@@ -143,9 +143,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* MOTIVASYON */
 .motivasyon{background:linear-gradient(135deg,rgba(29,185,122,.1),rgba(139,92,246,.1));border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.6;font-style:italic}
 
-/* ── RESPONSIVE DESKTOP ── */
+/* ── RESPONSIVE ── */
 @media(min-width:768px){
-  body{background:#EDE8DC;margin:0;padding:0}
+  body{background:#EDE8DC}
   #main-app{
     max-width:1400px;
     margin:0 auto;
@@ -161,12 +161,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     grid-column:1/-1;
     grid-row:1;
     padding:0 20px;
-    border-bottom:0.5px solid var(--border);
-    background:var(--bg);
-    height:52px;
-    display:flex;
-    align-items:center;
-    z-index:100;
   }
   .side-nav-desk{
     display:flex !important;
@@ -177,7 +171,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     border-right:0.5px solid var(--border);
     background:var(--bg);
     padding:10px 8px;
-    gap:1px;
+    gap:2px;
   }
   .main-pages{
     grid-row:2;
@@ -187,28 +181,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   }
   .bottom-nav{display:none !important}
   .page{padding-bottom:0 !important}
-  .main-pages{scrollbar-width:thin}
   #login-screen{
     position:fixed;top:0;left:0;
     width:100vw;height:100vh;z-index:9998;
   }
 }
 @media(min-width:1200px){
-  #app.show{grid-template-columns:200px 1fr}
+  #main-app{grid-template-columns:220px 1fr;max-width:1600px}
 }
 
-.side-nav-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:var(--radius-sm);
-  background:transparent;border:none;cursor:pointer;
-  color:var(--text2);font-size:13px;font-weight:500;
-  text-align:left;width:100%;transition:all .15s;
-}
-.side-nav-btn:hover{background:var(--card2);color:var(--text)}
-.side-nav-btn.active{background:var(--gold-bg);color:var(--gold-dark);font-weight:600}
-
-/* ── SIDE NAV DESKTOP ── */
-.side-nav-desk{display:none;}
 .snav-btn-d{
   display:flex;align-items:center;gap:10px;
   padding:10px 14px;border-radius:9px;
@@ -345,7 +326,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <!-- ANA UYGULAMA - STÜDYO GİBİ YAPI -->
-<div id="main-app">
+<div id="main-app" style="display:none">
 
   <div class="top-bar">
     <div style="width:38px;height:38px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(148,108,24,.12);flex-shrink:0">
