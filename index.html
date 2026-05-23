@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>DUMAN STUDIO — Öğrenci</title>
-<link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-
 :root{
   --bg:#FAF7F0;--bg2:#F5F0E8;--bg3:#EDE8DC;
   --card:#FFFFFF;--card2:#FDF9F3;
@@ -17,136 +15,29 @@
   --gold:#D2A941;--gold-light:#F0DC92;--gold-dark:#946C18;
   --gold-bg:rgba(210,169,65,.1);--gold-border:rgba(148,108,24,.25);
   --green:#5A8A5A;--green-bg:rgba(90,138,90,.1);--green-border:rgba(90,138,90,.25);
-  --red:#C0302C;--red-bg:rgba(192,48,44,.1);--red-border:rgba(192,48,44,.25);
-  --yellow:#D2A941;--yellow-bg:rgba(210,169,65,.1);--yellow-border:rgba(210,169,65,.25);
+  --red:#C0302C;--red-bg:rgba(192,48,44,.08);--red-border:rgba(192,48,44,.2);
   --blue:#5A7A9A;--blue-bg:rgba(90,122,154,.1);--blue-border:rgba(90,122,154,.25);
-  --purple:#8A6A9A;--purple-bg:rgba(138,106,154,.1);--purple-border:rgba(138,106,154,.25);
   --pink:#C07A90;--pink-bg:rgba(192,122,144,.1);--pink-border:rgba(192,122,144,.25);
-  --pilates:#946C18;--ems:#D2A941;
-  --cream:#F9EFBD;--warm:#F0DC92;
-  --radius:12px;--radius-sm:8px;--radius-lg:16px;
-  --shadow:0 2px 12px rgba(148,108,24,.06);
+  --yellow:#D2A941;--yellow-bg:rgba(210,169,65,.1);--yellow-border:rgba(210,169,65,.25);
+  --purple:#8A6A9A;--purple-bg:rgba(138,106,154,.1);--purple-border:rgba(138,106,154,.25);
+  --radius:12px;--radius-sm:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;width:100%;margin:0;padding:0;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;padding:0;-webkit-font-smoothing:antialiased}
 
-/* LOGIN */
-.login-wrap{width:100%;display:flex;align-items:center;justify-content:center;padding:24px}
-.login-box{width:100%;max-width:380px}
-.login-logo{text-align:center;margin-bottom:32px}
-.login-logo-icon{width:72px;height:72px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
-.login-logo h1{font-size:24px;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
-.login-logo p{font-size:13px;color:var(--text2);margin-top:4px}
-.login-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
-.login-card label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px}
-.login-card input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text);font-size:16px;outline:none;margin-bottom:16px}
-.login-card input:focus{border-color:var(--pilates)}
-.btn-login{width:100%;padding:13px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}
-.login-error{color:var(--red);font-size:13px;text-align:center;margin-top:8px;display:none}
-
-/* HEADER */
-.app-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
-.app-logo{width:32px;height:32px;background:white;border:1px solid var(--border2);overflow:hidden;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.app-title{font-size:15px;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.app-sub{font-size:11px;color:var(--text2);margin-top:1px}
-.header-right{margin-left:auto;display:flex;gap:8px;align-items:center}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--purple-bg);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--purple)}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:50;padding:0 4px}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;cursor:pointer;color:var(--text3);border:none;background:transparent;font-size:10px}
-.nav-btn.active{color:var(--gold-dark);font-weight:600}
-.nav-icon{font-size:20px}
-
-/* PAGES */
-.page{display:none;padding:16px;max-width:600px;margin:0 auto}
-.page.active{display:block}
-
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
-.section-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
-
-/* METRICS */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
-.metric-val{font-size:26px;font-weight:800;margin-bottom:2px}
-.metric-lbl{font-size:11px;color:var(--text2)}
-
-/* PROGRESS */
-.pbar{height:8px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:8px}
-.pfill{height:100%;border-radius:99px;transition:width .5s ease}
-
-/* BADGES */
-.badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:3px 9px;border-radius:99px;font-weight:600}
-.b-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.b-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.b-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
-.b-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
-.b-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
-.b-pink{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-border)}
-.b-pilates{background:var(--green-bg);color:var(--pilates)}
-.b-ems{background:var(--purple-bg);color:var(--ems)}
-
-/* ALERTS */
-.alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:8px;line-height:1.5}
-.a-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.a-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.a-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
-.a-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
-.a-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
-.a-pink{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-border)}
-
-/* BUTTONS */
-.btn{padding:10px 18px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-weight:600}
-.btn-primary{background:linear-gradient(135deg,#975B09,var(--gold-dark),var(--gold));color:white;border:none;font-weight:600;box-shadow:0 3px 10px rgba(148,108,24,.25)}
-.btn-ghost{background:var(--card2);color:var(--text2)}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card2);color:var(--text2);cursor:pointer;font-weight:600}
-.row{display:flex;align-items:center;gap:8px}
-.flex1{flex:1}
-.divider{border:none;border-top:1px solid var(--border);margin:10px 0}
-
-/* SU TAKİBİ */
-.water-circle{width:140px;height:140px;border-radius:50%;background:conic-gradient(var(--blue) var(--pct,0%), var(--bg3) var(--pct,0%));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative}
-.water-inner{width:110px;height:110px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.water-val{font-size:24px;font-weight:800;color:var(--blue)}
-.water-lbl{font-size:11px;color:var(--text2)}
-.water-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.water-btn{padding:8px 16px;border-radius:99px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);cursor:pointer;font-size:13px;font-weight:700}
-.water-btn:active{background:var(--blue);color:#fff}
-
-/* ADET DÖNGÜSÜ */
-.cycle-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0}
-.cycle-day{aspect-ratio:1;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;font-weight:600;background:var(--card2);color:var(--text2)}
-.cycle-day.period{background:var(--pink-bg);border-color:var(--pink-border);color:var(--pink)}
-.cycle-day.fertile{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
-.cycle-day.ovulation{background:var(--yellow-bg);border-color:var(--yellow-border);color:var(--yellow)}
-.cycle-day.today{border-color:var(--purple);border-width:2px}
-.cycle-day.future{opacity:.4}
-.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
-
-/* ÖDEME */
-.odeme-card{background:linear-gradient(135deg,rgba(29,185,122,.15),rgba(139,92,246,.1));border:1px solid var(--green-border);border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:16px}
-.odeme-tutar{font-size:36px;font-weight:800;color:var(--green);margin:8px 0}
-
-/* LOADING */
-.loading-wrap{position:fixed;inset:0;background:rgba(15,15,26,.8);z-index:200;display:flex;align-items:center;justify-content:center;display:none}
-.loading-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--pilates);border-radius:50%;animation:spin .8s linear infinite}
+/* ── LOADING ── */
 @keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:36px;height:36px;border:3px solid #E8DFD0;border-top-color:#946C18;border-radius:50%;animation:spin .8s linear infinite}
 
-/* DERS KARTLARI */
-.ders-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.ders-item:last-child{border-bottom:none}
-.ders-gun{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.ders-gun-text{font-size:10px;color:var(--text3)}
-.ders-gun-num{font-size:14px;font-weight:700;color:var(--text)}
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#FAF7F0,#F9EFBD,#F5F0E8)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#975B09,#946C18,#D2A941);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 14px rgba(148,108,24,.28)}
 
-/* MOTIVASYON */
-.motivasyon{background:linear-gradient(135deg,rgba(29,185,122,.1),rgba(139,92,246,.1));border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.6;font-style:italic}
-
-/* ── RESPONSIVE ── */
+/* ── APP GRID ── */
+#app{display:none}
 @media(min-width:768px){
   body{background:#EDE8DC}
-  #main-app{
+  #app{
     max-width:1400px;
     margin:0 auto;
     background:var(--bg);
@@ -156,235 +47,219 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     grid-template-columns:200px 1fr;
     grid-template-rows:52px 1fr;
   }
-  #main-app.show{display:grid !important}
-  .top-bar{
+  #app.show{display:grid !important}
+  .topbar{
     grid-column:1/-1;
     grid-row:1;
+    display:flex;
+    align-items:center;
     padding:0 20px;
+    height:52px;
+    background:var(--bg);
+    border-bottom:0.5px solid var(--border);
+    z-index:100;
   }
-  .side-nav-desk{
-    display:flex !important;
+  .sidebar{
     grid-row:2;
     grid-column:1;
-    overflow-y:auto;
+    display:flex !important;
     flex-direction:column;
-    border-right:0.5px solid var(--border);
-    background:var(--bg);
     padding:10px 8px;
     gap:2px;
+    border-right:0.5px solid var(--border);
+    background:var(--bg);
+    overflow-y:auto;
+    height:calc(100vh - 52px);
   }
-  .main-pages{
+  .pages{
     grid-row:2;
     grid-column:2;
     overflow-y:auto;
     height:calc(100vh - 52px);
   }
   .bottom-nav{display:none !important}
-  .page{padding-bottom:0 !important}
-  #login-screen{
-    position:fixed;top:0;left:0;
-    width:100vw;height:100vh;z-index:9998;
-  }
+  #login-screen{width:100vw;height:100vh}
 }
 @media(min-width:1200px){
-  #main-app{grid-template-columns:220px 1fr;max-width:1600px}
+  #app.show{grid-template-columns:220px 1fr;max-width:1600px}
 }
 
-.snav-btn-d{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:9px;
+/* ── TOP BAR (mobile) ── */
+.topbar{
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  height:52px;
+  background:var(--bg);
+  border-bottom:0.5px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{display:none;flex-direction:column}
+.snav-sec{font-size:9px;color:var(--text3);letter-spacing:1.5px;padding:10px 12px 4px;text-transform:uppercase;font-weight:500}
+.snav-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-radius:8px;
   background:transparent;border:none;
   cursor:pointer;color:var(--text2);
   font-size:13px;font-weight:500;
   text-align:left;width:100%;
-  transition:all .15s;white-space:nowrap;
+  transition:background .15s;
+  white-space:nowrap;
 }
-.snav-btn-d:hover{background:var(--card2);color:var(--text)}
-.snav-btn-d.act{background:#F9EFBD;color:#946C18;font-weight:600;border-left:2.5px solid #946C18;padding-left:10px}
-.snav-sec{font-size:8px;color:#A89070;letter-spacing:1.5px;padding:10px 12px 4px;text-transform:uppercase;font-weight:500}
-.snav-sec{font-size:8px;color:var(--text3);letter-spacing:1.5px;
-  padding:10px 12px 4px;text-transform:uppercase}
-.main-pages{flex:1;overflow-y:auto}
+.snav-btn:hover{background:var(--card2)}
+.snav-btn.act{background:#F9EFBD;color:#946C18;font-weight:600;border-left:2.5px solid #946C18;padding-left:9px}
+.sidebar-footer{margin-top:auto;padding:10px;background:var(--card2);border-radius:8px;border:0.5px solid var(--border)}
 
-/* ── RESPONSIVE - STÜDYO GİBİ ── */
-@media(min-width:768px){
-  body{background:#EDE8DC}
-  #main-app{
-    max-width:1400px;
-    margin:0 auto;
-    background:var(--bg);
-    box-shadow:0 0 40px rgba(148,108,24,.08);
-    height:100vh;
-    overflow:hidden;
-    grid-template-columns:200px 1fr;
-    grid-template-rows:52px 1fr;
-  }
-  #main-app.show{display:grid !important}
-  .top-bar{
-    grid-column:1/-1;
-    grid-row:1;
-    padding:0 20px;
-  }
-  .side-nav-desk{
-    display:flex !important;
-    grid-row:2;
-    grid-column:1;
-    overflow-y:auto;
-    flex-direction:column;
-    border-right:0.5px solid var(--border);
-    background:var(--bg);
-    padding:10px 8px;
-    gap:1px;
-    height:calc(100vh - 52px);
-  }
-  .main-pages{
-    grid-row:2;
-    grid-column:2;
-    overflow-y:auto;
-    height:calc(100vh - 52px);
-  }
-  .bottom-nav{display:none !important}
-  .page{padding-bottom:0 !important}
-  .main-pages{scrollbar-width:thin}
-  #login-screen{
-    position:fixed;top:0;left:0;
-    width:100vw;height:100vh;z-index:9998;
-  }
-}
-@media(min-width:1200px){
-  #main-app{grid-template-columns:220px 1fr;max-width:1600px}
-}
+/* ── PAGES ── */
+.pages{flex:1;overflow-y:auto}
+.page{display:none;min-height:100%}
+.page.active{display:block}
 
-
-/* ── SAYFA WRAPPER ── */
-.page-wrap{
-  padding:20px 28px;
-  width:100%;
-  box-sizing:border-box;
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg);border-top:0.5px solid var(--border);
+  display:flex;z-index:99;
+  padding-bottom:env(safe-area-inset-bottom);
 }
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:8px 4px 6px;cursor:pointer;border:none;
+  background:transparent;color:var(--text3);
+  font-size:9px;gap:2px;transition:color .2s;
+}
+.nav-btn.active{color:var(--gold-dark);font-weight:600}
+
+/* ── GENEL ── */
+.card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 1px 8px rgba(148,108,24,.05);margin-bottom:12px}
+.section-title{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;padding:12px 0 6px}
+.row{display:flex;align-items:center;gap:8px}
+.pbar{height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:8px}
+.pfill{height:100%;border-radius:99px;transition:width .5s ease}
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:3px 9px;border-radius:99px;font-weight:600}
+.b-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.b-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.b-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.b-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.b-pink{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-border)}
+.b-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.b-pilates{background:var(--gold-bg);color:var(--gold-dark);border:1px solid var(--gold-border)}
+.b-ems{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.alert{padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:10px;line-height:1.5}
+.a-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.a-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.a-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.a-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.btn{padding:10px 18px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-weight:600}
+.btn-primary{background:linear-gradient(135deg,#975B09,#946C18,#D2A941);color:white;border:none;box-shadow:0 3px 10px rgba(148,108,24,.25)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card2);color:var(--text2);cursor:pointer;font-weight:600}
+.metric{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.metric-val{font-size:28px;font-weight:700;font-family:Georgia,serif;letter-spacing:-1px;margin-bottom:4px}
+.metric-lbl{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-weight:500}
+.divider{border:none;border-top:0.5px solid var(--border);margin:10px 0}
+.water-circle{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative}
+.water-inner{width:110px;height:110px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.water-val{font-size:22px;font-weight:800;color:var(--blue)}
+.water-lbl{font-size:11px;color:var(--text2)}
+.cycle-day{aspect-ratio:1;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;font-weight:600;background:var(--card2);color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
 @media(max-width:767px){
-  .page-wrap{
-    padding:14px 16px;
-    padding-bottom:80px;
-  }
-}
-.page-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-@media(min-width:768px){
-  .page-grid-2{
-    grid-template-columns:1fr 300px;
-  }
-  .page-grid-3{
-    grid-template-columns:1fr 1fr 1fr;
-  }
-}
-
-/* Sayfa container'ları tam genişlik */
-#derslerim-c, #su-c, #dongü-c, #odeme-c, #olcumlerim-c, #anasayfa-c {
-  width: 100%;
-  box-sizing: border-box;
-}
-@media(min-width:768px){
-  #derslerim-c > div,
-  #su-c > div,
-  #dongü-c > div,
-  #odeme-c > div,
-  #olcumlerim-c > div {
-    padding: 20px 28px !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
+  .page{padding:14px 16px 80px}
 }
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="login-screen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#FAF7F0 0%,#F9EFBD 55%,#F5F0E8 100%)">
+<div id="login-screen">
   <div style="width:100%;max-width:400px;padding:40px 32px;text-align:center">
-    <div style="width:110px;height:110px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 28px rgba(148,108,24,.15)">
-      <img src="data:image/jpeg;base64,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" style="width:96px;height:96px;object-fit:contain">
+    <div style="width:100px;height:100px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 5px 24px rgba(148,108,24,.14)">
+      <img src="data:image/jpeg;base64,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" style="width:88px;height:88px;object-fit:contain">
     </div>
     <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;letter-spacing:2.5px;color:#2A2015;margin-bottom:4px">DUMANSS STUDIO</div>
     <div style="font-size:9px;letter-spacing:2.5px;color:#946C18;margin-bottom:28px">pilates · ems · yoga</div>
     <div style="text-align:left;margin-bottom:12px">
       <div style="font-size:9px;letter-spacing:2px;color:#946C18;font-weight:600;margin-bottom:7px">TELEFON NUMARASI</div>
-      <input id="tel-input" type="tel" placeholder="05XX XXX XX XX" maxlength="11"
-        style="width:100%;padding:13px 15px;background:white;border:1px solid #E8DFD0;border-radius:10px;font-size:15px;color:#2A2015;outline:none;transition:border-color .2s"
-        onkeydown="if(event.key==='Enter') girisYap()"
+      <input id="tel-input" type="tel" placeholder="05XX XXX XX XX" maxlength="13"
+        style="width:100%;padding:13px 15px;background:white;border:1px solid #E8DFD0;border-radius:10px;font-size:15px;color:#2A2015;outline:none"
+        onkeydown="if(event.key==='Enter')girisYap()"
         onfocus="this.style.borderColor='#946C18'"
         onblur="this.style.borderColor='#E8DFD0'">
-      <div id="login-error" style="display:none;color:#C03010;font-size:12px;margin-top:6px;padding:6px 10px;background:#FFF0EC;border-radius:8px">Bu numaraya kayıtlı öğrenci bulunamadı.</div>
+      <div id="login-error" style="display:none;color:#C03010;font-size:12px;margin-top:6px;padding:7px 10px;background:#FFF0EC;border-radius:8px;border:0.5px solid #F4B8A8"></div>
     </div>
-    <button onclick="girisYap()" style="width:100%;padding:14px;background:linear-gradient(135deg,#975B09,#946C18,#D2A941);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 14px rgba(148,108,24,.28)">GİRİŞ YAP →</button>
-    <div style="margin-top:16px;font-size:10px;color:#A89070">Kayıtlı değilseniz stüdyonuzla iletişime geçin</div>
+    <button class="btn-login" onclick="girisYap()">GİRİŞ YAP →</button>
+    <div style="margin-top:14px;font-size:10px;color:#A89070">Kayıtlı değilseniz stüdyonuzla iletişime geçin</div>
     <div style="margin-top:8px;font-size:8px;letter-spacing:1px;color:#C4B09A">★ DUMANSS STUDIO — Sakarya ★</div>
   </div>
 </div>
 
-<!-- ANA UYGULAMA - STÜDYO GİBİ YAPI -->
-<div id="main-app" style="display:none">
+<!-- ANA UYGULAMA -->
+<div id="app">
 
-  <div class="top-bar">
-    <div style="width:38px;height:38px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(148,108,24,.12);flex-shrink:0">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAEAAQADASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAUGAwcBAgQI/8QAUBAAAQMDAgIFCAUIBgUNAAAAAQACAwQFEQYhEjEHE0FRcRQiMmGBkaGxUnKywdEIFSMmNUJzdCQzQ4Ki8BY0NmLxFzhTY2R1doOEk7O04v/EABoBAQACAwEAAAAAAAAAAAAAAAAEBQEDBgL/xAA4EQACAQMBBAULBAEFAAAAAAAAAQIDBBEFEiExcUFRYbHBBhMiMjM0cpGh4fAVJIHRQiNSYpLi/9oADAMBAAIRAxEAPwD7LREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBFwXAcysT5mjtQGZMheJ9W0fvhY3Vrc+mPegJHIRRzaxp/fHvWZlU0/vhAetFjZK13asgIPIoAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiALHJKGjmF0nlDQomvreAO3CA9VVWtYPSCiKu6tbnzh715YRWXSo6mmaOEem854W/57lP26x0lIRJIPKJvpvGw8B2ICBhmr63/VaaSQH97BDfedl6G229PO8UTPrS/grSuUBVnW69M5RRP+rL+OFhlmrqPHlVNJGPpYJb7xsreuEBXKS6Ndjzh71LU1W13aFiuFmpak9ZGOol+kwbHxHaod/ldun6qoaMH0HjOHIC1MeHDmuyiqKq4wFJRu4ggO6IiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCxTv4Qsq8Va/A5oCOuNUGNO6haSCa73AwRlzYm7yv8Aoj8SvFqWkjrJPTqOtcQ1oZM7GfU3OPgqjxV1BVz0bqmZr4pHMeGyHHEDg/JUmqavLTsOdPKfBp/Yl0LZVk8S3o3ZSU0NJA2CnjDI28gPmsypmkLRDcbOyrqamsMjnuBAmIGApc6XthG76s/+oct1te3VxSjVhSWGsrMv/JrnThCTi5fT7k4irr9IWt39tXjwqXLC/RNBg9VdLzCe+Orx9y3+eu+mkv8At9jGzT/3fT7loRU2bSF5iaTbdZ3aJw5CoPXD5hR1VL0n2Qh/DQX6nHPgZwyY8BwnPhlHeTh7Sk1yw+55+h7VCMvVmv53Gw1iqqeGphdDOwPY7sKpNg6SrXWT+SXalmtNSDwu63dgPcTgEe0e1XiKSOWNssT2yMcMtc05BHeCt1C6o3CzTln86jXVozpPE1grEsUtsrRC8udGd4394/FTVDOHNG6y3SkFZRvi24xuw9zlC2qdwyx2zgSCD2FSDUWVpyFysVO7IWVAEREAREQBERAEREAREQBERAEREAREQA8lFXJ4AUo/0VCXZ2AUBGWKHyq+te4ZbADIfHkPnn2KkanaBqm4gcvKHFbE0a3IrJcc3tb7s/itfaoH61XH+OVyXlf7tDn4Fhp3rvkbB6PhjTUX8R/zVhUBoEY01D9d/wA1Pq80j3Cj8K7iLX9rLmERFYmkIiICC1Vpa1ahpyKuFsdSB+jqWAB7e7ftHqK1xTVF+0DeTRyO66lceIMJPVyt72/RP+d1uRRWqbLT320yUkoaJB50MhG7H9h8O9U+pad51eeoPZqLg109jJltdbHoVN8Wd9PXmjvdAKqkcdtpI3ekw9x/FR10Z5NeHOAw2YB48eR+XxWt7HW3DTl5cQCySJ5jmiPJwB3B+4rZF5q4K2ioK+mdxRSZwfHGx9YwvOj6qr2DhPdOPFeP9i7tvMvMfVZL0T8he1RVtfkKVHJXRDCIiAIiIAiIgCIiAIiIAiIgCIiAIiIDrJ6Kgbwdip6X0VA3jkUB20Z+zpz/ANoP2WrXuqR+tVw/jFbC0X+zp/5h32Wqg6rGNV1/8X7guS8sPdIfF4Mn6f675F90F/s3D9d/zU8oHQf+zkX13/NTyvNH9wo/Cu4i1/aS5hERWJqCIiAIiIDXXShaxDXw3WJuGzjq5frgbH2j5KD01dnxh1qkcTG+USxZ/dcAQR7dvctja3o/LNM1bQMvib1rf7u5+GVpOSd1PUsnZ6Ubg4excPqCenasq8OEt77n/ZdW/wC4tnB8V+I3VaZAQN1OMIIVVsE4kja9py1zQQe8FWeA5C7hPJSmVERAEREAREQBERAEREAREQBERAEREB1l9FQN45FT0voqBvHIoDtov9nT/wAw77LVRdWj9bK/64+yFetF/s6f+Yd9lqo+rR+tdd9cfZC5Lyw9zh8Xgyfp/tHyLzoYY03B63P+0VOKH0Y0t03SA9vEf8RUwr3SVixor/jHuREre0lzCx1M8NNA+eomjhiYMue9wa1o9ZKyKp9LFDV12jKhlG1z3RPbK9jebmDnt245+xSbmrKlSlOKy0s4FKCnNRbxkk7fqnTtfVikpLxSSzuOGs48Fx7hnn7FMr5OnJByDgjkV9F9GFxrbpomgqq8udPhzOsdzkDXEB3uHPtwqrStXleScJxw+O4m3tiqEVOL3FmREV4VxjqIhNTyQu5SMLT7RhfO1yBY97HDBBIIX0avnfUw4LtWs+jO8f4iuT8p4JulLn4FtpT3yXI2D0eVBlslK4nJDC33OI+5bApDkLV/RW8utGDybK4D4H71s6j5BdFYy2ram31LuK+5js1ZLtZ6kRFKNIREQBERAEREAREQBERAEREAREQHWX0VA3jkVPS+ioC8HY+CA76L/Z0/8w77LVSNVHOqa4/9YB8Arvor9mz/AMw77LVTrhAa7WdRTs/tKrgJHZvg/Irk/K6LnbU4R4uXgydYvEpPsNgWGIwWWjjPMQtJ8SMr3LhoDWhrRgAYAXK6ejTVKnGmuhJfIhSeW2Fjnmip4XTTysiiYMue9wDWjvJKitUaktun6brKuTimcMxwM3e/8B6ytaFmo+kWvc6aXyK0wuy4/wBnH4fTdjt7PUoV3qUKM/NU1tVH0Lx6iTRtnUW3J4j1nt1FfOi8XMymzm5VJduaWEhhd6wXNDvHBU3Q9JOn4mx089uuNtjA4WB9OAxoHcGnPuC81rvvR3pAiioqhk1QNpKiOIyvd35eBjHqG3qVyoK2zajthkppKevpH7Oa5uQPU5p3B8Qo1uqkm9ipBT6Ukn83nJvq7KS2oScetv7YPRa7lQXSmFTb6qKpi5cTHZwe4jmD6ivWtX6os8+irpDfbA90dJI8MlgJJaD3Hvad/A+xbDslxgu1rgr6f0JW5x2tPaD4FS7S9dSpKhVWJx+TXWiNWoqMVODzF/mGe1fOuqJRLd62Qcn1Ejh7XFfQtVM2npZah/oRML3eAGV823J5c5zjzJyVS+Ust9KPPwJ+lLfJ8jYXRUw/mUOxzkcfitmUY2CovR5S+T2KiYRgmIPP948X3q+0wwAuhs4bFvCL6kV1xLaqyfaZ0RFJNIREQBERAEREAREQBERAEREAREPJAY5jgKu3h+xU1VyYCql/q44mOfI8MaBuSsSkorLCWdyJLSdRHTWOsqZncMcUz3OPqDWrwaCoJKisqL7Ux8PWOcYs9pcTxEfL3quUEl4u9EbfbqOSWjNR1kjscIecDzS47AbZx61dqal1I6nbE6poKFgaGtbBGXFo7t1zVWvG8vI1IwlKFPhhbnJ9OXhYXRv49hNUHSptNpN9xN1NRBTQmaomZFG3m57sBUjU+vY4WPp7MzrH8vKHjzR9UHn7fipaTSMNXIJLncqyrcO93CPv+C9tHpiw0uCy2QPcO2UdZ9rKlV/1S6WzTSpLrbzL6bl+bzxTdCG+XpdxqK1RSXe7PnraSvushPEYoech/wB5/wC63/OyvLNLXu+Mjp71NFabPGBwW2hduR3Ody+fsV6ijjiYGRsaxo5NaMALusWWhwoRxUltZ49GefS+Wcdhsq30pP0Vgj7LZbVZoOptlDDTN7S1vnO8XHc+0qM1HQR20S6jtcLIaumYX1DWDDamIbua4dpxuDzyFYJ5YoInTTyMijaMue9wAA9ZKo2qNX0t1a7TunHtrausBhkmG0UTCMOdxdu2dxt8lOvJUaNHZeE/8UuOejCNVBVKk88evl2kzrp8FXoWtmDgYpIWSMd3+c0t+5RHQ7O91orKdxJbHMHN9XEN/kovpBvlHBZKbS9uqGVBiYyOoe3cAMAw3PfkAnuwrN0a2mW16fD6lhZNUv60tPNrcYaD8/aqqNR3GrRcP8I4ljhnfu+bJMo+btGpdL3Ho6Qq1tFpOsJdh8zepYO8u5/DK0ZDTGtuUFKM/pZA0+odvwWwelm7Mqq6O3QvyylyZCOReez2D5lRGiLM90b75K3EbZRBDntJBLj7Nh7SoF3L9Q1RU474x3fLe/6JFD9taub4v8RsSyQtY1rWjAAwB3KxxDAUNaRgBTbOS7MpTlERAEREAREQBERAEREARFwSAgOUXQyALjrQgMi6yHDSuokC6yPBCA8Fe7ZakvtwlrNSvhrQWU8Epa1hGBgcifHb2Lal2kfHGXR08k7vosLQf8RAWvtQU10rpMyUFLTtHIufxP8AeFS61CpUpKNPLaecYbT7GTLRxjJuXzzwLn0ZkGx1BGMeVOxj6jFZ3vawZe5rR3k4WrNL6XuFwpn1ENZFCxkhjIy7JIAPYPWrC3RM7h+mubc94jLvvWlanqLXo2jz8SXejEqNFP2n0LNU3i1UwJmuNKz1daM+5Q9brnT1NnFTLOR2RRH78BR0mgGP53V3/sf/AKWB/RtA/wBK7SeyEfitU7rW5erQjH+U/E9xp2q9aT/P4MFx6UqWIEUdqmkPYZZAz4DKrVV0haxu8xpbPTMjkI2bS05kfj259+ArLJ0WUj+d4nH/AJI/Fef/AJKDG4upNS1FOT2tg3+Dwo7pa1Uf+pw7HFEqE7GPDj2psr9PoPXOoZhPfK50MZOR5VOZHDwYMgeGytNv6J7NDCBV3Guml7XR8LG+4g/NeePo/wBV0p/omuqzHYC6Ro93GV64rB0jU39TqmmlA/6XJ+bCt0LOnDfVt5SfW2n4oTuJS3QqpLk14HL+jWGllZUWq6yxzRODmeURteMjlyx8ivUdU3S0TeQajoSHOBDKmmI84fSAOx+HgsZpekprcG40Lz3tazPxYFD1+mdX1s/X1zDVSdhM7NvAZAHsUa5lO3W1Y0Zxl07sxfNb/pg8wxUeK84tfXwOsGk6a9XAOoL5BNTOJdLxZE7R9U8z61cr/SU9usNHR0kYjhila1jR9V3xWuKzS+poZBJFbakPactdG4Eg+rBWKtvOu6KmjguNBXVNO2QFvX0zic4O3GBk9vPKzo9xC1zt0HFvpw/HevqermjKslszTSNoWp+wU3E7IWr7FriMObHX2O8Uzz2spXSN+Az8FsC13CCtgE0HXBh5dbC+M+5wBXVU60KizFlXOlOn6yJRFgEoXPWjvW01mZFjEgK7hwKA5REQBERAEREAWGV2yzHkvLNyKAplr6QKO6ayvulaSzXc3CyGPyouEDY3CQcTHMPW5II33AO6kn6moYLhBb7iya21FS4MphVABkzj+417SWF+x8zPFtnGFrjo+/5yXSf/AAbb/wDXCsnTfRQ13RTqQTYa6mt8tXDJnBjliaZGOaRuCHNG4QEk3X1Cekv/AEC/Nl0/OPkflvlHDF5P1OccWePi9LzccOc+rdWuaZzIHvbG+VzWkhjCOJx7hkgZPrIC+eejC6Vd76c9PXau4jVVfR9BLM5wwXPMwy72nf2r6DbnhQFG1N0lWmxt00+7Wq70sWoXxxU8rmRFtO9+MNmxIeHZwO3EOfcpO7Dn4Km9J2mnau6LrhbImF9VT2SmqKIjm2ZvE/A7i7ga3wK50nqZ2q+i60XqKX+mV1O2CQt5tnzwSOA9RDneAQFl6EdW27UtPfqS3wVTfzXcXQSyytaGSOwBlmHEkebnJA5j14v1fVQUNDPW1L+CCnjdLI7GcNaMk+4LRn5PxZaOmfpC0+xoZDUR0dfAwcgA0h+Pa8D2LdF1/pNZR24ei5/lE31IyCB4l5Z4gOQHh6PdXWnXOk6PUtkMwo6riAZM0Nkjc1xaWuAJAOR3nbCitd9JNk0Ve7db77Q3OKmr5Y4W3FkcZpYXvLg0SO4w5vouOeHGAe4qjdEP6idNOrejaT9Hbrkfz7ZWnZoa/aWNvgRgDujJWwdbaWtms6W+abu8fFTVlvgbxAedE8PmLXt9bTgjwQFrcSGFwaXEDIAxk+9Qts1HFX0lK+G217aqogbUGieI+thicSGvkIeWNBwcDiycHAPC7Gv/AMnvVFzay4dGmrX41NpkiIPcf9cpNhHM3PPYtBPcWk7krFerf0h6eudFrPQtJS3+krLVSwXOy1E3VSHqmnhkhedgcPII+Ds7AbEOpIqa8U9rutBV22Srf1dJNLwOgqH4J4Gva48LsAnDw3ODw5wV6vzsJpZordSTVvUvdHJIxzWxteObOJxGSOR4QQCCDgghULRvTLp++X6DTOobTc9KaglcBFQ3aDgErs7dW/k7flkNyeWVDTT9J3RjdLjHQ6bOtdJVFZPWQeSy8NfRmaR0j2Fpz1gDnOIwDnPMckBfLlr212y33We50NypKy2U4qJLe6JrqiWMu4WGLhcWScTiGjDtiQDgrw3rpKprJDYpLzpXUVC++XCK30cUraYvEsno8YbMeEd+dx3LpoHpE0b0jvloqVs8F1oXNlntlwh6qpgLHtcHFvIgPDTsTghucHCrn5SX7V6Mf/GlD9pAW64a+jt12qrbcdLahpJYbfNXwveyndHVMixxsje2YjrMHPC7h2BPdny0Gq6LXGgLbqW20ddSUVXUHqW1bWNkcG8bS7DHOAGQe3OysGvKaCfSdzlliD5KeiqJIXHmxxhe0kf3XOHtWtug0Z/J10gO39J/8syAtouLqOupKRtvq6k1IfiSLq+CMtHFh3E4HfkMA788Lx6D1/Saxs8t0s9ku4hhqX0z2ziBjhIzHEMdae9e7hIudu+tJ9gqgfks5/0Bu3/f9Z82oDZdDqS31VyktZfJS3GNpe6kqG8EhZnHG3se3l5zSQDsTnZRGjukG3amu1+t0FvuNE6xTmnrJawRNj4wXZ4S17sjDSckAYwqb+UdNJarPp7U1ESy5Wy9wdQ9npvZJlskQ7w4YyO3C1VqGuq6al6SaCmmkgZd9Y09uqJWHHBFIX8eT2AhvCfFYB9N2XVcF6gdV2SgrLhRBxayrZwMimxzMZe4F4zsHAcJ7CvdYdS227V9XbYzJTXOjx5TQ1DQyaNp5PxkhzD2PaS08s5BC5tlNBQ0UFFSQthp6eNsUUbBgMY0AAD1ABa36ZZX2XpI6ONQ0BLK2ouwtE4Z6U1NNjia7va0ji35E5WQblY7IXdYYlmQBERAEREAWCVuVnXDhlAaY0XQ3Cg6dekG+11pucFtuDaOOjnNHI5sxiiDH44Qdsjn29isOvrTdtZ2aXTVFDLbbZWlrK+vnAa90GfPjhj3dxuAxl4aADkcR2WxDGuOrQGq7/o2psetdO6w01b3VUFrtxtFZQROAkdR82GLi2c5jty0nzhy353U3B9XTGO201YJ3jDXVFJJC2L/AHncYGcdwyT4ZIn+rXPAEBV9NRMDa+OOmqoIoqkQxeUROYXMZFGwOGRu0lpwRzWr+jTSF50zqnVVonpTHp6C5OrbQ88nGdvnNb6mDLfFxW93R5Cjq6DIQGm9P0F0t35SVNe6W1181sq7KaCtqYoHOjikMhewuI7DwNGeztxutsWmnivMlVdqiK50rpJTDFG981M8RRkhpLQW5DiXvBIzh4B5YHmsrjSXprScNmBYfHmPl8VZJ5RFwDgc8vdwtDcc8E9vqBWOANP9O+l7nRXTSeudIW65XO92S5ASU8ckkz5qV4PWNy4nAwMdnplbJtVf5XqKZzaG4Qsmt0EjXz0r42gh8mWEkbPHE3LfWpJtUHOPmnAyCO3I4dufrXdtSCf6uTsxtvnfb4FefOR6zOyzV3TrpG9OuFo6R9EUxm1TYpA11OznX0rjh8J78ZJHqLsb4VjtFz1HbaO0VVZZp5bPPa6YSwQxF1ZQVHD54kYPTZggHhy5pbyIORcY5WvcW8LmnGfOGMrrNUNiDTwSPLgSA1uTgf8AFZ244zkYZQulXTsPSFZ6GzU9BOyVldBUi4z07oTRNY8OcWcYDi9zQWANH72TjAU7QXa9W+5VVDqC3zTQvqJH0NdQU75Y3QlxLGSNaC5kjQeEnHC7AOckgTj6xrc/oJiAHnI4eTTgnmssc7XmQcLmmM4II37d8c8bIpJjDKNW6XZfOlyx60goX0LLPS1MUtRJGY5K50rQxrOE4dwsHGcuA3IxkZIhPyhLfdbjctAvtlouFwbbtS01wqzS07pBFBG7znHHbvsOZwVtSSdkfpZ5ZG3P/gsc1W2IO4opMsaXkDGcDt5o5xQSZlnijqKd8MrQ+ORpa9p7QRghah0bbbloPT9NoW6UlXPRUFTM62XCCJ0zainfIXtDwwFzJG8ZBBHDjGCezbcdSx9QYQ14IBIdjzTggHB9qhrm7ym7EDdsQDB48z/n1LKeTBH29j6isFe+GaOnp4XtjD2HjkLiCXcHMYDcDbJ4jtyzQ/yd6K4ae0TX0l8tN0oame71NTHFJRSFxjfw8J2BAzg9q29Sw4C9XVrINZ6l0xX60v8AaH3WmNDYLRVitFPI5pmrKhgxGSGkhkbck4Jy47EDG9C0xoGo1PP0nWe9225Wynu91FXbauWnczdpdwStz3ODTwnBIPjj6IMPqXHU+pAU/S9yu0FripNU26piudO0RzTUsD54KkgD9LGWNJaHc+FwBByMEYJjTpq4ar6RLbqe9UrqK0WFshtVFIR1s9Q/Y1EgGzWhoAawni7Tw8lsURrsGgIDiMYXdEQBERAEREAREQBERAEREAWGoj4gsyEZGEBWLrTuHnsOHNOQR2FTNBLFcKOKSRrXPYfPaRsHYx9661sAe07KIifLbqwzRtcY3bSMHaPxRrILH1UWMdWzHdwj1fgPcnVR4x1bO7kuKeaKoiEsLw5p7VkWNldQydWsY13EGNBxjICPYx4AexrscsjK7KO1HXT22zVFZTwdfJG3zWZwSTsMDG5yRsvFScaUHOXBbz1FOTSR7zGwjBY3cEcu/n70axjHOc1jWl3MgYyo3S1wqbpY6euq6YU8sgw5nFk5GxzsMHIO3YpRZpzjUipx4MSTi3FnRzGukDzuQMAdyxTUkEsfVljWt3yA0b59i9CxzyxwRGSVwa0L1soxlnnrnw0cL52RRiZwLWkNGST/AJz7FHW2B3pOOSTkk966udJXVYme0hg2Y09g/FStLCGtxhZMHoibwhd0RAEREAREQBERAEREAREQBERAEREAREQBERAdXtDgo+rpQ8FSS4c0HmgK2wVFBP1lO7Y+kw8nKVorrTVB4HnqZPovOx8Cs09M13Z8FH1NvY7Ow9yAmUVfZBU0x/QVEjB3Dce5ZBVXFnOVr/Fg+5ATiKENVcX8pWs8GD710dDU1H9fO947jy9yAkKu5U8J4GHrpPotOw8So9wnrZusndsPRaOQXpp6FjcbD3L3wwNaOSAw0tOGgYXsaOEYXIACIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiALgtB7FyiAxmFp7Auhpx3BZ0QGAQAdgXdsTR2LIiA4DQOQXKIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiA/9k=" style="width:32px;height:32px;object-fit:contain">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div style="width:36px;height:36px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(148,108,24,.12);flex-shrink:0">
+      <img src="data:image/jpeg;base64,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" style="width:30px;height:30px;object-fit:contain">
     </div>
-    <div style="margin-left:10px;flex-shrink:0">
-      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;color:#946C18">DUMAN STUDIO</div>
-      <div style="font-size:9px;color:#946C18;letter-spacing:1px">pilates · ems · yoga</div>
+    <div style="margin-left:10px;flex:0 0 auto">
+      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;color:#946C18">DUMANSS STUDIO</div>
+      <div style="font-size:9px;color:#A89070;letter-spacing:1px">pilates · ems · yoga</div>
     </div>
     <div style="flex:1"></div>
-    <div id="header-sub" style="font-size:13px;color:#6B5A3A;font-weight:500;margin-right:14px"></div>
-    <button onclick="cikisYap()" style="font-size:12px;color:#C03010;background:transparent;border:none;cursor:pointer;font-weight:500;padding:6px 10px;border-radius:6px">Çıkış</button>
+    <div id="hdr-ad" style="font-size:12px;color:#6B5A3A;font-weight:500;margin-right:12px"></div>
+    <button onclick="cikisYap()" style="font-size:12px;color:#C03010;background:transparent;border:none;cursor:pointer;font-weight:500;padding:6px 8px">Çıkış</button>
   </div>
 
-  <nav class="side-nav-desk" id="side-nav-desk">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
     <div class="snav-sec">MENÜ</div>
-    <button class="snav-btn-d act" id="sd-anasayfa" onclick="sp('anasayfa')">🏠 Ana Sayfa</button>
-    <button class="snav-btn-d" id="sd-derslerim" onclick="sp('derslerim')">📅 Derslerim</button>
-    <button class="snav-btn-d" id="sd-su" onclick="sp('su')">💧 Su Takibi</button>
-    <button class="snav-btn-d" id="sd-dongü" onclick="sp('dongü')">🌸 Döngü</button>
-    <button class="snav-btn-d" id="sd-olcumlerim" onclick="sp('olcumlerim')">📏 Ölçümlerim</button>
-    <button class="snav-btn-d" id="sd-odeme" onclick="sp('odeme')">💳 Ödeme</button>
+    <button class="snav-btn act" id="sd-ana" onclick="sp('ana')">🏠 Ana Sayfa</button>
+    <button class="snav-btn" id="sd-dersler" onclick="sp('dersler')">📅 Derslerim</button>
+    <button class="snav-btn" id="sd-su" onclick="sp('su')">💧 Su Takibi</button>
+    <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Döngü</button>
+    <button class="snav-btn" id="sd-olcum" onclick="sp('olcum')">📏 Ölçümlerim</button>
+    <button class="snav-btn" id="sd-odeme" onclick="sp('odeme')">💳 Ödeme</button>
     <div style="flex:1"></div>
-    <div style="padding:10px;background:var(--card2);border-radius:8px;border:0.5px solid var(--border);margin-top:8px">
-      <div id="side-user-ad" style="font-size:12px;font-weight:600;color:var(--text)">—</div>
-      <div style="font-size:10px;color:var(--text3)">Öğrenci</div>
+    <div class="sidebar-footer">
+      <div id="sb-ad" style="font-size:12px;font-weight:600;color:var(--text)">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px">Öğrenci</div>
       <button onclick="cikisYap()" style="margin-top:6px;font-size:11px;color:var(--red);background:transparent;border:none;cursor:pointer;padding:0">Çıkış Yap →</button>
     </div>
   </nav>
 
-  <div class="main-pages">
-    <div id="anasayfa" class="page active"><div id="anasayfa-c"></div></div>
-    <div id="derslerim" class="page"><div id="derslerim-c"></div></div>
-    <div id="su" class="page"><div id="su-c"></div></div>
-    <div id="dongü" class="page"><div id="dongü-c"></div></div>
-    <div id="olcumlerim" class="page"><div id="olcumlerim-c"></div></div>
-    <div id="odeme" class="page"><div id="odeme-c"></div></div>
+  <!-- PAGES -->
+  <div class="pages">
+    <div id="pg-ana" class="page active"><div id="c-ana"></div></div>
+    <div id="pg-dersler" class="page"><div id="c-dersler"></div></div>
+    <div id="pg-su" class="page"><div id="c-su"></div></div>
+    <div id="pg-dongu" class="page"><div id="c-dongu"></div></div>
+    <div id="pg-olcum" class="page"><div id="c-olcum"></div></div>
+    <div id="pg-odeme" class="page"><div id="c-odeme"></div></div>
   </div>
 
+  <!-- BOTTOM NAV (mobil) -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-anasayfa" onclick="sp('anasayfa')"><div style="font-size:18px">🏠</div><div style="font-size:9px">Ana</div></button>
-    <button class="nav-btn" id="nav-derslerim" onclick="sp('derslerim')"><div style="font-size:18px">📅</div><div style="font-size:9px">Derslerim</div></button>
-    <button class="nav-btn" id="nav-su" onclick="sp('su')"><div style="font-size:18px">💧</div><div style="font-size:9px">Su</div></button>
-    <button class="nav-btn" id="nav-dongü" onclick="sp('dongü')"><div style="font-size:18px">🌸</div><div style="font-size:9px">Döngü</div></button>
-    <button class="nav-btn" id="nav-olcumlerim" onclick="sp('olcumlerim')"><div style="font-size:18px">📏</div><div style="font-size:9px">Ölçüm</div></button>
-    <button class="nav-btn" id="nav-odeme" onclick="sp('odeme')"><div style="font-size:18px">💳</div><div style="font-size:9px">Ödeme</div></button>
+    <button class="nav-btn active" id="nb-ana" onclick="sp('ana')"><div style="font-size:18px">🏠</div><div>Ana</div></button>
+    <button class="nav-btn" id="nb-dersler" onclick="sp('dersler')"><div style="font-size:18px">📅</div><div>Dersler</div></button>
+    <button class="nav-btn" id="nb-su" onclick="sp('su')"><div style="font-size:18px">💧</div><div>Su</div></button>
+    <button class="nav-btn" id="nb-dongu" onclick="sp('dongu')"><div style="font-size:18px">🌸</div><div>Döngü</div></button>
+    <button class="nav-btn" id="nb-olcum" onclick="sp('olcum')"><div style="font-size:18px">📏</div><div>Ölçüm</div></button>
+    <button class="nav-btn" id="nb-odeme" onclick="sp('odeme')"><div style="font-size:18px">💳</div><div>Ödeme</div></button>
   </nav>
 
 </div>
 
 <script>
-// ── SUPABASE ──
-const SUPABASE_URL='https://thaftqzytdmecpgurnwp.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoYWZ0cXp5dGRtZWNwZ3VybndwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwODE1NDEsImV4cCI6MjA5NDY1NzU0MX0.bkVJZjJYSRl16V8hXm5aAbEcNUrGm4pZp267rk-9G6w';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const SB_URL='https://thaftqzytdmecpgurnwp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoYWZ0cXp5dGRtZWNwZ3VybndwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwODE1NDEsImV4cCI6MjA5NDY1NzU0MX0.bkVJZjJYSRl16V8hXm5aAbEcNUrGm4pZp267rk-9G6w';
+const sb=supabase.createClient(SB_URL,SB_KEY);
 
 const GUNLER=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
-const AYLAR_F=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 const MOTIVASYONLAR=[
   'Her ders, daha güçlü bir sen için bir adım! 💪',
   'Bedenini dinle, kendine iyi bak. 🌿',
@@ -394,869 +269,693 @@ const MOTIVASYONLAR=[
   'Sen yapabilirsin, her gün biraz daha! 🌟',
 ];
 
-let ogrenci=null;
-let suData={}, donguData={}, bugunSu=0;
+let OGR=null, suData={}, donguData={}, bugunSu=0;
 
+// ── YARDIMCI ──
 function pad(n){return String(n).padStart(2,'0')}
-function todayStr(){const t=new Date();return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`}
-function gosterLoading(){
-  const el=document.getElementById('loading');
-  if(el)el.style.display='flex';
-  // Yoksa basit bir overlay ekle
-  else{
-    const ov=document.createElement('div');
-    ov.id='loading';
-    ov.style.cssText='position:fixed;inset:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;z-index:9999';
-    ov.innerHTML='<div style="width:36px;height:36px;border:3px solid #E8DFD0;border-top-color:#946C18;border-radius:50%;animation:spin .8s linear infinite"></div>';
-    document.body.appendChild(ov);
-  }
-}
-function gizleLoading(){
-  const el=document.getElementById('loading');
-  if(el)el.style.display='none';
-}
-
+function bugun(){const t=new Date();return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`}
+function tarihFmt(s){return s?new Date(s).toLocaleDateString('tr-TR'):'—'}
+function kalanDers(o){return Math.max(0,(o.toplam_paket||o.paket||20)-(o.yapilan||0)-(o.borc||0))}
+function bitis(o){const d=new Date(o.baslangic||Date.now());d.setMonth(d.getMonth()+1);return d}
+function kalanGun(o){return Math.ceil((bitis(o)-new Date())/864e5)}
+function barRenk(k){return k===0?'var(--red)':k<=3?'var(--yellow)':'var(--green)'}
 function rowToOgr(r){
   return {
     _id:r.id,ad:r.ad,tel:r.tel||'',mail:r.mail||'',
     tur:r.tur||'pilates',paket:r.paket||20,ucret:r.ucret||0,
     toplam_paket:r.toplam_paket||r.paket||20,
     baslangic:r.baslangic||'',yapilan:r.yapilan||0,borc:r.borc||0,
-    saat:r.saat||'',gunler:r.gunler||[],iptalHakki:r.iptal_hakki||1,
-    iptalGecmisi:r.iptal_gecmisi||[],odemeBekliyor:r.odeme_bekliyor||false,
-    ilkOdemeAlindi:r.ilk_odeme_alindi!==false
+    saat:r.saat||'',gunler:r.gunler||[],
+    iptal_hakki:r.iptal_hakki||1,iptal_gecmisi:r.iptal_gecmisi||[],
+    odeme_bekliyor:r.odeme_bekliyor||false,
+    ilk_odeme_alindi:r.ilk_odeme_alindi!==false
   };
 }
 
-function getBitis(o){const b=new Date(o.baslangic);b.setMonth(b.getMonth()+1);return b}
-function kalanGun(o){return Math.ceil((getBitis(o)-new Date())/864e5)}
-function kalanDers(o){return Math.max(0,(o.toplam_paket||o.paket||20)-(o.yapilan||0))}
-function efektifKalan(o){return Math.max(0,kalanDers(o)-(o.borc||0))}
-function pct(o){
-  const top=o.toplam_paket||o.paket||20;
-  // Mevcut paketteki ilerleme yüzdesi (yapilan / toplam_paket)
-  return Math.min(100,Math.round(((o.yapilan||0)/top)*100));
+function yukluYap(goster){
+  let el=document.getElementById('ov-loading');
+  if(goster){
+    if(!el){
+      el=document.createElement('div');
+      el.id='ov-loading';
+      el.style.cssText='position:fixed;inset:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;z-index:9999';
+      el.innerHTML='<div class="spinner"></div>';
+      document.body.appendChild(el);
+    }
+    el.style.display='flex';
+  }else if(el){
+    el.style.display='none';
+  }
 }
-function paketIlerleme(o){
-  // Mevcut pakette kaç ders yapıldı
-  const oncekiPaket=(o.toplam_paket||o.paket||20)-(o.paket||20);
-  const buPakette=Math.max(0,(o.yapilan||0)-oncekiPaket);
-  return {buPakette,paket:o.paket||20};
-}
-function barC(kd){return kd===0?'var(--red)':kd<=3?'var(--yellow)':'var(--green)'}
-function ini(ad){return ad.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 
 // ── GİRİŞ ──
 async function girisYap(){
   const raw=document.getElementById('tel-input').value;
-  // Tüm boşluk, tire, parantez kaldır
   const tel=raw.replace(/[\s\-\(\)]/g,'');
+  const errEl=document.getElementById('login-error');
+  errEl.style.display='none';
   if(!tel||tel.length<10){
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('login-error').textContent='Geçerli bir telefon numarası girin.';
+    errEl.textContent='Geçerli bir telefon numarası girin.';
+    errEl.style.display='block';
     return;
   }
-  gosterLoading();
+  yukluYap(true);
   try{
-    // Farklı formatları dene: 05xx, 5xx, +905xx
-    const formats=[
+    const formatlar=[
       tel,
-      tel.startsWith('0')?tel.slice(1):('0'+tel),
+      tel.startsWith('0')?tel.slice(1):'0'+tel,
       tel.startsWith('+90')?tel.slice(3):'+90'+tel.replace(/^0/,''),
-      tel.startsWith('90')?tel.slice(2):'90'+tel.replace(/^0/,''),
+      tel.startsWith('90')&&!tel.startsWith('0')?tel.slice(2):'90'+tel.replace(/^0/,''),
     ];
-    let found=null;
-    for(const fmt of formats){
+    let bulunan=null;
+    for(const fmt of formatlar){
       const {data,error}=await sb.from('ogrenciler').select('*').eq('tel',fmt).single();
-      if(!error&&data){found=data;break;}
+      if(!error&&data){bulunan=data;break;}
     }
-    if(!found){
-      // ilike ile kısmi arama
-      const digits=tel.replace(/\D/g,'').slice(-10);
-      const {data:d2}=await sb.from('ogrenciler').select('*').ilike('tel','%'+digits+'%').limit(1);
-      if(d2&&d2.length>0) found=d2[0];
+    if(!bulunan){
+      const rakamlar=tel.replace(/\D/g,'').slice(-10);
+      const {data:d2}=await sb.from('ogrenciler').select('*').ilike('tel','%'+rakamlar+'%').limit(1);
+      if(d2&&d2.length)bulunan=d2[0];
     }
-    if(!found){
-      document.getElementById('login-error').style.display='block';
-      document.getElementById('login-error').textContent='Bu numaraya kayıtlı öğrenci bulunamadı. ('+tel+')';
-      gizleLoading();
+    if(!bulunan){
+      errEl.textContent='Kayıtlı öğrenci bulunamadı. Stüdyonuzla iletişime geçin. ('+tel+')';
+      errEl.style.display='block';
+      yukluYap(false);
       return;
     }
-    ogrenci=rowToOgr(found);
-    localStorage.setItem('ds_ogr_tel',tel);
-    await baslat();
+    OGR=rowToOgr(bulunan);
+    localStorage.setItem('ogr_tel',tel);
+    await baslatApp();
   }catch(e){
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('login-error').textContent='Bağlantı hatası: '+e.message;
+    errEl.textContent='Bağlantı hatası: '+e.message;
+    errEl.style.display='block';
   }
-  gizleLoading();
+  yukluYap(false);
 }
 
-async function baslat(){
+async function baslatApp(){
   document.getElementById('login-screen').style.display='none';
-  document.getElementById('main-app').classList.add('show');
-  // Header
-  const headerSub=document.getElementById('header-sub');
-  if(headerSub)headerSub.textContent=ogrenci.ad;
-  const sideUserAd=document.getElementById('side-user-ad');
-  if(sideUserAd)sideUserAd.textContent=ogrenci.ad;
-  const avatarEl=document.getElementById('user-avatar'); if(avatarEl)avatarEl.textContent=ini(ogrenci.ad);
-  // Yerel verileri yükle
-  suData=JSON.parse(localStorage.getItem('ds_su_'+ogrenci._id)||'{}');
-  donguData=JSON.parse(localStorage.getItem('ds_dongu_'+ogrenci._id)||'{"baslangiclar":[],"uzunluk":28}');
-  bugunSu=suData[todayStr()]||0;
-  sp('anasayfa');
+  const appEl=document.getElementById('app');
+  appEl.classList.add('show');
+  document.getElementById('hdr-ad').textContent=OGR.ad;
+  document.getElementById('sb-ad').textContent=OGR.ad;
+  suData=JSON.parse(localStorage.getItem('su_'+OGR._id)||'{}');
+  donguData=JSON.parse(localStorage.getItem('dongu_'+OGR._id)||'{"bas":[],"uzunluk":28}');
+  bugunSu=suData[bugun()]||0;
+  sp('ana');
 }
 
 function cikisYap(){
-  localStorage.removeItem('ds_ogr_tel');
-  ogrenci=null;
-  document.getElementById('main-app').classList.remove('show');
-  loginGoster();
+  localStorage.removeItem('ogr_tel');
+  OGR=null;
+  const appEl=document.getElementById('app');
+  appEl.classList.remove('show');
+  appEl.style.display='none';
+  const ls=document.getElementById('login-screen');
+  ls.style.display='flex';
   const ti=document.getElementById('tel-input');
   if(ti)ti.value='';
-  const le=document.getElementById('login-error');
-  if(le)le.style.display='none';
 }
 
-// Splash → Login → App akışı
-window.addEventListener('DOMContentLoaded', async () => {
-  // Header tarih
-  const t=new Date();
-  document.querySelectorAll('.tarih-lbl').forEach(el=>el.textContent=`${GUNLER[t.getDay()]} ${t.getDate()} ${AYLAR_F[t.getMonth()]}`);
-
-  // Splash 1.5sn sonra kaybol
-  setTimeout(async () => {
-    const splash = document.getElementById('splash');
-    if(!splash) { loginGoster(); return; }
-    splash.style.opacity = '0';
-    splash.style.transform = 'scale(1.03)';
-    setTimeout(async () => {
-      splash.style.display = 'none';
-      // Otomatik giriş dene
-      const kayitliTel = localStorage.getItem('ds_ogr_tel');
-      if(kayitliTel){
-        gosterLoading();
-        try{
-          const {data,error}=await sb.from('ogrenciler').select('*').eq('tel',kayitliTel).single();
-          if(!error&&data){ogrenci=rowToOgr(data);await baslat();gizleLoading();return;}
-        }catch(e){console.error(e);}
-        gizleLoading();
-      }
-      loginGoster();
-    }, 600);
-  }, 1500);
+window.addEventListener('DOMContentLoaded',async()=>{
+  const kayitli=localStorage.getItem('ogr_tel');
+  if(kayitli){
+    yukluYap(true);
+    try{
+      const {data,error}=await sb.from('ogrenciler').select('*').eq('tel',kayitli).single();
+      if(!error&&data){OGR=rowToOgr(data);await baslatApp();yukluYap(false);return;}
+    }catch(e){}
+    yukluYap(false);
+  }
+  const ls=document.getElementById('login-screen');
+  ls.style.display='flex';
 });
 
-function loginGoster(){
-  const ls = document.getElementById('login-screen');
-  if(ls){
-    ls.style.display = 'flex';
-    ls.style.opacity = '0';
-    setTimeout(() => { ls.style.opacity='1'; ls.style.transition='opacity .4s ease'; }, 50);
-  }
-}
-
+// ── NAVİGASYON ──
 function sp(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.side-nav-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.snav-btn-d').forEach(b=>b.classList.remove('act'));
-  const pg=document.getElementById(id);
+  document.querySelectorAll('.snav-btn').forEach(b=>b.classList.remove('act'));
+  const pg=document.getElementById('pg-'+id);
   if(pg)pg.classList.add('active');
-  const nb=document.getElementById('nav-'+id);
+  const nb=document.getElementById('nb-'+id);
   if(nb)nb.classList.add('active');
-  const sb=document.getElementById('snav-'+id);
-  if(sb)sb.classList.add('active');
   const sd=document.getElementById('sd-'+id);
   if(sd)sd.classList.add('act');
-  const r={anasayfa:renderAnasayfa,derslerim:renderDerslerim,su:renderSu,dongü:renderDongu,olcumlerim:renderOlcumlerim,odeme:renderOdeme};
-  if(r[id])r[id]();
-  const mp=document.querySelector('.main-pages');
-  if(mp)mp.scrollTop=0;
+  const renders={ana:renderAna,dersler:renderDersler,su:renderSu,dongu:renderDongu,olcum:renderOlcum,odeme:renderOdeme};
+  if(renders[id])renders[id]();
+  const pages=document.querySelector('.pages');
+  if(pages)pages.scrollTop=0;
 }
 
 // ── ANA SAYFA ──
-function renderAnasayfa(){
-  if(!ogrenci){return;}
-  const o=ogrenci;
-  const kd=efektifKalan(o);
+function renderAna(){
+  if(!OGR)return;
+  const o=OGR;
+  const kd=kalanDers(o);
   const kg=kalanGun(o);
-  const suHedef=parseInt(localStorage.getItem('ds_su_hedef_'+o._id)||'2000');
-  const suYuzde=Math.min(100,Math.round(bugunSu/suHedef*100));
-  const motivasyon=MOTIVASYONLAR[new Date().getDay()%MOTIVASYONLAR.length];
-  const bitis=getBitis(o);
-  const toplamPkt=o.toplam_paket||o.paket||20;
+  const suH=parseInt(localStorage.getItem('su_h_'+o._id)||'2000');
+  const suPct=Math.min(100,Math.round(bugunSu/suH*100));
+  const mot=MOTIVASYONLAR[new Date().getDay()%MOTIVASYONLAR.length];
+  const bit=bitis(o);
+  const topPkt=o.toplam_paket||o.paket||20;
   const yapilan=o.yapilan||0;
-  const buPaketteki=yapilan%(o.paket||20);
-  const buPaketPct=Math.min(100,Math.round(buPaketteki/(o.paket||20)*100));
-  const donguBas=donguData.baslangiclar||[];
-  const sonDongu=donguBas.length>0?new Date(donguBas[donguBas.length-1]):null;
+  const buPkt=yapilan%(o.paket||20);
+  const buPktPct=Math.min(100,Math.round(buPkt/(o.paket||20)*100));
+  const donguBas=donguData.bas||[];
+  const sonDongu=donguBas.length?new Date(donguBas[donguBas.length-1]):null;
   const donguGun=sonDongu?Math.floor((new Date()-sonDongu)/864e5):null;
-  const isDesktop=window.innerWidth>=768;
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
 
-  // Haftalık program HTML
   const gunSira=[1,2,3,4,5,6,0];
   const gunIs=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
   const buG=new Date().getDay();
   let haftaHtml='';
   gunSira.forEach((g,gi)=>{
     const aktif=(o.gunler||[]).includes(g);
-    const bugun=g===buG;
-    const borderStyle = gi<6 ? 'border-bottom:0.5px solid #F0E8DE;' : '';
-    const circleStyle = bugun
-      ? 'background:#D2A941;color:white;'
-      : aktif
-        ? 'background:#F9EFBD;color:#946C18;'
-        : 'background:#F5F0E8;color:#A89070;';
-    const dersAdi = aktif ? (o.tur==='ems' ? '⚡ EMS' : '🧘 Pilates') : '—';
-    const saatHtml = aktif ? `<div style="font-size:10px;color:#A89070">${o.saat||''}</div>` : '';
-    const bugunBadge = bugun&&aktif ? '<div style="font-size:9px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:2px 8px;border-radius:99px;font-weight:600">Bugün</div>' : '';
-    haftaHtml+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;${borderStyle}">
-      <div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;${circleStyle}">${gunIs[gi]}</div>
+    const bugun2=g===buG;
+    const bst=gi<6?'border-bottom:0.5px solid #F0E8DE;':'';
+    const cst=bugun2?'background:#D2A941;color:white;':aktif?'background:#F9EFBD;color:#946C18;':'background:#F5F0E8;color:#A89070;';
+    const ders=aktif?(o.tur==='ems'?'⚡ EMS':'🧘 Pilates'):'—';
+    const saat=aktif?`<div style="font-size:10px;color:#A89070">${o.saat||''}</div>`:'';
+    const badge=bugun2&&aktif?'<div style="font-size:9px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:2px 8px;border-radius:99px;font-weight:600">Bugün</div>':'';
+    haftaHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;${bst}">
+      <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;${cst}">${gunIs[gi]}</div>
       <div style="flex:1">
-        <div style="font-size:13px;${aktif?'color:#2A2015;font-weight:500;':'color:#A89070;'}">${dersAdi}</div>
-        ${saatHtml}
-      </div>
-      ${bugunBadge}
+        <div style="font-size:13px;color:${aktif?'#2A2015':'#A89070'};font-weight:${aktif?'500':'400'}">${ders}</div>
+        ${saat}
+      </div>${badge}
     </div>`;
   });
 
-  const el=document.getElementById('anasayfa-c');
+  const t=new Date();
+  const tarihStr=`${GUNLER[t.getDay()]} ${t.getDate()} ${AYLAR[t.getMonth()]}`;
+  const pad2=`${desk?'24px 32px':'14px 16px'}`;
+  const col2=`${genis?'1fr 380px':desk?'1fr 340px':'1fr'}`;
 
-  let html=`
-  <div style="padding:${isDesktop?'24px 32px':'14px 16px'}">
-    <div style="font-size:${isDesktop?'24px':'18px'};font-weight:700;color:#2A2015;margin-bottom:4px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
-    <div style="font-size:${isDesktop?'13px':'12px'};color:#A89070;margin-bottom:16px" class="tarih-lbl"></div>
-    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:${isDesktop?'14px 18px':'12px 14px'};margin-bottom:20px;font-style:italic;font-size:${isDesktop?'14px':'13px'};color:#946C18;line-height:1.8">${motivasyon}</div>
-
-    <div style="display:grid;grid-template-columns:${isDesktop?'1fr 340px':'1fr'};gap:${isDesktop?'28px':'12px'};align-items:start">
-      
-      <!-- SOL KOLON -->
+  const html=`<div style="padding:${pad2}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:3px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
+    <div style="font-size:12px;color:#A89070;margin-bottom:14px">${tarihStr}</div>
+    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:20px;font-style:italic;font-size:${desk?'14px':'13px'};color:#946C18;line-height:1.7">${mot}</div>
+    <div style="display:grid;grid-template-columns:${col2};gap:${desk?'28px':'12px'};align-items:start">
       <div>
-        <!-- Metrik kartlar -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:${isDesktop?'16px':'12px'};margin-bottom:${isDesktop?'18px':'14px'}">
-          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'20px':'16px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-            <div style="font-size:${isDesktop?'11px':'10px'};color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:500">KALAN DERS</div>
-            <div style="font-size:${isDesktop?'42px':'30px'};font-weight:700;color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-family:Georgia,serif;line-height:1;margin-bottom:10px">${kd}</div>
-            <div style="height:6px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin-bottom:8px">
-              <div style="width:${Math.max(2,100-Math.round(kd/toplamPkt*100))}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div class="metric">
+            <div class="metric-lbl">KALAN DERS</div>
+            <div class="metric-val" style="color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-size:${desk?'40px':'30px'}">${kd}</div>
+            <div style="height:5px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin-bottom:5px">
+              <div style="width:${Math.max(2,Math.round(kd/topPkt*100))}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px"></div>
             </div>
-            <div style="font-size:${isDesktop?'12px':'10px'};color:#A89070">Toplam ${yapilan} yapıldı</div>
+            <div style="font-size:10px;color:#A89070">Toplam ${yapilan} yapıldı</div>
           </div>
-          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'20px':'16px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-            <div style="font-size:${isDesktop?'11px':'10px'};color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:500">GÜN KALDI</div>
-            <div style="font-size:${isDesktop?'42px':'30px'};font-weight:700;color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-family:Georgia,serif;line-height:1;margin-bottom:10px">${Math.max(0,kg)}</div>
-            ${bitis?`<div style="font-size:${isDesktop?'12px':'10px'};color:#A89070">Bitiş: ${bitis.toLocaleDateString('tr-TR')}</div>`:''}
+          <div class="metric">
+            <div class="metric-lbl">GÜN KALDI</div>
+            <div class="metric-val" style="color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-size:${desk?'40px':'30px'}">${Math.max(0,kg)}</div>
+            <div style="font-size:10px;color:#A89070;margin-top:8px">Bitiş: ${tarihFmt(bit)}</div>
           </div>
         </div>
-
-        <!-- Paket ilerlemesi -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-left:3px solid #946C18;border-radius:0 14px 14px 0;padding:${isDesktop?'18px':'14px'};margin-bottom:${isDesktop?'16px':'12px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
-            <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070">${buPaketteki} / ${o.paket||20} ders</div>
+        <div class="card" style="border-left:3px solid #946C18;border-radius:0 12px 12px 0;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
+            <div style="font-size:11px;color:#A89070">${buPkt} / ${o.paket||20} ders</div>
           </div>
-          <div style="height:8px;background:#E8DFD0;border-radius:4px;overflow:hidden">
-            <div style="width:${buPaketPct}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:4px;transition:width .5s"></div>
+          <div style="height:7px;background:#E8DFD0;border-radius:4px;overflow:hidden">
+            <div style="width:${buPktPct}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:4px;transition:width .5s"></div>
           </div>
-          ${toplamPkt>(o.paket||20)?`<div style="font-size:${isDesktop?'12px':'10px'};color:#A89070;margin-top:6px">${Math.ceil(toplamPkt/(o.paket||20))}. paket · Toplam ${toplamPkt} ders</div>`:''}
         </div>
-
-        <!-- Su takibi -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
-            <div style="font-size:${isDesktop?'16px':'14px'};font-weight:700;color:#5A8A5A">${suYuzde}%</div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
+            <div style="font-size:${desk?'16px':'14px'};font-weight:700;color:#5A8A5A">${suPct}%</div>
           </div>
-          <div style="height:${isDesktop?'10px':'8px'};background:#E8DFD0;border-radius:5px;overflow:hidden;margin-bottom:8px">
-            <div style="width:${suYuzde}%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:5px;transition:width .5s"></div>
+          <div style="height:8px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:7px">
+            <div style="width:${suPct}%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:4px;transition:width .5s"></div>
           </div>
-          <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070">${bugunSu}ml / ${suHedef}ml</div>
+          <div style="font-size:12px;color:#A89070">${bugunSu}ml / ${suH}ml</div>
         </div>
       </div>
-
-      <!-- SAĞ KOLON -->
-      <div style="display:flex;flex-direction:column;gap:${isDesktop?'14px':'12px'};${isDesktop?'':'margin-top:12px'}">
-        <!-- Haftalık program -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#2A2015;margin-bottom:14px">📆 Haftalık Program</div>
+      <div style="display:flex;flex-direction:column;gap:12px;${desk?'':'margin-top:12px'}">
+        <div class="card">
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#2A2015;margin-bottom:12px">📆 Haftalık Program</div>
           ${haftaHtml}
         </div>
-
-        <!-- Döngü -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#C07A90;margin-bottom:8px">🌸 Döngü</div>
-          <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?`${donguGun}. gün`:'Henüz kayıt yok'}</div>
-          ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${sonDongu.toLocaleDateString('tr-TR')}</div>`:''}
-          <button onclick="sp('dongü')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:4px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Döngü Başlat'}</button>
+        <div class="card">
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Döngü</div>
+          <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?donguGun+'. gün':'Henüz kayıt yok'}</div>
+          ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${tarihFmt(sonDongu)}</div>`:''}
+          <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Döngü Başlat'}</button>
         </div>
-
-        <!-- Ödeme -->
-        <div style="background:#FFFAEE;border:0.5px solid #D4C8B0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#946C18;margin-bottom:8px">💳 Ödeme</div>
-          <div style="font-size:${isDesktop?'28px':'22px'};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
-          <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070;margin-top:4px">${o.paket||20} ders / paket</div>
+        <div class="card" style="background:#FFFAEE;border-color:#D4C8B0">
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#946C18;margin-bottom:6px">💳 Ödeme</div>
+          <div style="font-size:${desk?'26px':'22px'};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
+          <div style="font-size:11px;color:#A89070;margin-top:3px">${o.paket||20} ders / paket</div>
         </div>
-
-        <!-- Son ölçüm -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
-          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#A89070;margin-bottom:8px">📏 Son Ölçüm</div>
-          <div style="font-size:${isDesktop?'14px':'12px'};color:#2A2015" id="son-olcum-ozet">Yükleniyor...</div>
+        <div class="card">
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#A89070;margin-bottom:6px">📏 Son Ölçüm</div>
+          <div style="font-size:12px;color:#2A2015" id="son-olcum">Yükleniyor...</div>
         </div>
       </div>
     </div>
   </div>`;
 
-  el.innerHTML=html;
-
-  // Tarih güncelle
-  const t=new Date();
-  el.querySelectorAll('.tarih-lbl').forEach(e=>e.textContent=`${GUNLER[t.getDay()]} ${t.getDate()} ${AYLAR_F[t.getMonth()]}`);
-
-  // Son ölçüm yükle
-  if(ogrenci._id){
-    sb.from('olcumler').select('kilo,tarih').eq('ogrenci_id',ogrenci._id).order('tarih',{ascending:false}).limit(1)
-      .then(({data:d})=>{
-        const el2=document.getElementById('son-olcum-ozet');
-        if(el2){el2.textContent=d&&d.length?`${d[0].kilo} kg — ${new Date(d[0].tarih).toLocaleDateString('tr-TR')}`:'Henüz ölçüm yok';}
-      }).catch(()=>{const el2=document.getElementById('son-olcum-ozet');if(el2)el2.textContent='Henüz ölçüm yok';});
+  document.getElementById('c-ana').innerHTML=html;
+  if(OGR._id){
+    sb.from('olcumler').select('kilo,tarih').eq('ogrenci_id',OGR._id).order('tarih',{ascending:false}).limit(1)
+      .then(({data:d})=>{const el=document.getElementById('son-olcum');if(el)el.textContent=d&&d.length?`${d[0].kilo} kg — ${tarihFmt(d[0].tarih)}`:'Henüz ölçüm yok';})
+      .catch(()=>{const el=document.getElementById('son-olcum');if(el)el.textContent='Henüz ölçüm yok';});
   }
 }
 
-function renderDerslerim(){
-  if(!ogrenci)return;
-  const o=ogrenci;
-  const kd=efektifKalan(o);
-  const gun=pct(o);
-
-  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box">
-  <div style="font-size:18px;font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>`;
-
-  // Paket kartı
-  const toplamPkt=o.toplam_paket||o.paket||20;
+// ── DERSLERİM ──
+function renderDersler(){
+  if(!OGR)return;
+  const o=OGR;
+  const kd=kalanDers(o);
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
+  const topPkt=o.toplam_paket||o.paket||20;
   const yapilan=o.yapilan||0;
-  const paketNo=Math.max(1,Math.ceil(toplamPkt/(o.paket||20)));
-  const buPaketteki=yapilan%(o.paket||20);
-  const buPaketPct=Math.min(100,Math.round(buPaketteki/(o.paket||20)*100));
+  const paketNo=Math.max(1,Math.ceil(topPkt/(o.paket||20)));
+  const buPkt=yapilan%(o.paket||20);
+  const buPktPct=Math.min(100,Math.round(buPkt/(o.paket||20)*100));
+  const m=new Date().getMonth(),y=new Date().getFullYear();
+  const kulIptal=(o.iptal_gecmisi||[]).filter(t=>{const d=new Date(t);return d.getMonth()===m&&d.getFullYear()===y}).length;
+  const kalanIptal=Math.max(0,(o.iptal_hakki||1)-kulIptal);
 
-  html+=`<div class="card" style="border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0;">
-    <div class="row" style="margin-bottom:12px">
-      <span class="badge ${o.tur==='ems'?'b-ems':'b-pilates'}">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'}</span>
-      <span style="margin-left:auto;font-size:12px;color:var(--text2)">${o.paket} ders/paket · ₺${(o.ucret||0).toLocaleString('tr-TR')}</span>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-bottom:12px">
-      <div><div style="font-size:22px;font-weight:800;color:${barC(kd)}">${kd}</div><div style="font-size:11px;color:var(--text2)">Kalan</div></div>
-      <div><div style="font-size:22px;font-weight:800;color:var(--gold-dark)">${buPaketteki}</div><div style="font-size:11px;color:var(--text2)">Bu Pakette</div></div>
-      <div><div style="font-size:22px;font-weight:800">${yapilan}</div><div style="font-size:11px;color:var(--text2)">Toplam</div></div>
-      <div><div style="font-size:22px;font-weight:800;color:var(--gold)">${paketNo}</div><div style="font-size:11px;color:var(--text2)">Paket No</div></div>
-    </div>
-    <div style="margin-bottom:4px">
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px">
-        <span>${paketNo}. paket ilerlemesi</span>
-        <span>${buPaketteki}/${o.paket||20}</span>
-      </div>
-      <div class="pbar" style="height:8px"><div class="pfill" style="width:${buPaketPct}%;background:linear-gradient(90deg,var(--gold-dark),var(--gold))"></div></div>
-    </div>
-    ${toplamPkt>(o.paket||20)?`<div style="font-size:10px;color:var(--text3);margin-top:6px">Toplam ${toplamPkt} ders satın alındı (${paketNo} paket)</div>`:''}
-    <div style="font-size:11px;color:var(--text3);margin-top:4px;text-align:right">
-      Bitiş: ${getBitis(o).toLocaleDateString('tr-TR')}
-    </div>
-  </div>`;
-
-  // Haftalık program
-  html+=`<div class="section-title">📆 Haftalık Program</div>
-  <div class="card">`;
-  const gunSiralama=[1,2,3,4,5,6,0];
+  const gunSira=[1,2,3,4,5,6,0];
   const gunIsim=['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
-  const bugunG=new Date().getDay();
-  gunSiralama.forEach((g,gi)=>{
+  const buG=new Date().getDay();
+  let gunHtml='';
+  gunSira.forEach(g=>{
     const aktif=(o.gunler||[]).includes(g);
-    const bugun=g===bugunG;
-    html+=`<div class="ders-item" style="${!aktif?'opacity:.35':''}">
-      <div class="ders-gun" style="${bugun?'background:var(--pilates-bg);border:1px solid var(--green-border)':''}">
-        <div class="ders-gun-text">${GUNLER[g]}</div>
-      </div>
+    const bugunG=g===buG;
+    gunHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);${!aktif?'opacity:.4':''}">
+      <div style="width:38px;height:38px;background:${bugunG?'var(--gold-dark)':'var(--bg3)'};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${bugunG?'white':'var(--text2)'};font-size:11px;font-weight:600;flex-shrink:0">${GUNLER[g]}</div>
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:${aktif?'600':'400'};color:${bugun?'var(--pilates)':'var(--text)'}">${aktif?`${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} — ${o.saat||'Saat belirtilmedi'}`:'Ders yok'}</div>
-        ${bugun&&aktif?'<div style="font-size:11px;color:var(--green);margin-top:2px">● Bugün</div>':''}
+        <div style="font-size:13px;font-weight:${aktif?'600':'400'};color:${bugunG?'var(--gold-dark)':'var(--text)'}">${aktif?`${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} — ${o.saat||'Saat belirtilmedi'}`:'Ders yok'}</div>
+        ${bugunG&&aktif?'<div style="font-size:11px;color:var(--green)">● Bugün</div>':''}
       </div>
-      ${aktif?`<span class="badge b-green" style="font-size:10px">${o.saat||'—'}</span>`:''}
     </div>`;
   });
-  html+=`</div>`;
 
-  // İptal hakkı
-  const m=new Date().getMonth(),y=new Date().getFullYear();
-  const kullanilan=(o.iptalGecmisi||[]).filter(t=>{const d=new Date(t);return d.getMonth()===m&&d.getFullYear()===y}).length;
-  const kalanIptal=Math.max(0,(o.iptalHakki||1)-kullanilan);
-  html+=`<div class="section-title">🚫 Bu Ay İptal Hakkı</div>
-  <div class="card">
-    <div class="row">
-      <div style="font-size:28px;font-weight:800;color:${kalanIptal===0?'var(--red)':'var(--green)'}">${kalanIptal}</div>
-      <div style="margin-left:12px">
-        <div style="font-weight:600">Kalan İptal Hakkı</div>
-        <div style="font-size:12px;color:var(--text2)">${kullanilan} kullanıldı / ${o.iptalHakki||1} toplam</div>
+  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>
+    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+      <div>
+        <div class="card" style="border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span class="badge b-pilates">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'}</span>
+            <span style="margin-left:auto;font-size:12px;color:var(--text2)">${o.paket} ders/paket · ₺${(o.ucret||0).toLocaleString('tr-TR')}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-bottom:14px">
+            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:${barRenk(kd)}">${kd}</div><div style="font-size:11px;color:var(--text2)">Kalan</div></div>
+            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--gold-dark)">${buPkt}</div><div style="font-size:11px;color:var(--text2)">Bu Pakette</div></div>
+            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800">${yapilan}</div><div style="font-size:11px;color:var(--text2)">Toplam</div></div>
+            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--gold)">${paketNo}</div><div style="font-size:11px;color:var(--text2)">Paket</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px">
+            <span>${paketNo}. paket</span><span>${buPkt}/${o.paket||20}</span>
+          </div>
+          <div style="height:7px;background:#E8DFD0;border-radius:4px;overflow:hidden">
+            <div style="width:${buPktPct}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:4px;transition:width .5s"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);text-align:right;margin-top:6px">Bitiş: ${tarihFmt(bitis(o))}</div>
+        </div>
+        <div class="section-title">📆 Haftalık Program</div>
+        <div class="card">${gunHtml}</div>
+      </div>
+      <div>
+        <div class="section-title">🚫 İptal Hakkı</div>
+        <div class="card" style="text-align:center;padding:20px">
+          <div style="font-size:${desk?'40px':'32px'};font-weight:800;color:${kalanIptal===0?'var(--red)':'var(--green)'};font-family:Georgia,serif">${kalanIptal}</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Kalan İptal Hakkı</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">${kulIptal} kullanıldı / ${o.iptal_hakki||1} toplam</div>
+        </div>
       </div>
     </div>
   </div>`;
-
-  document.getElementById('derslerim-c').innerHTML=html+'</div>';
+  document.getElementById('c-dersler').innerHTML=html;
 }
 
 // ── SU TAKİBİ ──
 function renderSu(){
-  const suHedef=getSuHedef();
-  const yuzde=Math.min(100,Math.round(bugunSu/suHedef*100));
-  const pctDeg=`${yuzde*3.6}deg`;
+  if(!OGR)return;
+  const suH=parseInt(localStorage.getItem('su_h_'+OGR._id)||'2000');
+  const pct=Math.min(100,Math.round(bugunSu/suH*100));
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
 
-  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015n-bottom:16px">💧 Su Takibi</div>`;
-
-  // Çember
-  html+=`<div class="card" style="text-align:center;padding:24px 16px">
-    <div style="--pct:${pctDeg}" class="water-circle">
-      <div class="water-inner">
-        <div class="water-val">${bugunSu>=1000?(bugunSu/1000).toFixed(1)+'L':bugunSu+'ml'}</div>
-        <div class="water-lbl">/ ${suHedef>=1000?(suHedef/1000).toFixed(1)+'L':suHedef+'ml'}</div>
+  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>
+    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+      <div>
+        <div class="card" style="text-align:center;padding:24px 16px">
+          <div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--blue) ${pct*3.6}deg, var(--bg3) ${pct*3.6}deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <div class="water-inner">
+              <div class="water-val">${bugunSu>=1000?(bugunSu/1000).toFixed(1)+'L':bugunSu+'ml'}</div>
+              <div class="water-lbl">/ ${suH>=1000?(suH/1000).toFixed(1)+'L':suH+'ml'}</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">${pct>=100?'🎉 Hedefe ulaştınız!':pct>=75?'💪 Çok yaklaştınız!':pct>=50?'🙂 Yarısını geçtiniz!':'💧 Su içmeye devam!'}</div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            ${[150,200,250,500].map(ml=>`<button onclick="suEkle(${ml})" style="padding:9px 14px;border-radius:99px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);cursor:pointer;font-size:12px;font-weight:700">+${ml}ml</button>`).join('')}
+          </div>
+          ${bugunSu>0?`<button onclick="suSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">↺ Sıfırla</button>`:''}
+        </div>
+      </div>
+      <div>
+        <div class="section-title">⚙️ Günlük Hedef</div>
+        <div class="card">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${[1500,2000,2500,3000].map(h=>`<button onclick="setHedef(${h})" class="btn-sm" style="${suH===h?'background:var(--blue);color:#fff;border-color:var(--blue)':''}">${h>=1000?(h/1000).toFixed(1)+'L':h+'ml'}</button>`).join('')}
+          </div>
+        </div>
+        <div class="section-title">📊 Son 7 Gün</div>
+        <div class="card">
+          <div style="display:flex;align-items:flex-end;gap:5px;height:90px;margin-bottom:8px">
+            ${Array.from({length:7},(_,i)=>{
+              const d=new Date();d.setDate(d.getDate()-(6-i));
+              const k=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+              const val=suData[k]||0;
+              const h2=suH>0?Math.round((val/suH)*80):0;
+              return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="width:100%;height:${h2}px;min-height:2px;background:${val>=suH?'var(--blue)':'var(--blue-bg)'};border-radius:3px 3px 0 0;border:1px solid var(--blue-border)"></div>
+                <div style="font-size:9px;color:${i===6?'var(--blue)':'var(--text3)'}">${GUNLER[d.getDay()]}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
       </div>
     </div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:16px">${
-      yuzde>=100?'🎉 Günlük hedefinize ulaştınız!':
-      yuzde>=75?'💪 Çok yaklaştınız, devam!':
-      yuzde>=50?'🙂 Yarısını geçtiniz!':
-      '💧 Su içmeye devam!'
-    }</div>
-    <div class="water-btns">
-      <div class="water-btn" onclick="suEkle(150)">+150ml</div>
-      <div class="water-btn" onclick="suEkle(200)">+200ml</div>
-      <div class="water-btn" onclick="suEkle(250)">+250ml ☕</div>
-      <div class="water-btn" onclick="suEkle(500)">+500ml 🍶</div>
-    </div>
-    ${bugunSu>0?`<button onclick="suSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">Sıfırla</button>`:''}
   </div>`;
-
-  // Hedef ayarla
-  html+=`<div class="section-title">⚙️ Günlük Hedef</div>
-  <div class="card">
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      ${[1500,2000,2500,3000].map(h=>`<button onclick="setHedef(${h})" class="btn-sm" style="${suHedef===h?'background:var(--blue);color:#fff;border-color:var(--blue)':''}">${h>=1000?(h/1000).toFixed(1)+'L':h+'ml'}</button>`).join('')}
-    </div>
-  </div>`;
-
-  // Son 7 gün
-  html+=`<div class="section-title">📊 Son 7 Gün</div>
-  <div class="card">`;
-  const maxSu=Math.max(suHedef,...Array.from({length:7},(_,i)=>{
-    const d=new Date();d.setDate(d.getDate()-i);
-    const k=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    return suData[k]||0;
-  }));
-  html+=`<div style="display:flex;align-items:flex-end;gap:4px;height:80px;margin-bottom:8px">`;
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const k=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    const val=suData[k]||0;
-    const h=maxSu>0?Math.round((val/maxSu)*70):0;
-    const bugun=i===0;
-    html+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-      <div style="width:100%;height:${h}px;min-height:2px;background:${val>=suHedef?'var(--blue)':'var(--blue-bg)'};border-radius:4px 4px 0 0;border:1px solid var(--blue-border)"></div>
-      <div style="font-size:9px;color:${bugun?'var(--blue)':'var(--text3)'}">${GUNLER[d.getDay()]}</div>
-    </div>`;
-  }
-  html+=`</div></div>`;
-
-  document.getElementById('su-c').innerHTML=html+'</div>';
-  // CSS değişkenini güncelle
-  document.querySelectorAll('.water-circle').forEach(el=>{
-    el.style.setProperty('--pct',pctDeg);
-    el.style.background=`conic-gradient(var(--blue) ${pctDeg}, var(--bg3) ${pctDeg})`;
-  });
+  document.getElementById('c-su').innerHTML=html;
 }
 
-function getSuHedef(){return parseInt(localStorage.getItem('ds_su_hedef_'+(ogrenci?._id||'x'))||'2000');}
-function setHedef(h){localStorage.setItem('ds_su_hedef_'+(ogrenci?._id||'x'),h);renderSu();}
+function setHedef(h){localStorage.setItem('su_h_'+OGR._id,h);renderSu();}
 function suEkle(ml){
   bugunSu+=ml;
-  if(!ogrenci)return;
-  suData[todayStr()]=bugunSu;
-  localStorage.setItem('ds_su_'+ogrenci._id,JSON.stringify(suData));
-  renderSu();renderAnasayfa();
+  if(!OGR)return;
+  suData[bugun()]=bugunSu;
+  localStorage.setItem('su_'+OGR._id,JSON.stringify(suData));
+  renderSu();renderAna();
 }
 function suSifirla(){
   bugunSu=0;
-  if(!ogrenci)return;
-  suData[todayStr()]=0;
-  localStorage.setItem('ds_su_'+ogrenci._id,JSON.stringify(suData));
-  renderSu();renderAnasayfa();
+  if(!OGR)return;
+  suData[bugun()]=0;
+  localStorage.setItem('su_'+OGR._id,JSON.stringify(suData));
+  renderSu();renderAna();
 }
 
-// ── ADET DÖNGÜSÜ ──
-function getDonguDurumu(){
-  const bas=donguData.baslangiclar||[];
-  if(!bas.length) return {baslik:'Henüz kayıt yok',aciklama:'Döngünüzü başlatmak için + butonuna basın',badge:'b-blue',gun:'—'};
-  const sonBas=new Date(bas[bas.length-1]);
-  const bugun=new Date();
-  const gecenGun=Math.floor((bugun-sonBas)/864e5)+1;
+// ── DÖNGÜ ──
+function donguDurum(){
+  const bas=donguData.bas||[];
+  if(!bas.length)return {baslik:'Henüz kayıt yok',aciklama:'Döngünüzü başlatmak için butona basın',badge:'b-blue',gun:'—'};
+  const son=new Date(bas[bas.length-1]);
+  const gecen=Math.floor((new Date()-son)/864e5)+1;
   const uzunluk=donguData.uzunluk||28;
-  const donemGun=((gecenGun-1)%uzunluk)+1;
-
-  if(donemGun<=5) return {baslik:'Adet Dönemi',aciklama:`${donemGun}. gün — ${6-donemGun} gün daha`,badge:'b-pink',gun:`${donemGun}. gün`};
-  if(donemGun<=13) return {baslik:'Folliküler Dönem',aciklama:'Enerji artıyor, egzersiz için harika!',badge:'b-green',gun:`${donemGun}. gün`};
-  if(donemGun===14) return {baslik:'Ovülasyon',aciklama:'Zirve enerji günü! 🌟',badge:'b-yellow',gun:'Ovülasyon'};
-  if(donemGun<=28) return {baslik:'Luteal Dönem',aciklama:`${uzunluk-donemGun+1} gün sonra yeni döngü`,badge:'b-purple',gun:`${donemGun}. gün`};
-  return {baslik:'Döngü bekleniyor',aciklama:'Yeni adet yaklaşıyor',badge:'b-pink',gun:'Yakında'};
+  const gun=((gecen-1)%uzunluk)+1;
+  if(gun<=5)return {baslik:'Adet Dönemi',aciklama:`${gun}. gün`,badge:'b-pink',gun:`${gun}. gün`};
+  if(gun<=13)return {baslik:'Foliküler Dönem',aciklama:'Enerji artıyor!',badge:'b-green',gun:`${gun}. gün`};
+  if(gun===14)return {baslik:'Ovülasyon',aciklama:'Zirve enerji günü! 🌟',badge:'b-yellow',gun:'Ovülasyon'};
+  return {baslik:'Luteal Dönem',aciklama:`${uzunluk-gun+1} gün sonra yeni döngü`,badge:'b-purple',gun:`${gun}. gün`};
 }
 
 function renderDongu(){
-  if(!ogrenci)return;
-  const bas=donguData.baslangiclar||[];
+  if(!OGR)return;
+  const bas=donguData.bas||[];
   const uzunluk=donguData.uzunluk||28;
-  const ozet=getDonguDurumu();
+  const ozet=donguDurum();
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
+  const t=new Date();
 
-  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015margin-bottom:16px">🌸 Döngü Takibi</div>`;
-
-  // Durum kartı
-  html+=`<div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:20px">
-    <div style="font-size:32px;margin-bottom:8px">🌸</div>
-    <div style="font-size:18px;font-weight:800;margin-bottom:4px">${ozet.baslik}</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:12px">${ozet.aciklama}</div>
-    <span class="badge ${ozet.badge}">${ozet.gun}</span>
-  </div>`;
-
-  // Bu ayın takvimi
-  const bugun=new Date();
-  const ayBaslangic=new Date(bugun.getFullYear(),bugun.getMonth(),1);
-  const ayBitis=new Date(bugun.getFullYear(),bugun.getMonth()+1,0);
-
-  html+=`<div class="section-title">📅 Bu Ay</div>
-  <div class="card">
-  <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;font-size:11px;color:var(--text2)">
-    <span><span class="legend-dot" style="background:var(--pink)"></span>Adet</span>
-    <span><span class="legend-dot" style="background:var(--green)"></span>Foliküler</span>
-    <span><span class="legend-dot" style="background:var(--yellow)"></span>Ovülasyon</span>
-    <span><span class="legend-dot" style="background:var(--purple)"></span>Luteal</span>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px">
-    ${GUNLER.map(g=>`<div style="text-align:center;font-size:10px;color:var(--text3);padding:2px">${g}</div>`).join('')}`;
-
-  // Boş günler
-  for(let i=0;i<ayBaslangic.getDay();i++) html+=`<div></div>`;
-
-  for(let d=1;d<=ayBitis.getDate();d++){
-    const tarih=new Date(bugun.getFullYear(),bugun.getMonth(),d);
-    const isToday=d===bugun.getDate();
-
-    // Döngü gününü hesapla
-    let donguGun=null,donguFaz=null;
-    if(bas.length>0){
-      const sonBas=new Date(bas[bas.length-1]);
-      const gecen=Math.floor((tarih-sonBas)/864e5)+1;
-      donguGun=((gecen-1)%uzunluk)+1;
-      if(donguGun<=5)donguFaz='period';
-      else if(donguGun<=13)donguFaz='fertile';
-      else if(donguGun===14)donguFaz='ovulation';
-      else donguFaz='luteal';
-    }
-
-    const bg=donguFaz==='period'?'var(--pink-bg)':donguFaz==='fertile'?'var(--green-bg)':donguFaz==='ovulation'?'var(--yellow-bg)':donguFaz==='luteal'?'var(--purple-bg)':'var(--card2)';
-    const tc=donguFaz==='period'?'var(--pink)':donguFaz==='fertile'?'var(--green)':donguFaz==='ovulation'?'var(--yellow)':donguFaz==='luteal'?'var(--purple)':'var(--text2)';
-
-    html+=`<div style="aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:${isToday?'800':'500'};background:${bg};color:${tc};border:${isToday?'2px solid var(--purple)':'1px solid transparent'}">${d}</div>`;
-  }
-
-  html+=`</div></div>`;
-
-  // Yeni döngü başlat
-  html+=`<div class="section-title">⚙️ Döngü Ayarları</div>
-  <div class="card">
-    <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguBaslat()">
-      🩸 Bugün Adet Başladı
-    </button>
-    <div class="row" style="margin-bottom:10px">
-      <input type="date" id="gecmis-dongu-tarih" value="${todayStr()}" style="flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card2);color:var(--text);font-size:13px">
-      <button class="btn-sm b-pink" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)" onclick="donguGecmisEkle()">
-        🩸 Geçmiş Tarihe Ekle
-      </button>
+  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Döngü Takibi</div>
+    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+      <div>
+        <div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:24px">
+          <div style="font-size:36px;margin-bottom:8px">🌸</div>
+          <div style="font-size:${desk?'20px':'17px'};font-weight:800;margin-bottom:4px">${ozet.baslik}</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:12px">${ozet.aciklama}</div>
+          <span class="badge ${ozet.badge}">${ozet.gun}</span>
+        </div>
+        <div class="section-title">📅 Bu Ay</div>
+        <div class="card">
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;font-size:11px">
+            <span><span class="legend-dot" style="background:var(--pink)"></span>Adet</span>
+            <span><span class="legend-dot" style="background:var(--green)"></span>Foliküler</span>
+            <span><span class="legend-dot" style="background:var(--yellow)"></span>Ovülasyon</span>
+            <span><span class="legend-dot" style="background:var(--purple)"></span>Luteal</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">
+            ${GUNLER.map(g=>`<div style="text-align:center;font-size:9px;color:var(--text3);padding:2px">${g}</div>`).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+            ${(()=>{
+              const ayB=new Date(t.getFullYear(),t.getMonth(),1);
+              const ayS=new Date(t.getFullYear(),t.getMonth()+1,0);
+              let cells='';
+              for(let i=0;i<ayB.getDay();i++)cells+='<div></div>';
+              for(let d=1;d<=ayS.getDate();d++){
+                const tr=new Date(t.getFullYear(),t.getMonth(),d);
+                const bugunG=d===t.getDate();
+                let bg='var(--card2)',tc='var(--text2)',faz=null;
+                if(bas.length){
+                  const son=new Date(bas[bas.length-1]);
+                  const gun2=((Math.floor((tr-son)/864e5))%uzunluk)+1;
+                  if(gun2<=5){faz='period';bg='var(--pink-bg)';tc='var(--pink)';}
+                  else if(gun2<=13){faz='fertile';bg='var(--green-bg)';tc='var(--green)';}
+                  else if(gun2===14){faz='ovulation';bg='var(--yellow-bg)';tc='var(--yellow)';}
+                  else{faz='luteal';bg='var(--purple-bg)';tc='var(--purple)';}
+                }
+                cells+=`<div style="aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:${bugunG?800:500};background:${bg};color:${tc};border:${bugunG?'2px solid var(--purple)':'1px solid transparent'}">${d}</div>`;
+              }
+              return cells;
+            })()}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">⚙️ Döngü Ayarları</div>
+        <div class="card">
+          <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguEkle(bugun())">🩸 Bugün Adet Başladı</button>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <input type="date" id="dongu-tarih" value="${bugun()}" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--card2);color:var(--text);font-size:13px">
+            <button class="btn-sm" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)" onclick="donguEkleGecmis()">🩸 Ekle</button>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <span style="font-size:13px;color:var(--text2)">Döngü uzunluğu:</span>
+            <select onchange="donguUzunluk(parseInt(this.value))" style="margin-left:auto;padding:6px;border:1px solid var(--border);border-radius:8px;background:var(--card2);color:var(--text);font-size:13px">
+              ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>`<option value="${u}" ${u===uzunluk?'selected':''}>${u} gün</option>`).join('')}
+            </select>
+          </div>
+          ${bas.length?`<div style="margin-top:10px"><div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Kayıtlı döngüler:</div>
+            ${[...bas].reverse().slice(0,5).map((tr,i)=>`<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);padding:4px 0">
+              <span>🩸 ${tarihFmt(tr)}</span>
+              <button onclick="donguSil(${bas.length-1-i})" style="background:transparent;border:none;color:var(--red);cursor:pointer;margin-left:auto">✕</button>
+            </div>`).join('')}
+          </div>`:''}
+        </div>
+      </div>
     </div>
-    <div class="row" style="margin-bottom:8px">
-      <span style="font-size:13px;color:var(--text2)">Döngü uzunluğu:</span>
-      <select onchange="donguUzunluk(parseInt(this.value))" style="margin-left:auto;width:80px;padding:6px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card2);color:var(--text);font-size:13px">
-        ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>`<option value="${u}" ${u===uzunluk?'selected':''}>${u} gün</option>`).join('')}
-      </select>
-    </div>
-    ${bas.length>0?`<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">
-      <div style="font-size:12px;font-weight:600;color:var(--text2)">Kayıtlı döngüler:</div>
-      ${[...bas].reverse().slice(0,5).map((t,i)=>`
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3)">
-          <span>🩸 ${new Date(t).toLocaleDateString('tr-TR')}</span>
-          <button onclick="donguSil(${bas.length-1-i})" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:11px;margin-left:auto">✕ Sil</button>
-        </div>`).join('')}
-    </div>`:''}
   </div>`;
-
-  document.getElementById('dongu-c').innerHTML=html;
+  document.getElementById('c-dongu').innerHTML=html;
 }
 
-function donguBaslat(){
-  if(!confirm('Bugün adet başladı olarak kayıt edilsin mi?')) return;
-  donguTarihEkle(todayStr());
+function donguEkle(tarih){
+  if(!donguData.bas)donguData.bas=[];
+  if(donguData.bas.includes(tarih)){alert('Bu tarih zaten kayıtlı!');return;}
+  donguData.bas.push(tarih);
+  donguData.bas.sort();
+  if(donguData.bas.length>24)donguData.bas=donguData.bas.slice(-24);
+  localStorage.setItem('dongu_'+OGR._id,JSON.stringify(donguData));
+  renderDongu();renderAna();
 }
-function donguGecmisEkle(){
-  const tarih=document.getElementById('gecmis-dongu-tarih')?.value;
-  if(!tarih){alert('Tarih seçin!');return;}
-  if(confirm(`${new Date(tarih).toLocaleDateString('tr-TR')} tarihine adet başlangıcı eklensin mi?`)){
-    donguTarihEkle(tarih);
-  }
-}
-function donguTarihEkle(tarih){
-  if(!donguData.baslangiclar)donguData.baslangiclar=[];
-  // Aynı tarihi ekleme
-  if(donguData.baslangiclar.includes(tarih)){alert('Bu tarih zaten kayıtlı!');return;}
-  donguData.baslangiclar.push(tarih);
-  donguData.baslangiclar.sort(); // tarihe göre sırala
-  if(donguData.baslangiclar.length>24)donguData.baslangiclar=donguData.baslangiclar.slice(-24);
-  localStorage.setItem('ds_dongu_'+ogrenci._id,JSON.stringify(donguData));
-  renderDongu();renderAnasayfa();
+function donguEkleGecmis(){
+  const tarih=document.getElementById('dongu-tarih')?.value;
+  if(!tarih)return;
+  if(confirm(tarihFmt(tarih)+' tarihine döngü eklensin mi?'))donguEkle(tarih);
 }
 function donguSil(idx){
-  const tarih=donguData.baslangiclar[idx];
-  if(!confirm(`${new Date(tarih).toLocaleDateString('tr-TR')} döngüsü silinsin mi?`)) return;
-  donguData.baslangiclar.splice(idx,1);
-  localStorage.setItem('ds_dongu_'+ogrenci._id,JSON.stringify(donguData));
-  renderDongu();renderAnasayfa();
+  if(!confirm('Bu döngü kaydı silinsin mi?'))return;
+  donguData.bas.splice(idx,1);
+  localStorage.setItem('dongu_'+OGR._id,JSON.stringify(donguData));
+  renderDongu();renderAna();
 }
-function donguUzunluk(u){
-  donguData.uzunluk=u;
-  localStorage.setItem('ds_dongu_'+ogrenci._id,JSON.stringify(donguData));
-  renderDongu();
-}
+function donguUzunluk(u){donguData.uzunluk=u;localStorage.setItem('dongu_'+OGR._id,JSON.stringify(donguData));renderDongu();}
 
-// ── ÖDEME ──
-function renderOdeme(){
-  if(!ogrenci)return;
-  const o=ogrenci;
-  const kd=efektifKalan(o);
-  const kg=kalanGun(o);
-  const odemeGerekli=kd<=3||kg<0||!o.ilkOdemeAlindi||o.borc>0;
-
-  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div le="font-size:17px;font-weight:700;margin-bottom:16px">💳 Ödeme</div>`;
-
-  // Paket özeti
-  html+=`<div class="odeme-card">
-    <div style="font-size:13px;color:var(--text2)">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} Paketi</div>
-    <div class="odeme-tutar">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
-    <div style="font-size:13px;color:var(--text2)">${o.paket} ders / ay</div>
-    ${o.borc>0?`<div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ ${o.borc} ders borcunuz var, paket açılınca düşülür</div>`:''}
-  </div>`;
-
-  if(o.odemeBekliyor){
-    html+=`<div class="alert a-yellow">
-      ⏳ Ödeme bildiriminiz stüdyoya iletildi. Onaylanınca paketiniz açılacak.
-    </div>`;
-  } else if(odemeGerekli){
-    html+=`<div class="alert a-red">
-      ${kd<=3&&kd>0?`⚠️ Son ${kd} dersiniz kaldı.`:kg<0?'❌ Paket süreniz doldu.':'💳 Ödeme bekleniyor.'}
-      Ödeme yaparak paketinizi yenileyebilirsiniz.
-    </div>`;
-  } else {
-    html+=`<div class="alert a-green">✓ Paketiniz aktif. ${kd} ders, ${Math.max(0,kg)} gün kaldı.</div>`;
-  }
-
-  // Ödedim bildirimi
-  html+=`<div class="card">
-    <div style="font-weight:700;font-size:15px;margin-bottom:8px">Ödeme Yaptım Bildirimi</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">
-      Havale/EFT yaptıktan sonra aşağıdaki butona basın. Stüdyonuz onaylayınca paketiniz otomatik açılacak.
-    </div>
-    <div style="background:var(--bg3);border:1px solid var(--gold-border);border-radius:var(--radius);padding:16px;margin-bottom:14px">
-      <div style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:10px">ÖDEME BİLGİLERİ</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:13px;color:var(--text2)">Alıcı</span>
-        <span style="font-size:13px;font-weight:700;color:var(--text)">Merve Duman</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:13px;color:var(--text2)">Banka</span>
-        <span style="font-size:13px;font-weight:600">Garanti Bankası</span>
-      </div>
-      <div style="background:var(--card2);border-radius:var(--radius-sm);padding:10px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">IBAN</div>
-        <div style="font-size:15px;font-weight:800;letter-spacing:1px;color:var(--gold)" id="iban-text">TR35 0006 2000 3330 0006 8099 60</div>
-        <button onclick="ibanKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 IBAN Kopyala</button>
-      </div>
-      <div style="background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:var(--radius-sm);padding:10px">
-        <div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:6px">⚠️ AÇIKLAMA ZORUNLU</div>
-        <div style="font-size:13px;color:var(--text);font-weight:600">${o.ad} - ${o.tur==='ems'?'EMS':'Pilates'} - ${new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'})}</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:4px">Havale açıklamasına yukarıdakini yazın</div>
-        <button onclick="aciklamaKopyala('${o.ad} - ${o.tur==='ems'?'EMS':'Pilates'} - ${new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'})}')" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Açıklamayı Kopyala</button>
-      </div>
-    </div>
-    <button class="btn btn-primary" style="width:100%" onclick="odemeyaptimBildir()" ${o.odemeBekliyor?'disabled':''}>
-      ${o.odemeBekliyor?'⏳ Bildirim İletildi':'✓ Ödeme Yaptım — Stüdyoya Bildir'}
-    </button>
-  </div>`;
-
-  // Geçmiş
-  html+=`<div class="section-title">📊 Paket Bilgileri</div>
-  <div class="card">
-    <div class="row" style="margin-bottom:8px">
-      <span style="font-size:13px;color:var(--text2)">Paket başlangıcı</span>
-      <span style="font-size:13px;font-weight:600">${o.baslangic?new Date(o.baslangic).toLocaleDateString('tr-TR'):'—'}</span>
-    </div>
-    <div class="row" style="margin-bottom:8px">
-      <span style="font-size:13px;color:var(--text2)">Paket bitişi</span>
-      <span style="font-size:13px;font-weight:600">${o.baslangic?getBitis(o).toLocaleDateString('tr-TR'):'—'}</span>
-    </div>
-    <div class="row">
-      <span style="font-size:13px;color:var(--text2)">Kalan ders</span>
-      <span style="font-size:13px;font-weight:700;color:${barC(kd)}">${kd} / ${o.paket}</span>
-    </div>
-  </div>`;
-
-  document.getElementById('odeme-c').innerHTML=html+'</div>';
-}
-
-// ── ÖĞRENCİ ÖLÇÜMLER ──
-async function renderOlcumlerim(){
-  const el=document.getElementById('olcumlerim-c');
-  if(!ogrenci){el.innerHTML='';return;}
+// ── ÖLÇÜMLER ──
+async function renderOlcum(){
+  if(!OGR)return;
+  const el=document.getElementById('c-olcum');
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
   let olcumler=[];
   try{
-    const {data,error}=await sb.from('olcumler').select('*')
-      .eq('ogrenci_id',ogrenci._id).order('tarih',{ascending:true});
-    if(!error) olcumler=data||[];
+    const {data,error}=await sb.from('olcumler').select('*').eq('ogrenci_id',OGR._id).order('tarih',{ascending:true});
+    if(!error)olcumler=data||[];
   }catch(e){}
 
-  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015;margin-bottom:16px">📏 Ölçümlerim</div>`;
+  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">📏 Ölçümlerim</div>`;
 
   if(!olcumler.length){
-    html+=`<div class="alert a-blue">Henüz ölçüm kaydınız yok. Stüdyonuz ölçüm yaptıktan sonra burada görünecek.</div>`;
-    el.innerHTML=html+'</div>';return;
+    html+=`<div class="alert a-blue">Henüz ölçüm kaydınız yok. Stüdyonuz ölçüm yaptıktan sonra burada görünecek.</div></div>`;
+    el.innerHTML=html;return;
   }
 
   const son=olcumler[olcumler.length-1];
   const ilk=olcumler[0];
 
-  // Son ölçüm özeti
-  html+=`<div class="card" style="background:linear-gradient(135deg,rgba(29,185,122,.1),rgba(139,92,246,.08));border-color:var(--green-border)">
-    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px">Son Ölçüm — ${new Date(son.tarih).toLocaleDateString('tr-TR')}</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
-      ${son.kilo?`<div><div style="font-size:22px;font-weight:800">${son.kilo}</div><div style="font-size:11px;color:var(--text2)">Kilo (kg)</div></div>`:''}
-      ${son.yag_yuzdesi?`<div><div style="font-size:22px;font-weight:800;color:var(--yellow)">${son.yag_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Yağ</div></div>`:''}
-      ${son.kas_yuzdesi?`<div><div style="font-size:22px;font-weight:800;color:var(--blue)">${son.kas_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Kas</div></div>`:''}
-      ${son.bmi?`<div><div style="font-size:22px;font-weight:800">${son.bmi}</div><div style="font-size:11px;color:var(--text2)">BMI</div></div>`:''}
-      ${son.su_yuzdesi?`<div><div style="font-size:22px;font-weight:800;color:var(--blue)">${son.su_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Su</div></div>`:''}
-    </div>
-  </div>`;
-
-  // İlerleme
-  if(olcumler.length>1){
-    const kiloFark=((son.kilo||0)-(ilk.kilo||0)).toFixed(1);
-    const yagFark=son.yag_yuzdesi&&ilk.yag_yuzdesi?((son.yag_yuzdesi)-(ilk.yag_yuzdesi)).toFixed(1):null;
-    html+=`<div class="section-title">📈 İlerleme</div>
-    <div class="card">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">
-        ${new Date(ilk.tarih).toLocaleDateString('tr-TR')} → ${new Date(son.tarih).toLocaleDateString('tr-TR')}
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="metric" style="text-align:center">
-          <div style="font-size:20px;font-weight:800;color:${kiloFark<0?'var(--green)':kiloFark>0?'var(--red)':'var(--text)'}">
-            ${kiloFark>0?'+':''}${kiloFark} kg
-          </div>
-          <div style="font-size:11px;color:var(--text2)">Kilo değişimi</div>
+  html+=`<div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+    <div>
+      <div class="card" style="background:linear-gradient(135deg,var(--green-bg),var(--blue-bg));border-color:var(--green-border)">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px">Son Ölçüm — ${tarihFmt(son.tarih)}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
+          ${son.kilo?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800">${son.kilo}</div><div style="font-size:11px;color:var(--text2)">Kilo (kg)</div></div>`:''}
+          ${son.yag_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--yellow)">${son.yag_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Yağ</div></div>`:''}
+          ${son.kas_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--blue)">${son.kas_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Kas</div></div>`:''}
+          ${son.bmi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800">${son.bmi}</div><div style="font-size:11px;color:var(--text2)">BMI</div></div>`:''}
+          ${son.su_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--blue)">${son.su_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Su</div></div>`:''}
         </div>
-        ${yagFark!==null?`<div class="metric" style="text-align:center">
-          <div style="font-size:20px;font-weight:800;color:${yagFark<0?'var(--green)':yagFark>0?'var(--red)':'var(--text)'}">
-            ${yagFark>0?'+':''}${yagFark}%
-          </div>
-          <div style="font-size:11px;color:var(--text2)">Yağ değişimi</div>
-        </div>`:''}
       </div>
-    </div>`;
-  }
-
-  // Grafik
-  const son8=olcumler.slice(-8);
-  const maxK=Math.max(...son8.map(x=>x.kilo||0),1);
-  html+=`<div class="section-title">📊 Kilo Grafiği</div>
-  <div class="card">
-    <div style="display:flex;align-items:flex-end;gap:5px;height:100px;margin-bottom:6px">
-      ${son8.map(o=>{
-        const h=Math.round(((o.kilo||0)/maxK)*90);
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
-          <div style="width:100%;height:${h}px;background:var(--pilates);border-radius:4px 4px 0 0;min-height:2px"></div>
-          <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
+      ${olcumler.length>1?(()=>{
+        const kF=((son.kilo||0)-(ilk.kilo||0)).toFixed(1);
+        return `<div class="section-title">📈 İlerleme</div>
+        <div class="card">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${tarihFmt(ilk.tarih)} → ${tarihFmt(son.tarih)}</div>
+          <div style="font-size:${desk?'28px':'24px'};font-weight:800;color:${kF<0?'var(--green)':kF>0?'var(--red)':'var(--text)'};font-family:Georgia,serif;text-align:center">
+            ${kF>0?'+':''}${kF} kg
+          </div>
+          <div style="font-size:12px;color:var(--text2);text-align:center">kilo değişimi</div>
         </div>`;
-      }).join('')}
+      })():''}
+      <div class="section-title">📋 Tüm Ölçümler</div>
+      <div class="card" style="overflow-x:auto;padding:8px">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead><tr style="border-bottom:1px solid var(--border)">
+            <th style="padding:7px;text-align:left;color:var(--text2)">Tarih</th>
+            <th style="padding:7px;text-align:center;color:var(--text2)">Kilo</th>
+            <th style="padding:7px;text-align:center;color:var(--text2)">Yağ%</th>
+            <th style="padding:7px;text-align:center;color:var(--text2)">Kas%</th>
+            <th style="padding:7px;text-align:center;color:var(--text2)">BMI</th>
+          </tr></thead><tbody>
+          ${[...olcumler].reverse().map(o=>`<tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:7px">${tarihFmt(o.tarih)}</td>
+            <td style="padding:7px;text-align:center;font-weight:600">${o.kilo||'—'}</td>
+            <td style="padding:7px;text-align:center;color:var(--yellow)">${o.yag_yuzdesi?o.yag_yuzdesi+'%':'—'}</td>
+            <td style="padding:7px;text-align:center;color:var(--blue)">${o.kas_yuzdesi?o.kas_yuzdesi+'%':'—'}</td>
+            <td style="padding:7px;text-align:center">${o.bmi||'—'}</td>
+          </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">📊 Kilo Grafiği</div>
+      <div class="card">
+        <div style="display:flex;align-items:flex-end;gap:5px;height:100px;margin-bottom:6px">
+          ${olcumler.slice(-8).map(o=>{
+            const maxK=Math.max(...olcumler.slice(-8).map(x=>x.kilo||0),1);
+            const h2=Math.round(((o.kilo||0)/maxK)*90);
+            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
+              <div style="width:100%;height:${h2}px;background:var(--gold-dark);border-radius:3px 3px 0 0;min-height:2px"></div>
+              <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  </div></div>`;
+  el.innerHTML=html;
+}
+
+// ── ÖDEME ──
+function renderOdeme(){
+  if(!OGR)return;
+  const o=OGR;
+  const kd=kalanDers(o);
+  const kg=kalanGun(o);
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
+
+  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">💳 Ödeme</div>
+    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+      <div>
+        <div style="background:linear-gradient(135deg,var(--gold-bg),rgba(148,108,24,.05));border:1px solid var(--gold-border);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--text2)">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} Paketi</div>
+          <div style="font-size:${desk?'38px':'32px'};font-weight:800;color:var(--gold-dark);font-family:Georgia,serif;margin:8px 0">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
+          <div style="font-size:13px;color:var(--text2)">${o.paket} ders / ay</div>
+          ${o.borc>0?`<div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ ${o.borc} ders borcunuz var</div>`:''}
+        </div>
+        ${o.odemeBekliyor?`<div class="alert a-yellow">⏳ Bildiriminiz iletildi. Onaylanınca paket açılacak.</div>`:
+          kd<=3?`<div class="alert a-red">⚠️ Son ${kd} dersiniz kaldı. Ödeme yaparak yenileyebilirsiniz.</div>`:
+          `<div class="alert a-green">✓ Paketiniz aktif. ${kd} ders, ${Math.max(0,kg)} gün kaldı.</div>`}
+        <div class="card">
+          <div style="font-size:${desk?'16px':'15px'};font-weight:700;margin-bottom:8px">Ödeme Yaptım Bildirimi</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Havale/EFT yaptıktan sonra aşağıdaki butona basın. Stüdyonuz onaylayınca paketiniz açılır.</div>
+          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:10px;font-weight:600;color:var(--gold-dark);letter-spacing:1px;margin-bottom:8px">ÖDEME BİLGİLERİ</div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--text2)">Alıcı</span><span style="font-size:13px;font-weight:700">Merve Duman</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Banka</span><span style="font-size:13px;font-weight:600">Garanti Bankası</span></div>
+            <div style="background:white;border-radius:8px;padding:10px;margin-bottom:8px">
+              <div style="font-size:10px;color:var(--text2);margin-bottom:4px">IBAN</div>
+              <div style="font-size:${desk?'15px':'13px'};font-weight:800;color:var(--gold-dark)">TR35 0006 2000 3330 0006 8099 60</div>
+              <button onclick="ibanKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>
+            </div>
+            <div style="background:var(--gold-bg);border-radius:8px;padding:10px;border:1px solid var(--gold-border)">
+              <div style="font-size:10px;font-weight:600;color:var(--gold-dark);margin-bottom:4px">⚠️ Açıklama Zorunlu</div>
+              <div style="font-size:13px;font-weight:600" id="odeme-aciklama">${o.ad} - ${o.tur==='ems'?'EMS':'Pilates'} - ${new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'})}</div>
+              <button onclick="aciklamaKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="odemeBildir()" ${o.odemeBekliyor?'disabled':''}>
+            ${o.odemeBekliyor?'⏳ Bildirim İletildi':'✓ Ödeme Yaptım — Stüdyoya Bildir'}
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">📊 Paket Bilgileri</div>
+        <div class="card">
+          <div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Başlangıç</span><span style="font-weight:600;margin-left:auto">${tarihFmt(o.baslangic)}</span></div>
+          <div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Bitiş</span><span style="font-weight:600;margin-left:auto">${tarihFmt(bitis(o))}</span></div>
+          <div class="row"><span style="color:var(--text2)">Kalan ders</span><span style="font-weight:700;color:${barRenk(kd)};margin-left:auto">${kd} / ${o.paket}</span></div>
+        </div>
+      </div>
     </div>
   </div>`;
-
-  // Geçmiş tablo
-  html+=`<div class="section-title">📋 Tüm Ölçümler</div>
-  <div class="card" style="overflow-x:auto;padding:8px">
-    <table style="width:100%;font-size:12px;border-collapse:collapse">
-      <thead><tr style="border-bottom:1px solid var(--border)">
-        <th style="padding:6px;text-align:left;color:var(--text2)">Tarih</th>
-        <th style="padding:6px;text-align:center;color:var(--text2)">Kilo</th>
-        <th style="padding:6px;text-align:center;color:var(--text2)">Yağ%</th>
-        <th style="padding:6px;text-align:center;color:var(--text2)">Kas%</th>
-        <th style="padding:6px;text-align:center;color:var(--text2)">BMI</th>
-      </tr></thead><tbody>
-      ${[...olcumler].reverse().map(o=>`
-        <tr style="border-bottom:1px solid var(--border2)">
-          <td style="padding:6px">${new Date(o.tarih).toLocaleDateString('tr-TR')}</td>
-          <td style="padding:6px;text-align:center;font-weight:600">${o.kilo||'-'}</td>
-          <td style="padding:6px;text-align:center;color:var(--yellow)">${o.yag_yuzdesi?o.yag_yuzdesi+'%':'-'}</td>
-          <td style="padding:6px;text-align:center;color:var(--blue)">${o.kas_yuzdesi?o.kas_yuzdesi+'%':'-'}</td>
-          <td style="padding:6px;text-align:center">${o.bmi||'-'}</td>
-        </tr>`).join('')}
-      </tbody>
-    </table>
-  </div>`;
-
-  el.innerHTML=html;
+  document.getElementById('c-odeme').innerHTML=html;
 }
 
 function ibanKopyala(){
   navigator.clipboard.writeText('TR350006200033300006809960')
     .then(()=>alert('✅ IBAN kopyalandı!'))
-    .catch(()=>{
-      const el=document.getElementById('iban-text');
-      const range=document.createRange();
-      range.selectNode(el);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-      document.execCommand('copy');
-      alert('✅ IBAN kopyalandı!');
-    });
+    .catch(()=>alert('TR350006200033300006809960'));
 }
-function aciklamaKopyala(metin){
+function aciklamaKopyala(){
+  const el=document.getElementById('odeme-aciklama');
+  const metin=el?el.textContent:'';
   navigator.clipboard.writeText(metin)
     .then(()=>alert('✅ Açıklama kopyalandı!'))
-    .catch(()=>alert('Açıklamayı manuel kopyalayın:\n'+metin));
+    .catch(()=>alert(metin));
 }
-async function odemeyaptimBildir(){
-  if(!ogrenci)return;
-  if(!confirm('Ödeme yapıldı olarak stüdyoya bildirilsin mi?')) return;
-  gosterLoading();
+async function odemeBildir(){
+  if(!OGR)return;
+  if(!confirm('Ödeme yapıldı olarak stüdyoya bildirilsin mi?'))return;
+  yukluYap(true);
   try{
-    const {error}=await sb.from('ogrenciler').update({odeme_bekliyor:true}).eq('id',ogrenci._id);
+    const {error}=await sb.from('ogrenciler').update({odeme_bekliyor:true}).eq('id',OGR._id);
     if(error)throw error;
-    ogrenci.odemeBekliyor=true;
-    alert('✅ Bildiriminiz stüdyoya iletildi!\nOnaylanınca paketiniz açılacak.');
-    renderOdeme();renderAnasayfa();
+    OGR.odemeBekliyor=true;
+    alert('✅ Bildiriminiz stüdyoya iletildi!');
+    renderOdeme();renderAna();
   }catch(e){alert('Hata: '+e.message);}
-  gizleLoading();
+  yukluYap(false);
 }
-
-headerTarih();
-function headerTarih(){
-  const t=new Date();
-  const s=`${GUNLER[t.getDay()]} ${t.getDate()} ${AYLAR_F[t.getMonth()]} ${t.getFullYear()}`;
-  const el=document.getElementById('header-sub');
-  if(el&&ogrenci)el.textContent=ogrenci.ad;
-}
-
 </script>
 </body>
 </html>
