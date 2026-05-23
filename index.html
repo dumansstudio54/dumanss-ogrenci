@@ -220,7 +220,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="snav-btn act" id="sd-ana" onclick="sp('ana')">🏠 Ana Sayfa</button>
     <button class="snav-btn" id="sd-dersler" onclick="sp('dersler')">📅 Derslerim</button>
     <button class="snav-btn" id="sd-su" onclick="sp('su')">💧 Su Takibi</button>
-    <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Döngü</button>
+    <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Regl Takibi</button>
     <button class="snav-btn" id="sd-olcum" onclick="sp('olcum')">📏 Ölçümlerim</button>
     <button class="snav-btn" id="sd-odeme" onclick="sp('odeme')">💳 Ödeme</button>
     <div style="flex:1"></div>
@@ -246,7 +246,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="nav-btn active" id="nb-ana" onclick="sp('ana')"><div style="font-size:18px">🏠</div><div>Ana</div></button>
     <button class="nav-btn" id="nb-dersler" onclick="sp('dersler')"><div style="font-size:18px">📅</div><div>Dersler</div></button>
     <button class="nav-btn" id="nb-su" onclick="sp('su')"><div style="font-size:18px">💧</div><div>Su</div></button>
-    <button class="nav-btn" id="nb-dongu" onclick="sp('dongu')"><div style="font-size:18px">🌸</div><div>Döngü</div></button>
+    <button class="nav-btn" id="nb-dongu" onclick="sp('dongu')"><div style="font-size:18px">🌸</div><div>Regl Takibi</div></button>
     <button class="nav-btn" id="nb-olcum" onclick="sp('olcum')"><div style="font-size:18px">📏</div><div>Ölçüm</div></button>
     <button class="nav-btn" id="nb-odeme" onclick="sp('odeme')"><div style="font-size:18px">💳</div><div>Ödeme</div></button>
   </nav>
@@ -501,7 +501,7 @@ function renderAna(){
           ${haftaHtml}
         </div>
         <div class="card">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Döngü</div>
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Takibi</div>
           <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?donguGun+'. gün':'Henüz kayıt yok'}</div>
           ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${tarihFmt(sonDongu)}</div>`:''}
           <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Döngü Başlat'}</button>
@@ -668,7 +668,7 @@ function suSifirla(){
   renderSu();renderAna();
 }
 
-// ── DÖNGÜ ──
+// ── REGL DÖNGÜ ──
 function donguDurum(){
   const bas=donguData.bas||[];
   if(!bas.length)return {baslik:'Henüz kayıt yok',aciklama:'Döngünüzü başlatmak için butona basın',badge:'b-blue',gun:'—'};
@@ -692,7 +692,7 @@ function renderDongu(){
   const t=new Date();
 
   let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Döngü Takibi</div>
+    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Regl Döngüsü Takibi</div>
     <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
       <div>
         <div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:24px">
@@ -738,7 +738,7 @@ function renderDongu(){
         </div>
       </div>
       <div>
-        <div class="section-title">⚙️ Döngü Ayarları</div>
+        <div class="section-title">⚙️ Regl Döngü Ayarları</div>
         <div class="card">
           <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguEkle(bugun())">🩸 Bugün Adet Başladı</button>
           <div style="display:flex;gap:8px;margin-bottom:10px">
