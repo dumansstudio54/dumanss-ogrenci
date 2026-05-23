@@ -59,11 +59,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .nav-icon{font-size:20px}
 
 /* PAGES */
-.page{display:none;padding:0;width:100%}
+.page{display:none;padding:16px;max-width:600px;margin:0 auto}
 .page.active{display:block}
-@media(max-width:767px){
-  .page{padding:16px}
-}
 
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
@@ -146,9 +143,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* MOTIVASYON */
 .motivasyon{background:linear-gradient(135deg,rgba(29,185,122,.1),rgba(139,92,246,.1));border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.6;font-style:italic}
 
-/* ── RESPONSIVE DESKTOP ── */
+/* ── RESPONSIVE ── */
 @media(min-width:768px){
-  body{background:#EDE8DC;margin:0;padding:0}
+  body{background:#EDE8DC}
   #main-app{
     max-width:1400px;
     margin:0 auto;
@@ -164,12 +161,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     grid-column:1/-1;
     grid-row:1;
     padding:0 20px;
-    border-bottom:0.5px solid var(--border);
-    background:var(--bg);
-    height:52px;
-    display:flex;
-    align-items:center;
-    z-index:100;
   }
   .side-nav-desk{
     display:flex !important;
@@ -180,7 +171,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     border-right:0.5px solid var(--border);
     background:var(--bg);
     padding:10px 8px;
-    gap:1px;
+    gap:2px;
   }
   .main-pages{
     grid-row:2;
@@ -190,34 +181,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   }
   .bottom-nav{display:none !important}
   .page{padding-bottom:0 !important}
-  .main-pages{scrollbar-width:thin}
   #login-screen{
     position:fixed;top:0;left:0;
     width:100vw;height:100vh;z-index:9998;
   }
 }
 @media(min-width:1200px){
-  #app.show{grid-template-columns:200px 1fr}
+  #main-app{grid-template-columns:220px 1fr;max-width:1600px}
 }
 
-.side-nav-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:var(--radius-sm);
-  background:transparent;border:none;cursor:pointer;
-  color:var(--text2);font-size:13px;font-weight:500;
-  text-align:left;width:100%;transition:all .15s;
-}
-.side-nav-btn:hover{background:var(--card2);color:var(--text)}
-.side-nav-btn.active{background:var(--gold-bg);color:var(--gold-dark);font-weight:600}
-
-/* ── SIDE NAV DESKTOP ── */
-.side-nav-desk{display:none;}
 .snav-btn-d{
-  display:flex;align-items:center;gap:9px;
-  padding:9px 12px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:9px;
   background:transparent;border:none;
   cursor:pointer;color:var(--text2);
-  font-size:12px;font-weight:500;
+  font-size:13px;font-weight:500;
   text-align:left;width:100%;
   transition:all .15s;white-space:nowrap;
 }
@@ -310,14 +288,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   box-sizing: border-box;
 }
 @media(min-width:768px){
-  .main-pages{
-    width:100%;
-    max-width:100% !important;
-  }
-  .main-pages > .page {
-    width:100%;
-    max-width:100% !important;
-  }
   #derslerim-c > div,
   #su-c > div,
   #dongü-c > div,
@@ -326,20 +296,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     padding: 20px 28px !important;
     max-width: 100% !important;
     width: 100% !important;
-  }
-}
-@media(min-width:1200px){
-  /* Derslerim ve diğer sayfalar için geniş grid */
-  .desktop-grid-2{
-    display:grid;
-    grid-template-columns:1fr 380px;
-    gap:28px;
-    align-items:start;
-  }
-  .desktop-grid-3{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:20px;
   }
 }
 </style>
@@ -370,7 +326,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <!-- ANA UYGULAMA - STÜDYO GİBİ YAPI -->
-<div id="main-app">
+<div id="main-app" style="display:none">
 
   <div class="top-bar">
     <div style="width:38px;height:38px;background:white;border-radius:50%;border:1.5px solid #D4C8B0;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(148,108,24,.12);flex-shrink:0">
@@ -638,7 +594,6 @@ function renderAnasayfa(){
   const sonDongu=donguBas.length>0?new Date(donguBas[donguBas.length-1]):null;
   const donguGun=sonDongu?Math.floor((new Date()-sonDongu)/864e5):null;
   const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
 
   // Haftalık program HTML
   const gunSira=[1,2,3,4,5,6,0];
@@ -657,10 +612,10 @@ function renderAnasayfa(){
     const dersAdi = aktif ? (o.tur==='ems' ? '⚡ EMS' : '🧘 Pilates') : '—';
     const saatHtml = aktif ? `<div style="font-size:10px;color:#A89070">${o.saat||''}</div>` : '';
     const bugunBadge = bugun&&aktif ? '<div style="font-size:9px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:2px 8px;border-radius:99px;font-weight:600">Bugün</div>' : '';
-    haftaHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;${borderStyle}">
-      <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;${circleStyle}">${gunIs[gi]}</div>
+    haftaHtml+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;${borderStyle}">
+      <div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;${circleStyle}">${gunIs[gi]}</div>
       <div style="flex:1">
-        <div style="font-size:12px;${aktif?'color:#2A2015;font-weight:500;':'color:#A89070;'}">${dersAdi}</div>
+        <div style="font-size:13px;${aktif?'color:#2A2015;font-weight:500;':'color:#A89070;'}">${dersAdi}</div>
         ${saatHtml}
       </div>
       ${bugunBadge}
@@ -670,84 +625,84 @@ function renderAnasayfa(){
   const el=document.getElementById('anasayfa-c');
 
   let html=`
-  <div style="padding:${isDesktop?'20px 28px':'14px 16px'}">
-    <div style="font-size:${isDesktop?'20px':'18px'};font-weight:700;color:#2A2015;margin-bottom:3px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
-    <div style="font-size:12px;color:#A89070;margin-bottom:14px" class="tarih-lbl"></div>
-    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:18px;font-style:italic;font-size:13px;color:#946C18;line-height:1.7">${motivasyon}</div>
+  <div style="padding:${isDesktop?'24px 32px':'14px 16px'}">
+    <div style="font-size:${isDesktop?'24px':'18px'};font-weight:700;color:#2A2015;margin-bottom:4px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
+    <div style="font-size:${isDesktop?'13px':'12px'};color:#A89070;margin-bottom:16px" class="tarih-lbl"></div>
+    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:${isDesktop?'14px 18px':'12px 14px'};margin-bottom:20px;font-style:italic;font-size:${isDesktop?'14px':'13px'};color:#946C18;line-height:1.8">${motivasyon}</div>
 
-    <div style="display:grid;grid-template-columns:${isWide?'1fr 380px':isDesktop?'1fr 320px':'1fr'};gap:${isDesktop?'28px':'12px'};align-items:start">
+    <div style="display:grid;grid-template-columns:${isDesktop?'1fr 340px':'1fr'};gap:${isDesktop?'28px':'12px'};align-items:start">
       
       <!-- SOL KOLON -->
       <div>
         <!-- Metrik kartlar -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:16px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-            <div style="font-size:10px;color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-weight:500">KALAN DERS</div>
-            <div style="font-size:30px;font-weight:700;color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-family:Georgia,serif;line-height:1;margin-bottom:8px">${kd}</div>
-            <div style="height:5px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin-bottom:6px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:${isDesktop?'16px':'12px'};margin-bottom:${isDesktop?'18px':'14px'}">
+          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'20px':'16px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+            <div style="font-size:${isDesktop?'11px':'10px'};color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:500">KALAN DERS</div>
+            <div style="font-size:${isDesktop?'42px':'30px'};font-weight:700;color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-family:Georgia,serif;line-height:1;margin-bottom:10px">${kd}</div>
+            <div style="height:6px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin-bottom:8px">
               <div style="width:${Math.max(2,100-Math.round(kd/toplamPkt*100))}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px"></div>
             </div>
-            <div style="font-size:10px;color:#A89070">Toplam ${yapilan} yapıldı</div>
+            <div style="font-size:${isDesktop?'12px':'10px'};color:#A89070">Toplam ${yapilan} yapıldı</div>
           </div>
-          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:16px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-            <div style="font-size:10px;color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-weight:500">GÜN KALDI</div>
-            <div style="font-size:30px;font-weight:700;color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-family:Georgia,serif;line-height:1;margin-bottom:8px">${Math.max(0,kg)}</div>
-            ${bitis?`<div style="font-size:10px;color:#A89070">Bitiş: ${bitis.toLocaleDateString('tr-TR')}</div>`:''}
+          <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'20px':'16px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+            <div style="font-size:${isDesktop?'11px':'10px'};color:#A89070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:500">GÜN KALDI</div>
+            <div style="font-size:${isDesktop?'42px':'30px'};font-weight:700;color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-family:Georgia,serif;line-height:1;margin-bottom:10px">${Math.max(0,kg)}</div>
+            ${bitis?`<div style="font-size:${isDesktop?'12px':'10px'};color:#A89070">Bitiş: ${bitis.toLocaleDateString('tr-TR')}</div>`:''}
           </div>
         </div>
 
         <!-- Paket ilerlemesi -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-left:3px solid #946C18;border-radius:0 12px 12px 0;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:13px;font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
-            <div style="font-size:11px;color:#A89070">${buPaketteki} / ${o.paket||20} ders</div>
+        <div style="background:white;border:0.5px solid #E8DFD0;border-left:3px solid #946C18;border-radius:0 14px 14px 0;padding:${isDesktop?'18px':'14px'};margin-bottom:${isDesktop?'16px':'12px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
+            <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070">${buPaketteki} / ${o.paket||20} ders</div>
           </div>
-          <div style="height:6px;background:#E8DFD0;border-radius:3px;overflow:hidden">
-            <div style="width:${buPaketPct}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px;transition:width .5s"></div>
+          <div style="height:8px;background:#E8DFD0;border-radius:4px;overflow:hidden">
+            <div style="width:${buPaketPct}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:4px;transition:width .5s"></div>
           </div>
-          ${toplamPkt>(o.paket||20)?`<div style="font-size:10px;color:#A89070;margin-top:5px">${Math.ceil(toplamPkt/(o.paket||20))}. paket · Toplam ${toplamPkt} ders</div>`:''}
+          ${toplamPkt>(o.paket||20)?`<div style="font-size:${isDesktop?'12px':'10px'};color:#A89070;margin-top:6px">${Math.ceil(toplamPkt/(o.paket||20))}. paket · Toplam ${toplamPkt} ders</div>`:''}
         </div>
 
         <!-- Su takibi -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:14px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:13px;font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
-            <div style="font-size:14px;font-weight:700;color:#5A8A5A">${suYuzde}%</div>
+        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
+            <div style="font-size:${isDesktop?'16px':'14px'};font-weight:700;color:#5A8A5A">${suYuzde}%</div>
           </div>
-          <div style="height:8px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:7px">
-            <div style="width:${suYuzde}%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:4px;transition:width .5s"></div>
+          <div style="height:${isDesktop?'10px':'8px'};background:#E8DFD0;border-radius:5px;overflow:hidden;margin-bottom:8px">
+            <div style="width:${suYuzde}%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:5px;transition:width .5s"></div>
           </div>
-          <div style="font-size:11px;color:#A89070">${bugunSu}ml / ${suHedef}ml</div>
+          <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070">${bugunSu}ml / ${suHedef}ml</div>
         </div>
       </div>
 
       <!-- SAĞ KOLON -->
-      <div style="display:flex;flex-direction:column;gap:12px;${isDesktop?'':'margin-top:12px'}">
+      <div style="display:flex;flex-direction:column;gap:${isDesktop?'14px':'12px'};${isDesktop?'':'margin-top:12px'}">
         <!-- Haftalık program -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:14px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="font-size:13px;font-weight:600;color:#2A2015;margin-bottom:12px">📆 Haftalık Program</div>
+        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#2A2015;margin-bottom:14px">📆 Haftalık Program</div>
           ${haftaHtml}
         </div>
 
         <!-- Döngü -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:14px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="font-size:13px;font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Döngü</div>
+        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#C07A90;margin-bottom:8px">🌸 Döngü</div>
           <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?`${donguGun}. gün`:'Henüz kayıt yok'}</div>
           ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${sonDongu.toLocaleDateString('tr-TR')}</div>`:''}
           <button onclick="sp('dongü')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:4px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Döngü Başlat'}</button>
         </div>
 
         <!-- Ödeme -->
-        <div style="background:#FFFAEE;border:0.5px solid #D4C8B0;border-radius:12px;padding:14px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="font-size:13px;font-weight:600;color:#946C18;margin-bottom:6px">💳 Ödeme</div>
-          <div style="font-size:22px;font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
-          <div style="font-size:11px;color:#A89070;margin-top:3px">${o.paket||20} ders / paket</div>
+        <div style="background:#FFFAEE;border:0.5px solid #D4C8B0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#946C18;margin-bottom:8px">💳 Ödeme</div>
+          <div style="font-size:${isDesktop?'28px':'22px'};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
+          <div style="font-size:${isDesktop?'13px':'11px'};color:#A89070;margin-top:4px">${o.paket||20} ders / paket</div>
         </div>
 
         <!-- Son ölçüm -->
-        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:12px;padding:14px;box-shadow:0 1px 6px rgba(148,108,24,.05)">
-          <div style="font-size:13px;font-weight:600;color:#A89070;margin-bottom:6px">📏 Son Ölçüm</div>
-          <div style="font-size:12px;color:#2A2015" id="son-olcum-ozet">Yükleniyor...</div>
+        <div style="background:white;border:0.5px solid #E8DFD0;border-radius:14px;padding:${isDesktop?'18px':'14px'};box-shadow:0 2px 12px rgba(148,108,24,.06)">
+          <div style="font-size:${isDesktop?'15px':'13px'};font-weight:600;color:#A89070;margin-bottom:8px">📏 Son Ölçüm</div>
+          <div style="font-size:${isDesktop?'14px':'12px'};color:#2A2015" id="son-olcum-ozet">Yükleniyor...</div>
         </div>
       </div>
     </div>
@@ -774,23 +729,16 @@ function renderDerslerim(){
   const o=ogrenci;
   const kd=efektifKalan(o);
   const gun=pct(o);
-  const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
 
-  let html=`<div style="padding:${isDesktop?'20px 28px':'14px 16px'};width:100%;box-sizing:border-box">
-  <div style="font-size:${isDesktop?'20px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>`;
+  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box">
+  <div style="font-size:18px;font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>`;
 
+  // Paket kartı
   const toplamPkt=o.toplam_paket||o.paket||20;
   const yapilan=o.yapilan||0;
   const paketNo=Math.max(1,Math.ceil(toplamPkt/(o.paket||20)));
   const buPaketteki=yapilan%(o.paket||20);
   const buPaketPct=Math.min(100,Math.round(buPaketteki/(o.paket||20)*100));
-
-  // Masaüstünde iki kolon düzeni
-  if(isDesktop){
-    html+=`<div style="display:grid;grid-template-columns:${isWide?'1fr 360px':'1fr 300px'};gap:24px;align-items:start">
-    <div>`; // Sol kolon
-  }
 
   html+=`<div class="card" style="border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0;">
     <div class="row" style="margin-bottom:12px">
@@ -842,11 +790,6 @@ function renderDerslerim(){
   const m=new Date().getMonth(),y=new Date().getFullYear();
   const kullanilan=(o.iptalGecmisi||[]).filter(t=>{const d=new Date(t);return d.getMonth()===m&&d.getFullYear()===y}).length;
   const kalanIptal=Math.max(0,(o.iptalHakki||1)-kullanilan);
-
-  if(isDesktop){
-    html+=`</div><div>`; // Sağ kolon başlangıcı
-  }
-
   html+=`<div class="section-title">🚫 Bu Ay İptal Hakkı</div>
   <div class="card">
     <div class="row">
@@ -858,10 +801,6 @@ function renderDerslerim(){
     </div>
   </div>`;
 
-  if(isDesktop){
-    html+=`</div></div>`; // İki kolon kapat
-  }
-
   document.getElementById('derslerim-c').innerHTML=html+'</div>';
 }
 
@@ -870,14 +809,8 @@ function renderSu(){
   const suHedef=getSuHedef();
   const yuzde=Math.min(100,Math.round(bugunSu/suHedef*100));
   const pctDeg=`${yuzde*3.6}deg`;
-  const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
 
-  let html=`<div style="padding:${isDesktop?'20px 28px':'14px 16px'};width:100%;box-sizing:border-box"><div style="font-size:${isDesktop?'20px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>`;
-
-  if(isDesktop){
-    html+=`<div style="display:grid;grid-template-columns:${isWide?'1fr 360px':'1fr 300px'};gap:24px;align-items:start"><div>`;
-  }
+  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015n-bottom:16px">💧 Su Takibi</div>`;
 
   // Çember
   html+=`<div class="card" style="text-align:center;padding:24px 16px">
@@ -903,8 +836,6 @@ function renderSu(){
   </div>`;
 
   // Hedef ayarla
-  if(isDesktop){ html+=`</div><div>`; } // Sağ kolon
-
   html+=`<div class="section-title">⚙️ Günlük Hedef</div>
   <div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -933,8 +864,6 @@ function renderSu(){
     </div>`;
   }
   html+=`</div></div>`;
-
-  if(isDesktop){ html+=`</div></div>`; } // İki kolon kapat
 
   document.getElementById('su-c').innerHTML=html+'</div>';
   // CSS değişkenini güncelle
@@ -983,14 +912,8 @@ function renderDongu(){
   const bas=donguData.baslangiclar||[];
   const uzunluk=donguData.uzunluk||28;
   const ozet=getDonguDurumu();
-  const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
 
-  let html=`<div style="padding:${isDesktop?'20px 28px':'14px 16px'};width:100%;box-sizing:border-box"><div style="font-size:${isDesktop?'20px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Döngü Takibi</div>`;
-
-  if(isDesktop){
-    html+=`<div style="display:grid;grid-template-columns:${isWide?'1fr 360px':'1fr 300px'};gap:24px;align-items:start"><div>`;
-  }
+  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015margin-bottom:16px">🌸 Döngü Takibi</div>`;
 
   // Durum kartı
   html+=`<div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:20px">
@@ -1044,8 +967,6 @@ function renderDongu(){
   html+=`</div></div>`;
 
   // Yeni döngü başlat
-  if(isDesktop){ html+=`</div><div>`; } // Sağ kolon
-
   html+=`<div class="section-title">⚙️ Döngü Ayarları</div>
   <div class="card">
     <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguBaslat()">
@@ -1072,8 +993,6 @@ function renderDongu(){
         </div>`).join('')}
     </div>`:''}
   </div>`;
-
-  if(isDesktop){ html+=`</div></div>`; } // İki kolon kapat
 
   document.getElementById('dongu-c').innerHTML=html;
 }
@@ -1119,14 +1038,8 @@ function renderOdeme(){
   const kd=efektifKalan(o);
   const kg=kalanGun(o);
   const odemeGerekli=kd<=3||kg<0||!o.ilkOdemeAlindi||o.borc>0;
-  const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
 
-  let html=`<div style="padding:${isDesktop?'20px 28px':'14px 16px'};width:100%;box-sizing:border-box"><div style="font-size:${isDesktop?'20px':'17px'};font-weight:700;margin-bottom:16px">💳 Ödeme</div>`;
-
-  if(isDesktop){
-    html+=`<div style="display:grid;grid-template-columns:${isWide?'1fr 360px':'1fr 300px'};gap:24px;align-items:start"><div>`; // Sol kolon
-  }
+  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div le="font-size:17px;font-weight:700;margin-bottom:16px">💳 Ödeme</div>`;
 
   // Paket özeti
   html+=`<div class="odeme-card">
@@ -1183,8 +1096,6 @@ function renderOdeme(){
   </div>`;
 
   // Geçmiş
-  if(isDesktop){ html+=`</div><div>`; } // Sağ kolon
-
   html+=`<div class="section-title">📊 Paket Bilgileri</div>
   <div class="card">
     <div class="row" style="margin-bottom:8px">
@@ -1201,8 +1112,6 @@ function renderOdeme(){
     </div>
   </div>`;
 
-  if(isDesktop){ html+=`</div></div>`; } // İki kolon kapat
-
   document.getElementById('odeme-c').innerHTML=html+'</div>';
 }
 
@@ -1210,8 +1119,6 @@ function renderOdeme(){
 async function renderOlcumlerim(){
   const el=document.getElementById('olcumlerim-c');
   if(!ogrenci){el.innerHTML='';return;}
-  const isDesktop=window.innerWidth>=768;
-  const isWide=window.innerWidth>=1200;
   let olcumler=[];
   try{
     const {data,error}=await sb.from('olcumler').select('*')
@@ -1219,15 +1126,11 @@ async function renderOlcumlerim(){
     if(!error) olcumler=data||[];
   }catch(e){}
 
-  let html=`<div style="padding:${isDesktop?'20px 28px':'14px 16px'};width:100%;box-sizing:border-box"><div style="font-size:${isDesktop?'20px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">📏 Ölçümlerim</div>`;
+  let html=`<div style="padding:20px 28px;width:100%;box-sizing:border-box"><div style="font-size:18px;font-weight:700;color:#2A2015;margin-bottom:16px">📏 Ölçümlerim</div>`;
 
   if(!olcumler.length){
     html+=`<div class="alert a-blue">Henüz ölçüm kaydınız yok. Stüdyonuz ölçüm yaptıktan sonra burada görünecek.</div>`;
     el.innerHTML=html+'</div>';return;
-  }
-
-  if(isDesktop){
-    html+=`<div style="display:grid;grid-template-columns:${isWide?'1fr 360px':'1fr 300px'};gap:24px;align-items:start"><div>`;
   }
 
   const son=olcumler[olcumler.length-1];
@@ -1272,8 +1175,6 @@ async function renderOlcumlerim(){
   }
 
   // Grafik
-  if(isDesktop){ html+=`</div><div>`; } // Sağ kolon başlangıcı
-
   const son8=olcumler.slice(-8);
   const maxK=Math.max(...son8.map(x=>x.kilo||0),1);
   html+=`<div class="section-title">📊 Kilo Grafiği</div>
@@ -1312,8 +1213,6 @@ async function renderOlcumlerim(){
       </tbody>
     </table>
   </div>`;
-
-  if(isDesktop){ html+=`</div></div>`; } // İki kolon kapat
 
   el.innerHTML=html;
 }
