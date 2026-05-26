@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <title>DUMAN STUDIO — Öğrenci</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -30,11 +30,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .spinner{width:36px;height:36px;border:3px solid #E8DFD0;border-top-color:#946C18;border-radius:50%;animation:spin .8s linear infinite}
 
 /* ── LOGIN ── */
-#login-screen{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#FAF7F0,#F9EFBD,#F5F0E8)}
+#login-screen{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#FAF7F0,#F9EFBD,#F5F0E8);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#975B09,#946C18,#D2A941);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 14px rgba(148,108,24,.28)}
 
 /* ── APP GRID ── */
 #app{display:none}
+#app.show{display:flex !important;flex-direction:column;min-height:100vh}
 @media(min-width:768px){
   body{background:#EDE8DC}
   #app{
@@ -169,6 +170,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
 @media(max-width:767px){
   .page{padding:14px 16px 80px}
+  #app.show{display:block !important}
+  .pages{padding-bottom:0}
 }
 </style>
 </head>
@@ -220,7 +223,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="snav-btn act" id="sd-ana" onclick="sp('ana')">🏠 Ana Sayfa</button>
     <button class="snav-btn" id="sd-dersler" onclick="sp('dersler')">📅 Derslerim</button>
     <button class="snav-btn" id="sd-su" onclick="sp('su')">💧 Su Takibi</button>
-    <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Regl Takibi</button>
+    <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Regl Döngüsü</button>
     <button class="snav-btn" id="sd-olcum" onclick="sp('olcum')">📏 Ölçümlerim</button>
     <button class="snav-btn" id="sd-odeme" onclick="sp('odeme')">💳 Ödeme</button>
     <div style="flex:1"></div>
@@ -246,7 +249,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="nav-btn active" id="nb-ana" onclick="sp('ana')"><div style="font-size:18px">🏠</div><div>Ana</div></button>
     <button class="nav-btn" id="nb-dersler" onclick="sp('dersler')"><div style="font-size:18px">📅</div><div>Dersler</div></button>
     <button class="nav-btn" id="nb-su" onclick="sp('su')"><div style="font-size:18px">💧</div><div>Su</div></button>
-    <button class="nav-btn" id="nb-dongu" onclick="sp('dongu')"><div style="font-size:18px">🌸</div><div>Regl Takibi</div></button>
+    <button class="nav-btn" id="nb-dongu" onclick="sp('dongu')"><div style="font-size:18px">🌸</div><div>Döngü</div></button>
     <button class="nav-btn" id="nb-olcum" onclick="sp('olcum')"><div style="font-size:18px">📏</div><div>Ölçüm</div></button>
     <button class="nav-btn" id="nb-odeme" onclick="sp('odeme')"><div style="font-size:18px">💳</div><div>Ödeme</div></button>
   </nav>
@@ -501,10 +504,10 @@ function renderAna(){
           ${haftaHtml}
         </div>
         <div class="card">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Takibi</div>
+          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Döngüsü</div>
           <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?donguGun+'. gün':'Henüz kayıt yok'}</div>
           ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${tarihFmt(sonDongu)}</div>`:''}
-          <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Döngü Başlat'}</button>
+          <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Regl Döngüsü Başlat'}</button>
         </div>
         <div class="card" style="background:#FFFAEE;border-color:#D4C8B0">
           <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#946C18;margin-bottom:6px">💳 Ödeme</div>
@@ -668,7 +671,7 @@ function suSifirla(){
   renderSu();renderAna();
 }
 
-// ── REGL DÖNGÜ ──
+// ── DÖNGÜ ──
 function donguDurum(){
   const bas=donguData.bas||[];
   if(!bas.length)return {baslik:'Henüz kayıt yok',aciklama:'Döngünüzü başlatmak için butona basın',badge:'b-blue',gun:'—'};
@@ -676,7 +679,7 @@ function donguDurum(){
   const gecen=Math.floor((new Date()-son)/864e5)+1;
   const uzunluk=donguData.uzunluk||28;
   const gun=((gecen-1)%uzunluk)+1;
-  if(gun<=5)return {baslik:'Adet Dönemi',aciklama:`${gun}. gün`,badge:'b-pink',gun:`${gun}. gün`};
+  if(gun<=5)return {baslik:'Regl Dönemi',aciklama:`${gun}. gün`,badge:'b-pink',gun:`${gun}. gün`};
   if(gun<=13)return {baslik:'Foliküler Dönem',aciklama:'Enerji artıyor!',badge:'b-green',gun:`${gun}. gün`};
   if(gun===14)return {baslik:'Ovülasyon',aciklama:'Zirve enerji günü! 🌟',badge:'b-yellow',gun:'Ovülasyon'};
   return {baslik:'Luteal Dönem',aciklama:`${uzunluk-gun+1} gün sonra yeni döngü`,badge:'b-purple',gun:`${gun}. gün`};
@@ -738,9 +741,9 @@ function renderDongu(){
         </div>
       </div>
       <div>
-        <div class="section-title">⚙️ Regl Döngü Ayarları</div>
+        <div class="section-title">⚙️ Regl Ayarları</div>
         <div class="card">
-          <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguEkle(bugun())">🩸 Bugün Adet Başladı</button>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="donguEkle(bugun())">🩸 Bugün Regl Başladı</button>
           <div style="display:flex;gap:8px;margin-bottom:10px">
             <input type="date" id="dongu-tarih" value="${bugun()}" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--card2);color:var(--text);font-size:13px">
             <button class="btn-sm" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border)" onclick="donguEkleGecmis()">🩸 Ekle</button>
@@ -776,10 +779,10 @@ function donguEkle(tarih){
 function donguEkleGecmis(){
   const tarih=document.getElementById('dongu-tarih')?.value;
   if(!tarih)return;
-  if(confirm(tarihFmt(tarih)+' tarihine döngü eklensin mi?'))donguEkle(tarih);
+  if(confirm(tarihFmt(tarih)+' tarihine regl eklensin mi?'))donguEkle(tarih);
 }
 function donguSil(idx){
-  if(!confirm('Bu döngü kaydı silinsin mi?'))return;
+  if(!confirm('Bu regl kaydı silinsin mi?'))return;
   donguData.bas.splice(idx,1);
   localStorage.setItem('dongu_'+OGR._id,JSON.stringify(donguData));
   renderDongu();renderAna();
@@ -898,9 +901,34 @@ function renderOdeme(){
         <div class="card">
           <div style="font-size:${desk?'16px':'15px'};font-weight:700;margin-bottom:8px">Ödeme Yaptım Bildirimi</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Havale/EFT yaptıktan sonra aşağıdaki butona basın. Stüdyonuz onaylayınca paketiniz açılır.</div>
+          <div style="background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:10px;font-weight:700;color:var(--gold-dark);letter-spacing:1px;margin-bottom:10px">📋 ÖDEME ADIM ADIM</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.5">Bankanızın mobil uygulamasını veya internet bankacılığını açın. <strong>Para Transferi → Havale/EFT</strong> bölümüne gidin.</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.5">Aşağıdaki <strong>IBAN numarasını kopyalayın</strong> ve bankanızdaki IBAN alanına yapıştırın.</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.5">Alıcı adı otomatik gelecektir: <strong>MERVE DUMAN</strong></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.5">Aşağıdaki <strong>Açıklama metnini kopyalayın</strong> ve bankanızdaki açıklama bölümüne yapıştırın. (Çok önemli!)</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">5</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.5">Transferi gönderdikten sonra bu sayfaya dönüp <strong>"Ödeme Yaptım"</strong> butonuna basın.</div>
+              </div>
+            </div>
+          </div>
           <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px">
             <div style="font-size:10px;font-weight:600;color:var(--gold-dark);letter-spacing:1px;margin-bottom:8px">ÖDEME BİLGİLERİ</div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--text2)">Alıcı</span><span style="font-size:13px;font-weight:700">Merve Duman</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--text2)">Alıcı</span><span style="font-size:13px;font-weight:700">MERVE DUMAN</span></div>
             <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Banka</span><span style="font-size:13px;font-weight:600">Garanti Bankası</span></div>
             <div style="background:white;border-radius:8px;padding:10px;margin-bottom:8px">
               <div style="font-size:10px;color:var(--text2);margin-bottom:4px">IBAN</div>
