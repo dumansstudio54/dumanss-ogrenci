@@ -514,9 +514,14 @@ function renderAna(){
           <div style="font-size:${desk?'26px':'22px'};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
           <div style="font-size:11px;color:#A89070;margin-top:3px">${o.paket||20} ders / paket</div>
         </div>
-        <div class="card">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#A89070;margin-bottom:6px">📏 Son Ölçüm</div>
-          <div style="font-size:12px;color:#2A2015" id="son-olcum">Yükleniyor...</div>
+        <div class="card" onclick="sp('olcum')" style="cursor:pointer">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#A89070">📏 Son Ölçüm</div>
+            <div style="font-size:11px;color:#946C18;background:#F9EFBD;padding:3px 10px;border-radius:99px;border:0.5px solid #D4C8B0">Detay →</div>
+          </div>
+          <div id="son-olcum-ozet">
+            <div style="font-size:12px;color:#A89070">Yükleniyor...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -524,9 +529,29 @@ function renderAna(){
 
   document.getElementById('c-ana').innerHTML=html;
   if(OGR._id){
-    sb.from('olcumler').select('kilo,tarih').eq('ogrenci_id',OGR._id).order('tarih',{ascending:false}).limit(1)
-      .then(({data:d})=>{const el=document.getElementById('son-olcum');if(el)el.textContent=d&&d.length?`${d[0].kilo} kg — ${tarihFmt(d[0].tarih)}`:'Henüz ölçüm yok';})
-      .catch(()=>{const el=document.getElementById('son-olcum');if(el)el.textContent='Henüz ölçüm yok';});
+    sb.from('olcumler').select('*').eq('ogrenci_id',OGR._id).order('tarih',{ascending:false}).limit(2)
+      .then(({data:d})=>{
+        const el=document.getElementById('son-olcum-ozet');
+        if(!el)return;
+        if(!d||!d.length){el.innerHTML='<div style="font-size:12px;color:#A89070">Henüz ölçüm yok</div>';return;}
+        const son=d[0];
+        const onceki=d[1];
+        const kiloFark=onceki&&son.kilo&&onceki.kilo?((son.kilo-onceki.kilo).toFixed(1)):null;
+        const farkRenk=kiloFark?parseFloat(kiloFark)<0?'#5A8A5A':'#C03010':'#A89070';
+        const farkIkon=kiloFark?parseFloat(kiloFark)<0?'↓':parseFloat(kiloFark)>0?'↑':'→':'';
+        el.innerHTML=`
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+            ${son.kilo?`<div style="text-align:center"><div style="font-size:${window.innerWidth>=768?'22px':'18px'};font-weight:800;color:#2A2015;font-family:Georgia,serif">${son.kilo}</div><div style="font-size:10px;color:#A89070">kg</div></div>`:''}
+            ${son.yag_yuzdesi?`<div style="text-align:center"><div style="font-size:${window.innerWidth>=768?'22px':'18px'};font-weight:800;color:#E07020;font-family:Georgia,serif">${son.yag_yuzdesi}%</div><div style="font-size:10px;color:#A89070">Yağ</div></div>`:''}
+            ${son.bmi?`<div style="text-align:center"><div style="font-size:${window.innerWidth>=768?'22px':'18px'};font-weight:800;color:#5A7A9A;font-family:Georgia,serif">${son.bmi}</div><div style="font-size:10px;color:#A89070">BMI</div></div>`:''}
+          </div>
+          ${kiloFark?`<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#F5F0E8;border-radius:8px;margin-bottom:6px">
+            <span style="font-size:11px;color:#A89070">Önceki ölçümden:</span>
+            <span style="font-size:13px;font-weight:700;color:${farkRenk}">${parseFloat(kiloFark)>0?'+':''}${kiloFark} kg ${farkIkon}</span>
+          </div>`:''}
+          <div style="font-size:10px;color:#A89070">Son ölçüm: ${tarihFmt(son.tarih)}</div>`;
+      })
+      .catch(()=>{const el=document.getElementById('son-olcum-ozet');if(el)el.innerHTML='<div style="font-size:12px;color:#A89070">Ölçüm yüklenemedi</div>';});
   }
 }
 
@@ -837,30 +862,107 @@ async function renderOlcum(){
 
   const son=olcumler[olcumler.length-1];
   const ilk=olcumler[0];
+  const onceki=olcumler.length>1?olcumler[olcumler.length-2]:null;
+  const kiloFark=onceki&&son.kilo&&onceki.kilo?((son.kilo-onceki.kilo).toFixed(1)):null;
+  const hasSeg=son.seg_sag_bacak_yag||son.seg_sol_bacak_yag;
 
   html+=`<div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
     <div>
-      <div class="card" style="background:linear-gradient(135deg,var(--green-bg),var(--blue-bg));border-color:var(--green-border)">
+      <!-- Son ölçüm özet kartı -->
+      <div class="card" style="background:linear-gradient(135deg,var(--green-bg),var(--blue-bg));border-color:var(--green-border);margin-bottom:14px">
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px">Son Ölçüm — ${tarihFmt(son.tarih)}</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
-          ${son.kilo?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800">${son.kilo}</div><div style="font-size:11px;color:var(--text2)">Kilo (kg)</div></div>`:''}
-          ${son.yag_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--yellow)">${son.yag_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Yağ</div></div>`:''}
-          ${son.kas_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--blue)">${son.kas_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Kas</div></div>`:''}
-          ${son.bmi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800">${son.bmi}</div><div style="font-size:11px;color:var(--text2)">BMI</div></div>`:''}
-          ${son.su_yuzdesi?`<div><div style="font-size:${desk?'26px':'22px'};font-weight:800;color:var(--blue)">${son.su_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Su</div></div>`:''}
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;margin-bottom:12px">
+          ${son.kilo?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;font-family:Georgia,serif">${son.kilo}</div><div style="font-size:11px;color:var(--text2)">Kilo (kg)</div></div>`:''}
+          ${son.yag_yuzdesi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:#E07020;font-family:Georgia,serif">${son.yag_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Yağ</div></div>`:''}
+          ${son.bmi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.bmi}</div><div style="font-size:11px;color:var(--text2)">BMI ${son.bmi<25?'✓':''}</div></div>`:''}
+          ${son.su_yuzdesi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.su_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Sıvı</div></div>`:''}
+          ${son.gunluk_kalori?`<div><div style="font-size:${desk?'22px':'18px'};font-weight:800;color:var(--green);font-family:Georgia,serif">${son.gunluk_kalori}</div><div style="font-size:11px;color:var(--text2)">kcal/gün</div></div>`:''}
+          ${son.metabolizma_yasi?`<div><div style="font-size:${desk?'22px':'18px'};font-weight:800;color:var(--purple,#8A6A9A);font-family:Georgia,serif">${son.metabolizma_yasi}</div><div style="font-size:11px;color:var(--text2)">Met. Yaşı</div></div>`:''}
+        </div>
+        ${kiloFark?`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:white;border-radius:10px;border:0.5px solid var(--border)">
+          <span style="font-size:12px;color:var(--text2)">Önceki ölçümden kilo değişimi:</span>
+          <span style="font-size:15px;font-weight:800;color:${parseFloat(kiloFark)<0?'var(--green)':'var(--red)'};margin-left:auto">${parseFloat(kiloFark)>0?'+':''}${kiloFark} kg ${parseFloat(kiloFark)<0?'↓':parseFloat(kiloFark)>0?'↑':'→'}</span>
+        </div>`:''}
+      </div>
+
+      <!-- Metabolizma bilgileri -->
+      ${son.bmr||son.ic_yaglama||son.hedef_kilo?`
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">🔬 Metabolizma</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${son.bmr?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">Bazal Metabolizma</span><strong>${son.bmr} kcal</strong></div>`:''}
+          ${son.ic_yaglama?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">İç Yağlanma</span><strong style="color:${son.ic_yaglama>5?'var(--red)':'var(--green)'}">${son.ic_yaglama}/10</strong></div>`:''}
+          ${son.hedef_kilo?`<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:13px;color:var(--text2)">Hedef Kilo</span><strong style="color:var(--green)">${son.hedef_kilo} kg</strong></div>`:''}
+        </div>
+      </div>`:''}
+
+      <!-- Segmental tablo -->
+      ${hasSeg?`
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">🦵 Segmental Analiz</div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;font-size:12px;border-collapse:collapse;min-width:250px">
+            <thead><tr style="background:var(--bg3)">
+              <th style="padding:7px 10px;text-align:left;color:var(--text2)">Bölge</th>
+              <th style="padding:7px 8px;text-align:center;color:var(--text2)">Yağ%</th>
+              <th style="padding:7px 8px;text-align:center;color:var(--text2)">Kas kg</th>
+            </tr></thead><tbody>
+            ${[['Sağ Bacak','seg_sag_bacak'],['Sol Bacak','seg_sol_bacak'],['Sağ Kol','seg_sag_kol'],['Sol Kol','seg_sol_kol'],['Gövde','seg_govde']].map(([n,k])=>{
+              const y=son[k+'_yag'],m=son[k+'_kas'];
+              if(!y)return '';
+              const r=y<25?'var(--green)':y<32?'var(--gold-dark)':y<40?'#E07020':'var(--red)';
+              return `<tr style="border-bottom:0.5px solid var(--border)">
+                <td style="padding:7px 10px;color:var(--text2)">${n}</td>
+                <td style="padding:7px 8px;text-align:center;font-weight:700;color:${r}">${y}%</td>
+                <td style="padding:7px 8px;text-align:center;color:var(--blue);font-weight:600">${m?m+' kg':'-'}</td>
+              </tr>`;
+            }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`:''}
+
+      <!-- Fark analizi -->
+      ${olcumler.length>1?`
+      <div class="section-title">📈 İlerleme</div>
+      <div class="card">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${tarihFmt(ilk.tarih)} → ${tarihFmt(son.tarih)}</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${[['Kilo','kilo','kg',true],['Yağ%','yag_yuzdesi','%',true],['Sıvı%','su_yuzdesi','%',false],['Yağ Ağırlığı','yag_agirlik','kg',true]].map(([lbl,key,unit,tersIyi])=>{
+            const v1=ilk[key],v2=son[key];
+            if(!v1||!v2)return '';
+            const f=(v2-v1).toFixed(1);
+            const iyiMi=tersIyi?parseFloat(f)<0:parseFloat(f)>0;
+            const r=parseFloat(f)===0?'var(--text3)':iyiMi?'var(--green)':'var(--red)';
+            return `<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:0.5px solid var(--border)">
+              <span style="font-size:12px;color:var(--text2);flex:1">${lbl}</span>
+              <span style="font-size:12px;color:var(--text3)">${v1}${unit} → ${v2}${unit}</span>
+              <span style="font-size:13px;font-weight:700;color:${r};min-width:55px;text-align:right">${parseFloat(f)>0?'+':''}${f}${unit}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`:''}
+
+      <!-- Kilo grafiği -->
+      <div class="section-title">📊 Kilo Grafiği</div>
+      <div class="card">
+        <div style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-bottom:8px">
+          ${olcumler.slice(-8).map(o=>{
+            const maxK=Math.max(...olcumler.slice(-8).map(x=>x.kilo||0),1);
+            const minK=Math.min(...olcumler.slice(-8).map(x=>x.kilo||maxK));
+            const range=maxK-minK||1;
+            const h2=Math.round(((o.kilo||0)-minK)/range*80)+20;
+            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
+              <div style="width:100%;height:${h2}px;background:var(--gold-dark);border-radius:3px 3px 0 0;min-height:4px;opacity:0.85"></div>
+              <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
+            </div>`;
+          }).join('')}
         </div>
       </div>
-      ${olcumler.length>1?(()=>{
-        const kF=((son.kilo||0)-(ilk.kilo||0)).toFixed(1);
-        return `<div class="section-title">📈 İlerleme</div>
-        <div class="card">
-          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${tarihFmt(ilk.tarih)} → ${tarihFmt(son.tarih)}</div>
-          <div style="font-size:${desk?'28px':'24px'};font-weight:800;color:${kF<0?'var(--green)':kF>0?'var(--red)':'var(--text)'};font-family:Georgia,serif;text-align:center">
-            ${kF>0?'+':''}${kF} kg
-          </div>
-          <div style="font-size:12px;color:var(--text2);text-align:center">kilo değişimi</div>
-        </div>`;
-      })():''}
+    </div>
+    <div>
+      <!-- Tüm ölçümler tablosu -->
       <div class="section-title">📋 Tüm Ölçümler</div>
       <div class="card" style="overflow-x:auto;padding:8px">
         <table style="width:100%;font-size:12px;border-collapse:collapse">
@@ -868,122 +970,22 @@ async function renderOlcum(){
             <th style="padding:7px;text-align:left;color:var(--text2)">Tarih</th>
             <th style="padding:7px;text-align:center;color:var(--text2)">Kilo</th>
             <th style="padding:7px;text-align:center;color:var(--text2)">Yağ%</th>
-            <th style="padding:7px;text-align:center;color:var(--text2)">Kas%</th>
             <th style="padding:7px;text-align:center;color:var(--text2)">BMI</th>
           </tr></thead><tbody>
           ${[...olcumler].reverse().map(o=>`<tr style="border-bottom:1px solid var(--border)">
             <td style="padding:7px">${tarihFmt(o.tarih)}</td>
-            <td style="padding:7px;text-align:center;font-weight:600">${o.kilo||'—'}</td>
-            <td style="padding:7px;text-align:center;color:var(--yellow)">${o.yag_yuzdesi?o.yag_yuzdesi+'%':'—'}</td>
-            <td style="padding:7px;text-align:center;color:var(--blue)">${o.kas_yuzdesi?o.kas_yuzdesi+'%':'—'}</td>
+            <td style="padding:7px;text-align:center;font-weight:600">${o.kilo?o.kilo+' kg':'—'}</td>
+            <td style="padding:7px;text-align:center;color:#E07020">${o.yag_yuzdesi?o.yag_yuzdesi+'%':'—'}</td>
             <td style="padding:7px;text-align:center">${o.bmi||'—'}</td>
           </tr>`).join('')}
           </tbody>
         </table>
       </div>
     </div>
-    <div>
-      <div class="section-title">📊 Kilo Grafiği</div>
-      <div class="card">
-        <div style="display:flex;align-items:flex-end;gap:5px;height:100px;margin-bottom:6px">
-          ${olcumler.slice(-8).map(o=>{
-            const maxK=Math.max(...olcumler.slice(-8).map(x=>x.kilo||0),1);
-            const h2=Math.round(((o.kilo||0)/maxK)*90);
-            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-              <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
-              <div style="width:100%;height:${h2}px;background:var(--gold-dark);border-radius:3px 3px 0 0;min-height:2px"></div>
-              <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-    </div>
   </div></div>`;
   el.innerHTML=html;
 }
 
-// ── ÖDEME ──
-function renderOdeme(){
-  if(!OGR)return;
-  const o=OGR;
-  const kd=kalanDers(o);
-  const kg=kalanGun(o);
-  const desk=window.innerWidth>=768;
-  const genis=window.innerWidth>=1200;
-
-  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">💳 Ödeme</div>
-    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
-      <div>
-        <div style="background:linear-gradient(135deg,var(--gold-bg),rgba(148,108,24,.05));border:1px solid var(--gold-border);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">
-          <div style="font-size:13px;color:var(--text2)">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} Paketi</div>
-          <div style="font-size:${desk?'38px':'32px'};font-weight:800;color:var(--gold-dark);font-family:Georgia,serif;margin:8px 0">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
-          <div style="font-size:13px;color:var(--text2)">${o.paket} ders / ay</div>
-          ${o.borc>0?`<div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ ${o.borc} ders borcunuz var</div>`:''}
-        </div>
-        ${o.odemeBekliyor?`<div class="alert a-yellow">⏳ Bildiriminiz iletildi. Onaylanınca paket açılacak.</div>`:
-          kd<=3?`<div class="alert a-red">⚠️ Son ${kd} dersiniz kaldı. Ödeme yaparak yenileyebilirsiniz.</div>`:
-          `<div class="alert a-green">✓ Paketiniz aktif. ${kd} ders, ${Math.max(0,kg)} gün kaldı.</div>`}
-        <div class="card">
-          <div style="font-size:${desk?'16px':'15px'};font-weight:700;margin-bottom:8px">Ödeme Yaptım Bildirimi</div>
-          <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Havale/EFT yaptıktan sonra aşağıdaki butona basın. Stüdyonuz onaylayınca paketiniz açılır.</div>
-          <div style="background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:10px;padding:14px;margin-bottom:14px">
-            <div style="font-size:10px;font-weight:700;color:var(--gold-dark);letter-spacing:1px;margin-bottom:10px">📋 ÖDEME ADIM ADIM</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <div style="display:flex;gap:8px;align-items:flex-start">
-                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
-                <div style="font-size:12px;color:var(--text2);line-height:1.5">Bankanızın mobil uygulamasını veya internet bankacılığını açın. <strong>Para Transferi → Havale/EFT</strong> bölümüne gidin.</div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start">
-                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
-                <div style="font-size:12px;color:var(--text2);line-height:1.5">Aşağıdaki <strong>IBAN numarasını kopyalayın</strong> ve bankanızdaki IBAN alanına yapıştırın.</div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start">
-                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-                <div style="font-size:12px;color:var(--text2);line-height:1.5">Alıcı adı otomatik gelecektir: <strong>MERVE DUMAN</strong></div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start">
-                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
-                <div style="font-size:12px;color:var(--text2);line-height:1.5">Aşağıdaki <strong>Açıklama metnini kopyalayın</strong> ve bankanızdaki açıklama bölümüne yapıştırın. (Çok önemli!)</div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start">
-                <div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">5</div>
-                <div style="font-size:12px;color:var(--text2);line-height:1.5">Transferi gönderdikten sonra bu sayfaya dönüp <strong>"Ödeme Yaptım"</strong> butonuna basın.</div>
-              </div>
-            </div>
-          </div>
-          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px">
-            <div style="font-size:10px;font-weight:600;color:var(--gold-dark);letter-spacing:1px;margin-bottom:8px">ÖDEME BİLGİLERİ</div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--text2)">Alıcı</span><span style="font-size:13px;font-weight:700">MERVE DUMAN</span></div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Banka</span><span style="font-size:13px;font-weight:600">Garanti Bankası</span></div>
-            <div style="background:white;border-radius:8px;padding:10px;margin-bottom:8px">
-              <div style="font-size:10px;color:var(--text2);margin-bottom:4px">IBAN</div>
-              <div style="font-size:${desk?'15px':'13px'};font-weight:800;color:var(--gold-dark)">TR35 0006 2000 3330 0006 8099 60</div>
-              <button onclick="ibanKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>
-            </div>
-            <div style="background:var(--gold-bg);border-radius:8px;padding:10px;border:1px solid var(--gold-border)">
-              <div style="font-size:10px;font-weight:600;color:var(--gold-dark);margin-bottom:4px">⚠️ Açıklama Zorunlu</div>
-              <div style="font-size:13px;font-weight:600" id="odeme-aciklama">${o.ad} - ${o.tur==='ems'?'EMS':'Pilates'} - ${new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'})}</div>
-              <button onclick="aciklamaKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>
-            </div>
-          </div>
-          <button class="btn btn-primary" style="width:100%" onclick="odemeBildir()" ${o.odemeBekliyor?'disabled':''}>
-            ${o.odemeBekliyor?'⏳ Bildirim İletildi':'✓ Ödeme Yaptım — Stüdyoya Bildir'}
-          </button>
-        </div>
-      </div>
-      <div>
-        <div class="section-title">📊 Paket Bilgileri</div>
-        <div class="card">
-          <div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Başlangıç</span><span style="font-weight:600;margin-left:auto">${tarihFmt(o.baslangic)}</span></div>
-          <div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Bitiş</span><span style="font-weight:600;margin-left:auto">${tarihFmt(bitis(o))}</span></div>
-          <div class="row"><span style="color:var(--text2)">Kalan ders</span><span style="font-weight:700;color:${barRenk(kd)};margin-left:auto">${kd} / ${o.paket}</span></div>
-        </div>
-      </div>
-    </div>
-  </div>`;
-  document.getElementById('c-odeme').innerHTML=html;
-}
 
 function ibanKopyala(){
   navigator.clipboard.writeText('TR350006200033300006809960')
