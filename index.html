@@ -846,6 +846,7 @@ async function renderOlcum(){
   const el=document.getElementById('c-olcum');
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
+  el.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3)"><div class="spinner"></div></div>';
   let olcumler=[];
   try{
     const {data,error}=await sb.from('olcumler').select('*').eq('ogrenci_id',OGR._id).order('tarih',{ascending:true});
@@ -866,104 +867,142 @@ async function renderOlcum(){
   const kiloFark=onceki&&son.kilo&&onceki.kilo?((son.kilo-onceki.kilo).toFixed(1)):null;
   const hasSeg=son.seg_sag_bacak_yag||son.seg_sol_bacak_yag;
 
+  // ── ÜST METRİK KARTLAR ──
+  html+=`<div style="display:grid;grid-template-columns:repeat(${desk?4:2},1fr);gap:10px;margin-bottom:16px">`;
+  if(son.kilo) html+=`<div class="metric" style="border-top:3px solid var(--gold-dark);text-align:center">
+    <div class="metric-lbl">KİLO</div>
+    <div style="font-size:${desk?'32px':'26px'};font-weight:800;font-family:Georgia,serif;color:#2A2015">${son.kilo}</div>
+    <div style="font-size:10px;color:var(--text3)">kg</div>
+    ${kiloFark?`<div style="font-size:12px;font-weight:700;color:${parseFloat(kiloFark)<0?'var(--green)':'var(--red)'};">${parseFloat(kiloFark)>0?'+':''}${kiloFark}kg</div>`:''}
+  </div>`;
+  if(son.yag_yuzdesi) html+=`<div class="metric" style="border-top:3px solid #E07020;text-align:center">
+    <div class="metric-lbl">YAĞ ORANI</div>
+    <div style="font-size:${desk?'32px':'26px'};font-weight:800;color:#E07020;font-family:Georgia,serif">${son.yag_yuzdesi}%</div>
+    <div style="font-size:10px;color:var(--text3)">yağ yüzdesi</div>
+  </div>`;
+  if(son.bmi) html+=`<div class="metric" style="border-top:3px solid var(--blue);text-align:center">
+    <div class="metric-lbl">BMI</div>
+    <div style="font-size:${desk?'32px':'26px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.bmi}</div>
+    <div style="font-size:10px;color:var(--text3)">${son.bmi<18.5?'Zayıf':son.bmi<25?'Normal ✓':son.bmi<30?'Fazla':'Obez'}</div>
+  </div>`;
+  if(son.su_yuzdesi) html+=`<div class="metric" style="border-top:3px solid var(--blue);text-align:center">
+    <div class="metric-lbl">SIVI ORANI</div>
+    <div style="font-size:${desk?'32px':'26px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.su_yuzdesi}%</div>
+    <div style="font-size:10px;color:var(--text3)">vücut sıvısı</div>
+  </div>`;
+  if(son.gunluk_kalori) html+=`<div class="metric" style="border-top:3px solid var(--green);text-align:center">
+    <div class="metric-lbl">GÜNLÜK KALORİ</div>
+    <div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--green);font-family:Georgia,serif">${son.gunluk_kalori}</div>
+    <div style="font-size:10px;color:var(--text3)">kcal/gün</div>
+  </div>`;
+  if(son.metabolizma_yasi) html+=`<div class="metric" style="border-top:3px solid var(--purple,#8A6A9A);text-align:center">
+    <div class="metric-lbl">METABOLİZMA YAŞI</div>
+    <div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--purple,#8A6A9A);font-family:Georgia,serif">${son.metabolizma_yasi}</div>
+    <div style="font-size:10px;color:var(--text3)">yaş</div>
+  </div>`;
+  html+='</div>';
+
   html+=`<div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
-    <div>
-      <!-- Son ölçüm özet kartı -->
-      <div class="card" style="background:linear-gradient(135deg,var(--green-bg),var(--blue-bg));border-color:var(--green-border);margin-bottom:14px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px">Son Ölçüm — ${tarihFmt(son.tarih)}</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;margin-bottom:12px">
-          ${son.kilo?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;font-family:Georgia,serif">${son.kilo}</div><div style="font-size:11px;color:var(--text2)">Kilo (kg)</div></div>`:''}
-          ${son.yag_yuzdesi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:#E07020;font-family:Georgia,serif">${son.yag_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Yağ</div></div>`:''}
-          ${son.bmi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.bmi}</div><div style="font-size:11px;color:var(--text2)">BMI ${son.bmi<25?'✓':''}</div></div>`:''}
-          ${son.su_yuzdesi?`<div><div style="font-size:${desk?'28px':'24px'};font-weight:800;color:var(--blue);font-family:Georgia,serif">${son.su_yuzdesi}%</div><div style="font-size:11px;color:var(--text2)">Sıvı</div></div>`:''}
-          ${son.gunluk_kalori?`<div><div style="font-size:${desk?'22px':'18px'};font-weight:800;color:var(--green);font-family:Georgia,serif">${son.gunluk_kalori}</div><div style="font-size:11px;color:var(--text2)">kcal/gün</div></div>`:''}
-          ${son.metabolizma_yasi?`<div><div style="font-size:${desk?'22px':'18px'};font-weight:800;color:var(--purple,#8A6A9A);font-family:Georgia,serif">${son.metabolizma_yasi}</div><div style="font-size:11px;color:var(--text2)">Met. Yaşı</div></div>`:''}
-        </div>
-        ${kiloFark?`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:white;border-radius:10px;border:0.5px solid var(--border)">
-          <span style="font-size:12px;color:var(--text2)">Önceki ölçümden kilo değişimi:</span>
-          <span style="font-size:15px;font-weight:800;color:${parseFloat(kiloFark)<0?'var(--green)':'var(--red)'};margin-left:auto">${parseFloat(kiloFark)>0?'+':''}${kiloFark} kg ${parseFloat(kiloFark)<0?'↓':parseFloat(kiloFark)>0?'↑':'→'}</span>
-        </div>`:''}
-      </div>
+    <div>`;
 
-      <!-- Metabolizma bilgileri -->
-      ${son.bmr||son.ic_yaglama||son.hedef_kilo?`
-      <div class="card" style="margin-bottom:14px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">🔬 Metabolizma</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          ${son.bmr?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">Bazal Metabolizma</span><strong>${son.bmr} kcal</strong></div>`:''}
-          ${son.ic_yaglama?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">İç Yağlanma</span><strong style="color:${son.ic_yaglama>5?'var(--red)':'var(--green)'}">${son.ic_yaglama}/10</strong></div>`:''}
-          ${son.hedef_kilo?`<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:13px;color:var(--text2)">Hedef Kilo</span><strong style="color:var(--green)">${son.hedef_kilo} kg</strong></div>`:''}
-        </div>
-      </div>`:''}
-
-      <!-- Segmental tablo -->
-      ${hasSeg?`
-      <div class="card" style="margin-bottom:14px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">🦵 Segmental Analiz</div>
-        <div style="overflow-x:auto">
-          <table style="width:100%;font-size:12px;border-collapse:collapse;min-width:250px">
-            <thead><tr style="background:var(--bg3)">
-              <th style="padding:7px 10px;text-align:left;color:var(--text2)">Bölge</th>
-              <th style="padding:7px 8px;text-align:center;color:var(--text2)">Yağ%</th>
-              <th style="padding:7px 8px;text-align:center;color:var(--text2)">Kas kg</th>
-            </tr></thead><tbody>
-            ${[['Sağ Bacak','seg_sag_bacak'],['Sol Bacak','seg_sol_bacak'],['Sağ Kol','seg_sag_kol'],['Sol Kol','seg_sol_kol'],['Gövde','seg_govde']].map(([n,k])=>{
-              const y=son[k+'_yag'],m=son[k+'_kas'];
-              if(!y)return '';
-              const r=y<25?'var(--green)':y<32?'var(--gold-dark)':y<40?'#E07020':'var(--red)';
-              return `<tr style="border-bottom:0.5px solid var(--border)">
-                <td style="padding:7px 10px;color:var(--text2)">${n}</td>
-                <td style="padding:7px 8px;text-align:center;font-weight:700;color:${r}">${y}%</td>
-                <td style="padding:7px 8px;text-align:center;color:var(--blue);font-weight:600">${m?m+' kg':'-'}</td>
-              </tr>`;
-            }).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>`:''}
-
-      <!-- Fark analizi -->
-      ${olcumler.length>1?`
-      <div class="section-title">📈 İlerleme</div>
-      <div class="card">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${tarihFmt(ilk.tarih)} → ${tarihFmt(son.tarih)}</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          ${[['Kilo','kilo','kg',true],['Yağ%','yag_yuzdesi','%',true],['Sıvı%','su_yuzdesi','%',false],['Yağ Ağırlığı','yag_agirlik','kg',true]].map(([lbl,key,unit,tersIyi])=>{
+  // ── FARK ANALİZİ ──
+  if(olcumler.length>1){
+    const fs=[
+      ['Kilo','kilo','kg',true],
+      ['Yağ Oranı','yag_yuzdesi','%',true],
+      ['Sıvı Oranı','su_yuzdesi','%',false],
+      ['Yağ Ağırlığı','yag_agirlik','kg',true],
+    ];
+    html+=`<div class="section-title">📈 FARK ANALİZİ</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${tarihFmt(ilk.tarih)} → ${tarihFmt(son.tarih)}</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead><tr style="background:var(--bg3)">
+            <th style="padding:7px 10px;text-align:left;color:var(--text2)">Alan</th>
+            <th style="padding:7px 8px;text-align:center;color:var(--text2)">${new Date(ilk.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'short'})}</th>
+            <th style="padding:7px 8px;text-align:center;color:var(--text2)">${new Date(son.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'short'})}</th>
+            <th style="padding:7px 8px;text-align:center;color:var(--text2)">Fark</th>
+          </tr></thead><tbody>
+          ${fs.map(([lbl,key,unit,tersIyi])=>{
             const v1=ilk[key],v2=son[key];
             if(!v1||!v2)return '';
             const f=(v2-v1).toFixed(1);
             const iyiMi=tersIyi?parseFloat(f)<0:parseFloat(f)>0;
             const r=parseFloat(f)===0?'var(--text3)':iyiMi?'var(--green)':'var(--red)';
-            return `<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:0.5px solid var(--border)">
-              <span style="font-size:12px;color:var(--text2);flex:1">${lbl}</span>
-              <span style="font-size:12px;color:var(--text3)">${v1}${unit} → ${v2}${unit}</span>
-              <span style="font-size:13px;font-weight:700;color:${r};min-width:55px;text-align:right">${parseFloat(f)>0?'+':''}${f}${unit}</span>
-            </div>`;
+            return `<tr style="border-bottom:0.5px solid var(--border)">
+              <td style="padding:7px 10px;color:var(--text2)">${lbl}</td>
+              <td style="padding:7px 8px;text-align:center">${v1}${unit}</td>
+              <td style="padding:7px 8px;text-align:center;font-weight:600">${v2}${unit}</td>
+              <td style="padding:7px 8px;text-align:center;font-weight:700;color:${r}">${parseFloat(f)>0?'+':''}${f}${unit}</td>
+            </tr>`;
           }).join('')}
-        </div>
-      </div>`:''}
-
-      <!-- Kilo grafiği -->
-      <div class="section-title">📊 Kilo Grafiği</div>
-      <div class="card">
-        <div style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-bottom:8px">
-          ${olcumler.slice(-8).map(o=>{
-            const maxK=Math.max(...olcumler.slice(-8).map(x=>x.kilo||0),1);
-            const minK=Math.min(...olcumler.slice(-8).map(x=>x.kilo||maxK));
-            const range=maxK-minK||1;
-            const h2=Math.round(((o.kilo||0)-minK)/range*80)+20;
-            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-              <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
-              <div style="width:100%;height:${h2}px;background:var(--gold-dark);border-radius:3px 3px 0 0;min-height:4px;opacity:0.85"></div>
-              <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
-            </div>`;
-          }).join('')}
-        </div>
+          </tbody>
+        </table>
       </div>
+    </div>`;
+  }
+
+  // ── SEGMENTAL ──
+  if(hasSeg){
+    html+=`<div class="section-title">🦵 SEGMENTAL ANALİZ</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead><tr style="background:var(--bg3)">
+            <th style="padding:7px 10px;text-align:left;color:var(--text2)">Bölge</th>
+            <th style="padding:7px 8px;text-align:center;color:var(--text2)">Yağ%</th>
+            <th style="padding:7px 8px;text-align:center;color:var(--text2)">Kas (kg)</th>
+          </tr></thead><tbody>
+          ${[['Sağ Bacak','seg_sag_bacak'],['Sol Bacak','seg_sol_bacak'],['Sağ Kol','seg_sag_kol'],['Sol Kol','seg_sol_kol'],['Gövde','seg_govde']].map(([n,k])=>{
+            const y=son[k+'_yag'],m=son[k+'_kas'];
+            if(!y)return '';
+            const r=y<25?'var(--green)':y<32?'var(--gold-dark)':y<40?'#E07020':'var(--red)';
+            return `<tr style="border-bottom:0.5px solid var(--border)">
+              <td style="padding:7px 10px;color:var(--text2)">${n}</td>
+              <td style="padding:7px 8px;text-align:center"><span style="font-weight:700;color:${r}">${y}%</span></td>
+              <td style="padding:7px 8px;text-align:center;color:var(--blue);font-weight:600">${m?m+' kg':'-'}</td>
+            </tr>`;
+          }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }
+
+  // ── METABOLİZMA ──
+  if(son.bmr||son.ic_yaglama||son.hedef_kilo){
+    html+=`<div class="section-title">🔬 METABOLİZMA</div>
+    <div class="card" style="margin-bottom:14px">
+      ${son.bmr?`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">Bazal Metabolizma (BMR)</span><strong>${son.bmr} kcal</strong></div>`:''}
+      ${son.ic_yaglama?`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">İç Yağlanma</span><strong style="color:${son.ic_yaglama>5?'var(--red)':'var(--green)'}">${son.ic_yaglama}/10</strong></div>`:''}
+      ${son.hedef_kilo?`<div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:13px;color:var(--text2)">Hedef Kilo</span><strong style="color:var(--green)">${son.hedef_kilo} kg</strong></div>`:''}
+    </div>`;
+  }
+
+  // ── KİLO GRAFİĞİ ──
+  html+=`<div class="section-title">📊 KİLO GRAFİĞİ</div>
+  <div class="card">
+    <div style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-bottom:8px">
+      ${olcumler.slice(-8).map(o=>{
+        const vals=olcumler.slice(-8).map(x=>x.kilo||0).filter(v=>v>0);
+        const maxK=Math.max(...vals,1);
+        const minK=Math.min(...vals,maxK);
+        const range=maxK-minK||1;
+        const h2=Math.round(((o.kilo||0)-minK)/range*80)+20;
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;color:var(--text2);font-weight:600">${o.kilo||''}</div>
+          <div style="width:100%;height:${h2}px;background:var(--gold-dark);border-radius:3px 3px 0 0;min-height:4px"></div>
+          <div style="font-size:9px;color:var(--text3)">${new Date(o.tarih).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})}</div>
+        </div>`;
+      }).join('')}
     </div>
+  </div>
+  </div>
+
+    <!-- Sağ kolon: Tüm ölçümler tablosu -->
     <div>
-      <!-- Tüm ölçümler tablosu -->
-      <div class="section-title">📋 Tüm Ölçümler</div>
+      <div class="section-title">📋 TÜM ÖLÇÜMLER</div>
       <div class="card" style="overflow-x:auto;padding:8px">
         <table style="width:100%;font-size:12px;border-collapse:collapse">
           <thead><tr style="border-bottom:1px solid var(--border)">
@@ -971,12 +1010,14 @@ async function renderOlcum(){
             <th style="padding:7px;text-align:center;color:var(--text2)">Kilo</th>
             <th style="padding:7px;text-align:center;color:var(--text2)">Yağ%</th>
             <th style="padding:7px;text-align:center;color:var(--text2)">BMI</th>
+            <th style="padding:7px;text-align:center;color:var(--text2)">Sıvı%</th>
           </tr></thead><tbody>
           ${[...olcumler].reverse().map(o=>`<tr style="border-bottom:1px solid var(--border)">
             <td style="padding:7px">${tarihFmt(o.tarih)}</td>
             <td style="padding:7px;text-align:center;font-weight:600">${o.kilo?o.kilo+' kg':'—'}</td>
             <td style="padding:7px;text-align:center;color:#E07020">${o.yag_yuzdesi?o.yag_yuzdesi+'%':'—'}</td>
-            <td style="padding:7px;text-align:center">${o.bmi||'—'}</td>
+            <td style="padding:7px;text-align:center;color:var(--blue)">${o.bmi||'—'}</td>
+            <td style="padding:7px;text-align:center;color:var(--blue)">${o.su_yuzdesi?o.su_yuzdesi+'%':'—'}</td>
           </tr>`).join('')}
           </tbody>
         </table>
