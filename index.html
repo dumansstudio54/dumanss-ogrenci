@@ -575,6 +575,10 @@ function renderDersler(){
   const kd=kalanDers(o);
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
+  const padMain=desk?'24px 32px':'14px 16px';
+  const gapMain=desk?'28px':'12px';
+  const fsMeta=desk?'22px':'18px';
+  const fsBuyuk=desk?'40px':'30px';
   const topPkt=o.toplam_paket||o.paket||20;
   const yapilan=o.yapilan||0;
   const paketNo=Math.max(1,Math.ceil(topPkt/(o.paket||20)));
@@ -646,6 +650,9 @@ function renderSu(){
   const pct=Math.min(100,Math.round(bugunSu/suH*100));
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
+  const padMain=desk?'24px 32px':'14px 16px';
+  const gapMain=desk?'28px':'12px';
+  const fsMeta=desk?'22px':'18px';
 
   let html=`<div style="padding:${padMain}">
     <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>
@@ -734,6 +741,9 @@ function renderDongu(){
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
   const t=new Date();
+  const padMain=desk?'24px 32px':'14px 16px';
+  const gapMain=desk?'28px':'12px';
+  const fsMeta=desk?'22px':'18px';
 
   let html=`<div style="padding:${padMain}">
     <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Regl Döngüsü Takibi</div>
