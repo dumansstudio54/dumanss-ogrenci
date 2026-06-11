@@ -431,6 +431,13 @@ function renderAna(){
   const donguGun=sonDongu?Math.floor((new Date()-sonDongu)/864e5):null;
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
+  const fsBuyuk=desk?'40px':'30px';
+  const fsMeta=desk?'22px':'18px';
+  const fsNorm=desk?'14px':'13px';
+  const fsKard=desk?'16px':'14px';
+  const padMain=desk?'24px 32px':'14px 16px';
+  const gapMain=desk?'28px':'12px';
+  const colMain=genis?'1fr 380px':desk?'1fr 340px':'1fr';
 
   const gunSira=[1,2,3,4,5,6,0];
   const gunIs=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
@@ -442,32 +449,32 @@ function renderAna(){
     const bst=gi<6?'border-bottom:0.5px solid #F0E8DE;':'';
     const cst=bugun2?'background:#D2A941;color:white;':aktif?'background:#F9EFBD;color:#946C18;':'background:#F5F0E8;color:#A89070;';
     const ders=aktif?(o.tur==='ems'?'⚡ EMS':'🧘 Pilates'):'—';
-    const saat=aktif?`<div style="font-size:10px;color:#A89070">${o.saat||''}</div>`:'';
+    const saat=aktif?'<div style="font-size:10px;color:#A89070">'+(o.saat||'')+'</div>':'';
     const badge=bugun2&&aktif?'<div style="font-size:9px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:2px 8px;border-radius:99px;font-weight:600">Bugün</div>':'';
-    haftaHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;${bst}">
-      <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;${cst}">${gunIs[gi]}</div>
-      <div style="flex:1">
-        <div style="font-size:13px;color:${aktif?'#2A2015':'#A89070'};font-weight:${aktif?'500':'400'}">${ders}</div>
-        ${saat}
-      </div>${badge}
-    </div>`;
+    haftaHtml+='<div style="display:flex;align-items:center;gap:10px;padding:9px 0;'+bst+'">'
+      +'<div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;'+cst+'">'+gunIs[gi]+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:13px;color:'+(aktif?'#2A2015':'#A89070')+';font-weight:'+(aktif?'500':'400')+'">'+ders+'</div>'
+      +saat
+      +'</div>'+badge
+      +'</div>';
   });
 
   const t=new Date();
   const tarihStr=`${GUNLER[t.getDay()]} ${t.getDate()} ${AYLAR[t.getMonth()]}`;
-  const pad2=`${desk?'24px 32px':'14px 16px'}`;
-  const col2=`${genis?'1fr 380px':desk?'1fr 340px':'1fr'}`;
+  const pad2=`${padMain}`;
+  const col2=`${colMain}`;
 
   const html=`<div style="padding:${pad2}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:3px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
+    <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:3px">Merhaba, ${o.ad.split(' ')[0]}! 👋</div>
     <div style="font-size:12px;color:#A89070;margin-bottom:14px">${tarihStr}</div>
-    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:20px;font-style:italic;font-size:${desk?'14px':'13px'};color:#946C18;line-height:1.7">${mot}</div>
-    <div style="display:grid;grid-template-columns:${col2};gap:${desk?'28px':'12px'};align-items:start">
+    <div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:20px;font-style:italic;font-size:${fsNorm};color:#946C18;line-height:1.7">${mot}</div>
+    <div style="display:grid;grid-template-columns:${col2};gap:${gapMain};align-items:start">
       <div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
           <div class="metric">
             <div class="metric-lbl">KALAN DERS</div>
-            <div class="metric-val" style="color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-size:${desk?'40px':'30px'}">${kd}</div>
+            <div class="metric-val" style="color:${kd<=3?'#C03010':kd<=7?'#D2A941':'#946C18'};font-size:${fsBuyuk}">${kd}</div>
             <div style="height:5px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin-bottom:5px">
               <div style="width:${Math.max(2,Math.round(kd/topPkt*100))}%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px"></div>
             </div>
@@ -475,13 +482,13 @@ function renderAna(){
           </div>
           <div class="metric">
             <div class="metric-lbl">GÜN KALDI</div>
-            <div class="metric-val" style="color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-size:${desk?'40px':'30px'}">${Math.max(0,kg)}</div>
+            <div class="metric-val" style="color:${kg<=7?'#C03010':kg<=14?'#D2A941':'#5A7A9A'};font-size:${fsBuyuk}">${Math.max(0,kg)}</div>
             <div style="font-size:10px;color:#A89070;margin-top:8px">Bitiş: ${tarihFmt(bit)}</div>
           </div>
         </div>
         <div class="card" style="border-left:3px solid #946C18;border-radius:0 12px 12px 0;margin-bottom:12px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
+            <div style="font-size:${fsNorm};font-weight:600;color:#2A2015">🎯 Paket İlerlemesi</div>
             <div style="font-size:11px;color:#A89070">${buPkt} / ${o.paket||20} ders</div>
           </div>
           <div style="height:7px;background:#E8DFD0;border-radius:4px;overflow:hidden">
@@ -490,8 +497,8 @@ function renderAna(){
         </div>
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
-            <div style="font-size:${desk?'16px':'14px'};font-weight:700;color:#5A8A5A">${suPct}%</div>
+            <div style="font-size:${fsNorm};font-weight:600;color:#5A8A5A">💧 Bugünkü Su</div>
+            <div style="font-size:${fsKard};font-weight:700;color:#5A8A5A">${suPct}%</div>
           </div>
           <div style="height:8px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:7px">
             <div style="width:${suPct}%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:4px;transition:width .5s"></div>
@@ -501,23 +508,23 @@ function renderAna(){
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;${desk?'':'margin-top:12px'}">
         <div class="card">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#2A2015;margin-bottom:12px">📆 Haftalık Program</div>
+          <div style="font-size:${fsNorm};font-weight:600;color:#2A2015;margin-bottom:12px">📆 Haftalık Program</div>
           ${haftaHtml}
         </div>
         <div class="card">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Döngüsü</div>
+          <div style="font-size:${fsNorm};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Döngüsü</div>
           <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?donguGun+'. gün':'Henüz kayıt yok'}</div>
           ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${tarihFmt(sonDongu)}</div>`:''}
           <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Regl Döngüsü Başlat'}</button>
         </div>
         <div class="card" style="background:#FFFAEE;border-color:#D4C8B0">
-          <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#946C18;margin-bottom:6px">💳 Ödeme</div>
-          <div style="font-size:${desk?'26px':'22px'};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
+          <div style="font-size:${fsNorm};font-weight:600;color:#946C18;margin-bottom:6px">💳 Ödeme</div>
+          <div style="font-size:${desk?"26px":"22px"};font-weight:700;color:#2A2015;font-family:Georgia,serif">₺${(o.ucret||0).toLocaleString('tr-TR')}</div>
           <div style="font-size:11px;color:#A89070;margin-top:3px">${o.paket||20} ders / paket</div>
         </div>
         <div class="card" onclick="sp('olcum')" style="cursor:pointer">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:${desk?'14px':'13px'};font-weight:600;color:#A89070">📏 Son Ölçüm</div>
+            <div style="font-size:${fsNorm};font-weight:600;color:#A89070">📏 Son Ölçüm</div>
             <div style="font-size:11px;color:#946C18;background:#F9EFBD;padding:3px 10px;border-radius:99px;border:0.5px solid #D4C8B0">Detay →</div>
           </div>
           <div id="son-olcum-ozet">
@@ -577,29 +584,29 @@ function renderDersler(){
   gunSira.forEach(g=>{
     const aktif=(o.gunler||[]).includes(g);
     const bugunG=g===buG;
-    gunHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);${!aktif?'opacity:.4':''}">
-      <div style="width:38px;height:38px;background:${bugunG?'var(--gold-dark)':'var(--bg3)'};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${bugunG?'white':'var(--text2)'};font-size:11px;font-weight:600;flex-shrink:0">${GUNLER[g]}</div>
+    gunHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);${!aktif?"opacity:.4":""}">
+      <div style="width:38px;height:38px;background:${bugunG?"var(--gold-dark)":"var(--bg3)"};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${bugunG?"white":"var(--text2)"};font-size:11px;font-weight:600;flex-shrink:0">${GUNLER[g]}</div>
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:${aktif?'600':'400'};color:${bugunG?'var(--gold-dark)':'var(--text)'}">${aktif?`${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'} — ${o.saat||'Saat belirtilmedi'}`:'Ders yok'}</div>
+        <div style="font-size:13px;font-weight:${aktif?"600":"400"};color:${bugunG?"var(--gold-dark)":"var(--text)"}">${aktif?`${o.tur==="ems"?"⚡ EMS":"🧘 Pilates"} — ${o.saat||"Saat belirtilmedi"}`:'Ders yok'}</div>
         ${bugunG&&aktif?'<div style="font-size:11px;color:var(--green)">● Bugün</div>':''}
       </div>
     </div>`;
   });
 
-  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>
-    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+  let html=`<div style="padding:${padMain}">
+    <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>
+    <div style="display:grid;grid-template-columns:${genis?"1fr 360px":desk?"1fr 300px":"1fr"};gap:${gapMain};align-items:start">
       <div>
         <div class="card" style="border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-            <span class="badge b-pilates">${o.tur==='ems'?'⚡ EMS':'🧘 Pilates'}</span>
-            <span style="margin-left:auto;font-size:12px;color:var(--text2)">${o.paket} ders/paket · ₺${(o.ucret||0).toLocaleString('tr-TR')}</span>
+            <span class="badge b-pilates">${o.tur==="ems"?"⚡ EMS":"🧘 Pilates"}</span>
+            <span style="margin-left:auto;font-size:12px;color:var(--text2)">${o.paket} ders/paket · ₺${(o.ucret||0).toLocaleString("tr-TR")}</span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-bottom:14px">
-            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:${barRenk(kd)}">${kd}</div><div style="font-size:11px;color:var(--text2)">Kalan</div></div>
-            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--gold-dark)">${buPkt}</div><div style="font-size:11px;color:var(--text2)">Bu Pakette</div></div>
-            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800">${yapilan}</div><div style="font-size:11px;color:var(--text2)">Toplam</div></div>
-            <div><div style="font-size:${desk?'28px':'22px'};font-weight:800;color:var(--gold)">${paketNo}</div><div style="font-size:11px;color:var(--text2)">Paket</div></div>
+            <div><div style="font-size:${desk?"28px":"22px"};font-weight:800;color:${barRenk(kd)}">${kd}</div><div style="font-size:11px;color:var(--text2)">Kalan</div></div>
+            <div><div style="font-size:${desk?"28px":"22px"};font-weight:800;color:var(--gold-dark)">${buPkt}</div><div style="font-size:11px;color:var(--text2)">Bu Pakette</div></div>
+            <div><div style="font-size:${desk?"28px":"22px"};font-weight:800">${yapilan}</div><div style="font-size:11px;color:var(--text2)">Toplam</div></div>
+            <div><div style="font-size:${desk?"28px":"22px"};font-weight:800;color:var(--gold)">${paketNo}</div><div style="font-size:11px;color:var(--text2)">Paket</div></div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px">
             <span>${paketNo}. paket</span><span>${buPkt}/${o.paket||20}</span>
@@ -615,7 +622,7 @@ function renderDersler(){
       <div>
         <div class="section-title">🚫 İptal Hakkı</div>
         <div class="card" style="text-align:center;padding:20px">
-          <div style="font-size:${desk?'40px':'32px'};font-weight:800;color:${kalanIptal===0?'var(--red)':'var(--green)'};font-family:Georgia,serif">${kalanIptal}</div>
+          <div style="font-size:${desk?"40px":"32px"};font-weight:800;color:${kalanIptal===0?"var(--red)":"var(--green)"};font-family:Georgia,serif">${kalanIptal}</div>
           <div style="font-size:13px;color:var(--text2);margin-top:4px">Kalan İptal Hakkı</div>
           <div style="font-size:12px;color:var(--text3);margin-top:4px">${kulIptal} kullanıldı / ${o.iptal_hakki||1} toplam</div>
         </div>
@@ -633,9 +640,9 @@ function renderSu(){
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
 
-  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>
-    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+  let html=`<div style="padding:${padMain}">
+    <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>
+    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${gapMain};align-items:start">
       <div>
         <div class="card" style="text-align:center;padding:24px 16px">
           <div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--blue) ${pct*3.6}deg, var(--bg3) ${pct*3.6}deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
@@ -721,13 +728,13 @@ function renderDongu(){
   const genis=window.innerWidth>=1200;
   const t=new Date();
 
-  let html=`<div style="padding:${desk?'24px 32px':'14px 16px'}">
-    <div style="font-size:${desk?'22px':'18px'};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Regl Döngüsü Takibi</div>
-    <div style="display:grid;grid-template-columns:${genis?'1fr 360px':desk?'1fr 300px':'1fr'};gap:${desk?'28px':'12px'};align-items:start">
+  let html=`<div style="padding:${padMain}">
+    <div style="font-size:${fsMeta};font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Regl Döngüsü Takibi</div>
+    <div style="display:grid;grid-template-columns:${genis?"1fr 360px":desk?"1fr 300px":"1fr"};gap:${gapMain};align-items:start">
       <div>
         <div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:24px">
           <div style="font-size:36px;margin-bottom:8px">🌸</div>
-          <div style="font-size:${desk?'20px':'17px'};font-weight:800;margin-bottom:4px">${ozet.baslik}</div>
+          <div style="font-size:${desk?"20px":"17px"};font-weight:800;margin-bottom:4px">${ozet.baslik}</div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:12px">${ozet.aciklama}</div>
           <span class="badge ${ozet.badge}">${ozet.gun}</span>
         </div>
@@ -752,21 +759,21 @@ function renderDongu(){
               const selAy=new Date(t.getFullYear(),t.getMonth()+donguAyOffset,1);
               const ayB=new Date(selAy.getFullYear(),selAy.getMonth(),1);
               const ayS=new Date(selAy.getFullYear(),selAy.getMonth()+1,0);
-              let cells='';
-              for(let i=0;i<ayB.getDay();i++)cells+='<div></div>';
+              let cells="";
+              for(let i=0;i<ayB.getDay();i++)cells+="<div></div>";
               for(let d=1;d<=ayS.getDate();d++){
                 const tr=new Date(selAy.getFullYear(),selAy.getMonth(),d);
                 const bugunG=d===t.getDate()&&selAy.getMonth()===t.getMonth()&&selAy.getFullYear()===t.getFullYear();
-                let bg='var(--card2)',tc='var(--text2)',faz=null;
+                let bg="var(--card2)",tc="var(--text2)",faz=null;
                 if(bas.length){
                   const son=new Date(bas[bas.length-1]);
                   const gun2=((Math.floor((tr-son)/864e5))%uzunluk)+1;
-                  if(gun2<=5){faz='period';bg='var(--pink-bg)';tc='var(--pink)';}
+                  if(gun2<=5){faz="period";bg="var(--pink-bg)";tc="var(--pink)";}
                   else if(gun2<=13){faz='fertile';bg='var(--green-bg)';tc='var(--green)';}
                   else if(gun2===14){faz='ovulation';bg='var(--yellow-bg)';tc='var(--yellow)';}
                   else{faz='luteal';bg='var(--purple-bg)';tc='var(--purple)';}
                 }
-                cells+=`<div style="aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:${bugunG?800:500};background:${bg};color:${tc};border:${bugunG?'2px solid var(--purple)':'1px solid transparent'}">${d}</div>`;
+                cells+=`<div style="aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:${bugunG?800:500};background:${bg};color:${tc};border:${bugunG?"2px solid var(--purple)":"1px solid transparent"}">${d}</div>`;
               }
               return cells;
             })()}
@@ -784,7 +791,7 @@ function renderDongu(){
           <div class="row" style="margin-bottom:8px">
             <span style="font-size:13px;color:var(--text2)">Döngü uzunluğu:</span>
             <select onchange="donguUzunluk(parseInt(this.value))" style="margin-left:auto;padding:6px;border:1px solid var(--border);border-radius:8px;background:var(--card2);color:var(--text);font-size:13px">
-              ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>`<option value="${u}" ${u===uzunluk?'selected':''}>${u} gün</option>`).join('')}
+              ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>`<option value="${u}" ${u===uzunluk?"selected":""}>${u} gün</option>`).join('')}
             </select>
           </div>
           ${bas.length?`<div style="margin-top:10px"><div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Kayıtlı döngüler:</div>
