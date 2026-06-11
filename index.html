@@ -1059,6 +1059,104 @@ async function odemeBildir(){
   yukluYap(false);
 }
 
+function renderOdeme(){
+  if(!OGR)return;
+  const o=OGR;
+  const kd=kalanDers(o);
+  const kg=kalanGun(o);
+  const desk=window.innerWidth>=768;
+  const genis=window.innerWidth>=1200;
+  const padO=desk?'24px 32px':'14px 16px';
+  const colO=genis?'1fr 360px':desk?'1fr 300px':'1fr';
+  const gapO=desk?'28px':'12px';
+
+  let html='<div style="padding:'+padO+'">';
+  html+='<div style="font-size:'+(desk?'22px':'18px')+';font-weight:700;color:#2A2015;margin-bottom:16px">💳 Ödeme</div>';
+  html+='<div style="display:grid;grid-template-columns:'+colO+';gap:'+gapO+';align-items:start">';
+  html+='<div>';
+
+  // Paket fiyat kutusu
+  html+='<div style="background:linear-gradient(135deg,var(--gold-bg),rgba(148,108,24,.05));border:1px solid var(--gold-border);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">';
+  html+='<div style="font-size:13px;color:var(--text2)">'+(o.tur==='ems'?'⚡ EMS':'🧘 Pilates')+' Paketi</div>';
+  html+='<div style="font-size:'+(desk?'38px':'32px')+';font-weight:800;color:var(--gold-dark);font-family:Georgia,serif;margin:8px 0">₺'+(o.ucret||0).toLocaleString('tr-TR')+'</div>';
+  html+='<div style="font-size:13px;color:var(--text2)">'+(o.paket||20)+' ders / ay</div>';
+  if(o.borc>0) html+='<div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ '+o.borc+' ders borcunuz var</div>';
+  html+='</div>';
+
+  // Durum alert
+  if(o.odemeBekliyor){
+    html+='<div class="alert a-yellow">⏳ Bildiriminiz iletildi. Onaylanınca paket açılacak.</div>';
+  } else if(kd<=3){
+    html+='<div class="alert a-red">⚠️ Son '+kd+' dersiniz kaldı. Ödeme yaparak yenileyebilirsiniz.</div>';
+  } else {
+    html+='<div class="alert a-green">✓ Paketiniz aktif. '+kd+' ders, '+Math.max(0,kg)+' gün kaldı.</div>';
+  }
+
+  // Ödeme adımları kartı
+  html+='<div class="card">';
+  html+='<div style="font-size:'+(desk?'16px':'15px')+';font-weight:700;margin-bottom:8px">Ödeme Yaptım Bildirimi</div>';
+  html+='<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Havale/EFT yaptıktan sonra aşağıdaki butona basın. Stüdyonuz onaylayınca paketiniz açılır.</div>';
+
+  // Adım adım talimat
+  html+='<div style="background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:10px;padding:14px;margin-bottom:14px">';
+  html+='<div style="font-size:10px;font-weight:700;color:var(--gold-dark);letter-spacing:1px;margin-bottom:10px">📋 ÖDEME ADIM ADIM</div>';
+  var adimlar=[
+    ['1','Bankanızın mobil uygulamasını açın.','Para Transferi → Havale/EFT bölümüne gidin.'],
+    ['2','Aşağıdaki IBAN numarasını kopyalayın','ve bankanızdaki IBAN alanına yapıştırın.'],
+    ['3','Alıcı adı otomatik gelecektir:','MERVE DUMAN'],
+    ['4','Açıklama metnini kopyalayın','ve bankanızdaki açıklama bölümüne yapıştırın.'],
+    ['5','Transferi gönderdikten sonra','aşağıdaki "Ödeme Yaptım" butonuna basın.'],
+  ];
+  adimlar.forEach(function(a){
+    html+='<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px">';
+    html+='<div style="width:20px;height:20px;border-radius:50%;background:var(--gold-dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+a[0]+'</div>';
+    html+='<div style="font-size:12px;color:var(--text2);line-height:1.5"><strong>'+a[1]+'</strong> '+a[2]+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+
+  // Ödeme bilgileri
+  html+='<div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px">';
+  html+='<div style="font-size:10px;font-weight:600;color:var(--gold-dark);letter-spacing:1px;margin-bottom:8px">ÖDEME BİLGİLERİ</div>';
+  html+='<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:var(--text2)">Alıcı</span><span style="font-size:13px;font-weight:700">MERVE DUMAN</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Banka</span><span style="font-size:13px;font-weight:600">Garanti Bankası</span></div>';
+  
+  // IBAN
+  html+='<div style="background:white;border-radius:8px;padding:10px;margin-bottom:8px">';
+  html+='<div style="font-size:10px;color:var(--text2);margin-bottom:4px">IBAN</div>';
+  html+='<div style="font-size:'+(desk?'15px':'13px')+';font-weight:800;color:var(--gold-dark)">TR35 0006 2000 3330 0006 8099 60</div>';
+  html+='<button onclick="ibanKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>';
+  html+='</div>';
+  
+  // Açıklama
+  html+='<div style="background:var(--gold-bg);border-radius:8px;padding:10px;border:1px solid var(--gold-border)">';
+  html+='<div style="font-size:10px;font-weight:600;color:var(--gold-dark);margin-bottom:4px">⚠️ Açıklama Zorunlu</div>';
+  html+='<div style="font-size:13px;font-weight:600" id="odeme-aciklama">'+o.ad+' - '+(o.tur==='ems'?'EMS':'Pilates')+' - '+new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'})+'</div>';
+  html+='<button onclick="aciklamaKopyala()" style="margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold-dark);padding:4px 10px;border-radius:99px;font-size:11px;cursor:pointer;font-weight:600">📋 Kopyala</button>';
+  html+='</div>';
+  html+='</div>';
+
+  // Kaydet butonu
+  html+='<button class="btn btn-primary" style="width:100%" onclick="odemeBildir()" '+(o.odemeBekliyor?'disabled':'')+'>'+
+    (o.odemeBekliyor?'⏳ Bildirim İletildi':'✓ Ödeme Yaptım — Stüdyoya Bildir')+
+  '</button>';
+  html+='</div>';
+  html+='</div>';
+
+  // Sağ kolon: paket bilgileri
+  html+='<div>';
+  html+='<div class="section-title">📊 Paket Bilgileri</div>';
+  html+='<div class="card">';
+  html+='<div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Başlangıç</span><span style="font-weight:600;margin-left:auto">'+tarihFmt(o.baslangic)+'</span></div>';
+  html+='<div class="row" style="margin-bottom:10px"><span style="color:var(--text2)">Bitiş</span><span style="font-weight:600;margin-left:auto">'+tarihFmt(bitis(o))+'</span></div>';
+  html+='<div class="row"><span style="color:var(--text2)">Kalan ders</span><span style="font-weight:700;color:'+barRenk(kd)+';margin-left:auto">'+kd+' / '+(o.paket||20)+'</span></div>';
+  html+='</div>';
+  html+='</div>';
+
+  html+='</div></div>';
+  document.getElementById('c-odeme').innerHTML=html;
+}
+
 </script>
 </body>
 </html>
