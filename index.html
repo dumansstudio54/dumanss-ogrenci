@@ -538,7 +538,8 @@ function renderAna(){
   document.getElementById('c-ana').innerHTML=html;
   if(OGR._id){
     sb.from('olcumler').select('*').eq('ogrenci_id',OGR._id).order('tarih',{ascending:false}).limit(2)
-      .then(({data:d})=>{
+      .then(function(res){
+        const d=res.data;
         const el=document.getElementById('son-olcum-ozet');
         if(!el)return;
         if(!d||!d.length){el.innerHTML='<div style="font-size:12px;color:#A89070">Henüz ölçüm yok</div>';return;}
@@ -547,21 +548,50 @@ function renderAna(){
         const kiloFark=onceki&&son.kilo&&onceki.kilo?((son.kilo-onceki.kilo).toFixed(1)):null;
         const farkRenk=kiloFark?parseFloat(kiloFark)<0?'#5A8A5A':'#C03010':'#A89070';
         const farkIkon=kiloFark?parseFloat(kiloFark)<0?'↓':parseFloat(kiloFark)>0?'↑':'→':'';
-        const fs3b=window.innerWidth>=768?'20px':'16px';
-        const cols3=son.kilo&&son.yag_yuzdesi&&son.bmi?'repeat(3,1fr)':son.kilo&&son.yag_yuzdesi?'repeat(2,1fr)':'1fr';
-        let ozHtml='<div style="display:grid;grid-template-columns:'+cols3+';gap:8px;margin-bottom:8px">';
-        if(son.kilo) ozHtml+='<div style="text-align:center"><div style="font-size:'+fs3b+';font-weight:800;color:#2A2015;font-family:Georgia,serif">'+son.kilo+'</div><div style="font-size:10px;color:#A89070">kg</div></div>';
-        if(son.yag_yuzdesi) ozHtml+='<div style="text-align:center"><div style="font-size:'+fs3b+';font-weight:800;color:#E07020;font-family:Georgia,serif">'+son.yag_yuzdesi+'%</div><div style="font-size:10px;color:#A89070">Yağ</div></div>';
-        if(son.bmi) ozHtml+='<div style="text-align:center"><div style="font-size:'+fs3b+';font-weight:800;color:#5A7A9A;font-family:Georgia,serif">'+son.bmi+'</div><div style="font-size:10px;color:#A89070">BMI</div></div>';
+
+        let ozHtml='';
+
+        // Ana metrikler - 3 kolon
+        const metrikler=[];
+        if(son.kilo) metrikler.push({val:son.kilo,unit:'kg',lbl:'Kilo',renk:'#2A2015'});
+        if(son.yag_yuzdesi) metrikler.push({val:son.yag_yuzdesi+'%',unit:'',lbl:'Yağ',renk:'#E07020'});
+        if(son.bmi) metrikler.push({val:son.bmi,unit:'',lbl:'BMI',renk:'#5A7A9A'});
+        if(son.su_yuzdesi) metrikler.push({val:son.su_yuzdesi+'%',unit:'',lbl:'Sıvı',renk:'#5A7A9A'});
+
+        const cols=metrikler.length>=4?'repeat(4,1fr)':metrikler.length===3?'repeat(3,1fr)':'repeat(2,1fr)';
+        ozHtml+='<div style="display:grid;grid-template-columns:'+cols+';gap:6px;margin-bottom:8px">';
+        metrikler.forEach(function(m){
+          ozHtml+='<div style="text-align:center;background:var(--bg2);border-radius:8px;padding:6px 4px">'
+            +'<div style="font-size:15px;font-weight:800;color:'+m.renk+';font-family:Georgia,serif">'+m.val+'</div>'
+            +'<div style="font-size:9px;color:var(--text3);margin-top:1px">'+m.lbl+'</div>'
+            +'</div>';
+        });
         ozHtml+='</div>';
-        if(son.gunluk_kalori||son.hedef_kilo){
-          ozHtml+='<div style="display:flex;gap:8px;margin-bottom:6px">';
-          if(son.gunluk_kalori) ozHtml+='<div style="flex:1;background:#EAF7EE;border-radius:6px;padding:5px 8px;text-align:center"><div style="font-size:12px;font-weight:700;color:#5A8A5A">'+son.gunluk_kalori+' kcal</div><div style="font-size:9px;color:#A89070">günlük kalori</div></div>';
-          if(son.hedef_kilo) ozHtml+='<div style="flex:1;background:#F9EFBD;border-radius:6px;padding:5px 8px;text-align:center"><div style="font-size:12px;font-weight:700;color:#946C18">'+son.hedef_kilo+' kg</div><div style="font-size:9px;color:#A89070">hedef kilo</div></div>';
+
+        // Kalori ve Met. Yaşı yan yana
+        if(son.gunluk_kalori||son.metabolizma_yasi){
+          ozHtml+='<div style="display:flex;gap:6px;margin-bottom:6px">';
+          if(son.gunluk_kalori) ozHtml+='<div style="flex:1;background:#EAF7EE;border-radius:7px;padding:5px 8px;text-align:center">'
+            +'<div style="font-size:13px;font-weight:700;color:#5A8A5A">'+son.gunluk_kalori+' kcal</div>'
+            +'<div style="font-size:9px;color:#A89070">günlük kalori</div></div>';
+          if(son.metabolizma_yasi) ozHtml+='<div style="flex:1;background:#F0EBF8;border-radius:7px;padding:5px 8px;text-align:center">'
+            +'<div style="font-size:13px;font-weight:700;color:#8A6A9A">'+son.metabolizma_yasi+' yaş</div>'
+            +'<div style="font-size:9px;color:#A89070">met. yaşı</div></div>';
+          if(son.hedef_kilo) ozHtml+='<div style="flex:1;background:#F9EFBD;border-radius:7px;padding:5px 8px;text-align:center">'
+            +'<div style="font-size:13px;font-weight:700;color:#946C18">'+son.hedef_kilo+' kg</div>'
+            +'<div style="font-size:9px;color:#A89070">hedef kilo</div></div>';
           ozHtml+='</div>';
         }
-        if(kiloFark) ozHtml+='<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#F5F0E8;border-radius:8px;margin-bottom:6px"><span style="font-size:11px;color:#A89070">Önceki ölçümden:</span><span style="font-size:13px;font-weight:700;color:'+farkRenk+';margin-left:auto">'+(parseFloat(kiloFark)>0?'+':'')+kiloFark+' kg '+farkIkon+'</span></div>';
-        ozHtml+='<div style="font-size:10px;color:#A89070">Son ölçüm: '+tarihFmt(son.tarih)+'</div>';
+
+        // Kilo farkı
+        if(kiloFark) ozHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:#F5F0E8;border-radius:7px;margin-bottom:5px">'
+          +'<span style="font-size:11px;color:#A89070">Önceki ölçümden:</span>'
+          +'<span style="font-size:12px;font-weight:700;color:'+farkRenk+';margin-left:auto">'+(parseFloat(kiloFark)>0?'+':'')+kiloFark+' kg '+farkIkon+'</span>'
+          +'</div>';
+
+        // Son ölçüm tarihi
+        ozHtml+='<div style="font-size:10px;color:#A89070">📅 Son ölçüm: '+tarihFmt(son.tarih)+'</div>';
+
         el.innerHTML=ozHtml;
       })
       .catch(function(){const el2=document.getElementById('son-olcum-ozet');if(el2)el2.innerHTML='<div style="font-size:12px;color:#A89070">Ölçüm yüklenemedi</div>';});
