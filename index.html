@@ -514,7 +514,7 @@ function renderAna(){
         <div class="card">
           <div style="font-size:${fsNorm};font-weight:600;color:#C07A90;margin-bottom:6px">🌸 Regl Döngüsü</div>
           <div style="font-size:13px;color:${sonDongu?'#2A2015':'#A89070'}">${sonDongu?donguGun+'. gün':'Henüz kayıt yok'}</div>
-          ${sonDongu?`<div style="font-size:10px;color:#A89070;margin-top:3px">Son: ${tarihFmt(sonDongu)}</div>`:''}
+          ${sonDongu?'<div style="font-size:10px;color:#A89070;margin-top:3px">Son: '+tarihFmt(sonDongu)+'</div>':''}
           <button onclick="sp('dongu')" style="margin-top:8px;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 12px;border-radius:99px;cursor:pointer">${sonDongu?'Döngü Detayı':'+ Regl Döngüsü Başlat'}</button>
         </div>
         <div class="card" style="background:#FFFAEE;border-color:#D4C8B0">
@@ -587,7 +587,7 @@ function renderDersler(){
     gunHtml+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);${!aktif?"opacity:.4":""}">
       <div style="width:38px;height:38px;background:${bugunG?"var(--gold-dark)":"var(--bg3)"};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${bugunG?"white":"var(--text2)"};font-size:11px;font-weight:600;flex-shrink:0">${GUNLER[g]}</div>
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:${aktif?"600":"400"};color:${bugunG?"var(--gold-dark)":"var(--text)"}">${aktif?`${o.tur==="ems"?"⚡ EMS":"🧘 Pilates"} — ${o.saat||"Saat belirtilmedi"}`:'Ders yok'}</div>
+        <div style="font-size:13px;font-weight:${aktif?"600":"400"};color:${bugunG?"var(--gold-dark)":"var(--text)"}">${aktif?(o.tur==="ems"?"⚡ EMS":"🧘 Pilates")+" — "+(o.saat||"Saat belirtilmedi"):'Ders yok'}</div>
         ${bugunG&&aktif?'<div style="font-size:11px;color:var(--green)">● Bugün</div>':''}
       </div>
     </div>`;
@@ -653,16 +653,16 @@ function renderSu(){
           </div>
           <div style="font-size:13px;color:var(--text2);margin-bottom:16px">${pct>=100?'🎉 Hedefe ulaştınız!':pct>=75?'💪 Çok yaklaştınız!':pct>=50?'🙂 Yarısını geçtiniz!':'💧 Su içmeye devam!'}</div>
           <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            ${[150,200,250,500].map(ml=>`<button onclick="suEkle(${ml})" style="padding:9px 14px;border-radius:99px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);cursor:pointer;font-size:12px;font-weight:700">+${ml}ml</button>`).join('')}
+            ${(()=>{const bs=[];[150,200,250,500].forEach(ml=>{bs.push('<button onclick="suEkle('+ml+')" style="padding:9px 14px;border-radius:99px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);cursor:pointer;font-size:12px;font-weight:700">+'+ml+'ml</button>');});return bs.join('');})()}
           </div>
-          ${bugunSu>0?`<button onclick="suSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">↺ Sıfırla</button>`:''}
+          ${bugunSu>0?'<button onclick="suSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">↺ Sıfırla</button>':''}
         </div>
       </div>
       <div>
         <div class="section-title">⚙️ Günlük Hedef</div>
         <div class="card">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            ${[1500,2000,2500,3000].map(h=>`<button onclick="setHedef(${h})" class="btn-sm" style="${suH===h?'background:var(--blue);color:#fff;border-color:var(--blue)':''}">${h>=1000?(h/1000).toFixed(1)+'L':h+'ml'}</button>`).join('')}
+            ${(()=>{const btns=[];[1500,2000,2500,3000].forEach(h=>{const active=suH===h;const lbl=h>=1000?(h/1000).toFixed(1)+'L':h+'ml';btns.push('<button onclick="setHedef('+h+')" class="btn-sm" style="'+(active?'background:var(--blue);color:#fff;border-color:var(--blue)':'')+'">'+lbl+'</button>');});return btns.join('');})()}
           </div>
         </div>
         <div class="section-title">📊 Son 7 Gün</div>
@@ -752,7 +752,7 @@ function renderDongu(){
             <span><span class="legend-dot" style="background:var(--purple)"></span>Luteal</span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">
-            ${GUNLER.map(g=>`<div style="text-align:center;font-size:9px;color:var(--text3);padding:2px">${g}</div>`).join('')}
+            ${GUNLER.map(g=>'<div style="text-align:center;font-size:9px;color:var(--text3);padding:2px">'+g+'</div>').join('')}
           </div>
           <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
             ${(()=>{
@@ -791,7 +791,7 @@ function renderDongu(){
           <div class="row" style="margin-bottom:8px">
             <span style="font-size:13px;color:var(--text2)">Döngü uzunluğu:</span>
             <select onchange="donguUzunluk(parseInt(this.value))" style="margin-left:auto;padding:6px;border:1px solid var(--border);border-radius:8px;background:var(--card2);color:var(--text);font-size:13px">
-              ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>`<option value="${u}" ${u===uzunluk?"selected":""}>${u} gün</option>`).join('')}
+              ${[21,24,25,26,27,28,29,30,31,32,35].map(u=>'<option value="'+u+'"'+(u===uzunluk?' selected':'')+'>'+u+' gün</option>').join('')}
             </select>
           </div>
           ${bas.length?`<div style="margin-top:10px"><div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Kayıtlı döngüler:</div>
