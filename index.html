@@ -823,6 +823,10 @@ function renderOdeme(){
   function cl(v,a,b){return v<a?a:v>b?b:v;}function ei(x){return x<0.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
   function fr(now){
     if(!last)last=now;var dt=Math.min(0.05,(now-last)/1000);last=now;t+=dt;ang+=0.42*dt;
+    // canvas starts hidden (display:none while splash is up) so clientWidth is 0
+    // at init; re-measure whenever the visible size appears or changes.
+    if(cv.clientWidth && cv.clientWidth!==S) rs();
+    if(!S){requestAnimationFrame(fr);return;}
     ctx.clearRect(0,0,S,S);
     if(poses&&N){
       var cy=t/SEG,ix=Math.floor(cy)%poses.length,nx=(ix+1)%poses.length,lo=t-Math.floor(cy)*SEG,mt=lo<=HOLD?0:ei((lo-HOLD)/TRANS),A=poses[ix],B=poses[nx],sc=S/300,c=S/2,si=Math.sin(ang),co=Math.cos(ang);
