@@ -242,7 +242,7 @@ body{background:var(--bg);color:var(--text);font-family:'Jost',-apple-system,Bli
     <div class="snav-sec">MENÜ</div>
     <button class="snav-btn act" id="sd-ana" onclick="sp('ana')">🏠 Ana Sayfa</button>
     <button class="snav-btn" id="sd-dersler" onclick="sp('dersler')">📅 Derslerim</button>
-    <button class="snav-btn" id="sd-su" onclick="sp('su')">💧 Su Takibi</button>
+    <button class="snav-btn" id="sd-su" onclick="sp('su')">💧 Su ve Kalori Takibi</button>
     <button class="snav-btn" id="sd-dongu" onclick="sp('dongu')">🌸 Regl Döngüsü</button>
     <button class="snav-btn" id="sd-olcum" onclick="sp('olcum')">📏 Ölçümlerim</button>
     <button class="snav-btn" id="sd-odeme" onclick="sp('odeme')">💳 Ödeme</button>
@@ -283,7 +283,7 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 const GUNLER=['Paz','Pzt','Sal','\u00c7ar','Per','Cum','Cmt'];
 const AYLAR=['Ocak','\u015eubat','Mart','Nisan','May\u0131s','Haziran','Temmuz','A\u011fustos','Eyl\u00fcl','Ekim','Kas\u0131m','Aral\u0131k'];
 const MOTIVASYONLAR=['Her ders, daha g\u00fc\u00e7l\u00fc bir sen i\u00e7in bir ad\u0131m! \ud83d\udcaa','Bedenini dinle, kendine iyi bak. \ud83c\udf3f','Tutarl\u0131l\u0131k, m\u00fckemmeliyetten \u00e7ok daha de\u011ferlidir. \u2728','Bug\u00fcn hareket et, yar\u0131n kendine te\u015fekk\u00fcr et! \ud83e\uddd8','K\u00fc\u00e7\u00fck ad\u0131mlar b\u00fcy\u00fck de\u011fi\u015ftime lere yol a\u00e7ar. \ud83c\udf31','Sen yapabilirsin, her g\u00fcn biraz daha! \ud83c\udf1f'];
-let OGR=null,suData={},donguData={},bugunSu=0;
+let OGR=null,suData={},donguData={},bugunSu=0,kaloriData={},bugunKalori=0;
 function pad(n){return String(n).padStart(2,'0')}
 function bugun(){const t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
 function tarihFmt(s){return s?new Date(s).toLocaleDateString('tr-TR'):'\u2014'}
@@ -316,6 +316,8 @@ async function baslatApp(){
   document.getElementById('hdr-ad').textContent=OGR.ad;
   document.getElementById('sb-ad').textContent=OGR.ad;
   suData=JSON.parse(localStorage.getItem('su_'+OGR._id)||'{}');
+  kaloriData=JSON.parse(localStorage.getItem('kalori_'+OGR._id)||'{}');
+  bugunKalori=kaloriData[bugun()]||0;
   donguData=JSON.parse(localStorage.getItem('dongu_'+OGR._id)||'{"bas":[],"uzunluk":28}');
   bugunSu=suData[bugun()]||0;sp('ana');
 }
@@ -337,6 +339,30 @@ function sp(id){
   const pages=document.querySelector('.pages');if(pages)pages.scrollTop=0;
 }
 
+// ── GÜNLÜK MENÜLER VE HABERLER (bülten) ──
+async function ogrBultenYukle(){
+  if(!OGR||!OGR._id)return;
+  const el=document.getElementById('bulten-alan');
+  if(!el)return;
+  try{
+    const {data:rows,error}=await sb.from('bultenler').select('*').or('hedef_tip.eq.tumu,ogrenci_id.eq.'+OGR._id).order('olusturulma',{ascending:false});
+    if(error||!rows){el.innerHTML='';return;}
+    const now=Date.now();
+    const aktif=rows.filter(function(r){return now-new Date(r.olusturulma).getTime()<24*3600*1000;});
+    if(!aktif.length){el.innerHTML='';return;}
+    el.innerHTML=aktif.map(function(r){
+      const kalan=Math.max(0,Math.round(24-(now-new Date(r.olusturulma).getTime())/3600000));
+      const guvenliIcerik=r.icerik.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const guvenliBaslik=r.baslik.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<div style="background:linear-gradient(135deg,#FDF9F3,#FAF7F0);border:1px solid #F0DC92;border-radius:12px;padding:14px 16px;margin-bottom:14px">'
+        +'<div style="font-size:10px;font-weight:700;color:#946C18;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase">📋 '+guvenliBaslik+'</div>'
+        +'<div style="font-size:12.5px;color:#2A2015;line-height:1.65;white-space:pre-line">'+guvenliIcerik+'</div>'
+        +'<div style="margin-top:9px;font-size:9.5px;color:#A89070;background:#F5F0E8;display:inline-block;padding:3px 9px;border-radius:99px">Merve Hoca\'dan · '+kalan+' saat kaldı</div>'
+        +'</div>';
+    }).join('');
+  }catch(e){el.innerHTML='';}
+}
+
 function renderAna(){
   if(!OGR)return;
   const o=OGR;
@@ -344,6 +370,8 @@ function renderAna(){
   const kg=kalanGun(o);
   const suH=parseInt(localStorage.getItem('su_h_'+o._id)||'2000');
   const suPct=Math.min(100,Math.round(bugunSu/suH*100));
+  const kaloriHA=parseInt(localStorage.getItem('kalori_h_'+o._id)||'2000');
+  const kaloriPctA=Math.min(100,Math.round((bugunKalori||0)/kaloriHA*100));
   const mot=MOTIVASYONLAR[new Date().getDay()%MOTIVASYONLAR.length];
   const bit=bitis(o);
   const topPkt=o.toplam_paket||o.paket||20;
@@ -380,6 +408,7 @@ function renderAna(){
   html+='<div style="font-size:14px;font-weight:700;color:#2A2015;margin-bottom:2px">Merhaba, '+o.ad.split(' ')[0]+'!</div>';
   html+='<div style="font-size:11px;color:#A89070;margin-bottom:12px">'+tarihStr+'</div>';
   html+='<div style="background:rgba(210,169,65,.1);border-left:3px solid #D2A941;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:16px;font-style:italic;font-size:12px;color:#946C18;line-height:1.6">'+mot+'</div>';
+  html+='<div id="bulten-alan"></div>';
 
   if(desk){
     html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start">';
@@ -400,6 +429,11 @@ function renderAna(){
     html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:12px;font-weight:600;color:#5A8A5A">Su Takibi</div><div style="font-size:14px;font-weight:700;color:#5A8A5A">'+suPct+'%</div></div>';
     html+='<div style="height:7px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:5px"><div style="width:'+suPct+'%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:4px"></div></div>';
     html+='<div style="font-size:11px;color:#A89070">'+bugunSu+'ml / '+suH+'ml</div>';
+    html+='</div>';
+    html+='<div class="card" style="padding:14px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:12px;font-weight:600;color:var(--gold-dark,#946C18)">Kalori Takibi</div><div style="font-size:11px;color:var(--gold-dark,#946C18);font-weight:700">'+kaloriPctA+'%</div></div>';
+    html+='<div style="height:7px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:5px"><div style="width:'+kaloriPctA+'%;height:100%;background:linear-gradient(90deg,#946C18,#D4AF37);border-radius:4px"></div></div>';
+    html+='<div style="font-size:11px;color:#A89070">'+bugunKalori+' / '+kaloriHA+' kcal</div>';
     html+='</div>';
     html+='</div>';
 
@@ -434,6 +468,8 @@ function renderAna(){
     html+='<div class="card" style="text-align:center;padding:14px"><div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:1px;margin-bottom:4px">KALAN DERS</div><div style="font-size:36px;font-weight:800;font-family:Cormorant Garamond,Georgia,serif;color:'+(kd<=3?'#C0302C':kd<=7?'#D2A941':'#946C18')+'">'+kd+'</div><div style="height:4px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin:6px 0 4px"><div style="width:'+Math.max(2,Math.round(kd/topPkt*100))+'%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:3px"></div></div><div style="font-size:9px;color:#A89070">'+yapilan+' yapildi — '+Math.max(0,kg)+' gun</div></div>';
     html+='<div class="card" style="text-align:center;padding:14px"><div style="font-size:10px;font-weight:600;color:#5A8A5A;letter-spacing:1px;margin-bottom:4px">SU</div><div style="font-size:36px;font-weight:800;font-family:Cormorant Garamond,Georgia,serif;color:#5A8A5A">'+suPct+'%</div><div style="height:4px;background:#E8DFD0;border-radius:3px;overflow:hidden;margin:6px 0 4px"><div style="width:'+suPct+'%;height:100%;background:linear-gradient(90deg,#5A8A5A,#7AB87A);border-radius:3px"></div></div><div style="font-size:9px;color:#A89070">'+bugunSu+'ml / '+suH+'ml</div></div>';
     html+='</div>';
+    html+='<div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px">';
+    html+='<div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:12px;font-weight:600;color:var(--gold-dark,#946C18)">Kalori Takibi</div><div style="font-size:11px;color:var(--gold-dark,#946C18);font-weight:700">'+kaloriPctA+'%</div></div><div style="height:6px;background:#E8DFD0;border-radius:4px;overflow:hidden;margin-bottom:5px"><div style="width:'+kaloriPctA+'%;height:100%;background:linear-gradient(90deg,#946C18,#D4AF37);border-radius:4px"></div></div><div style="font-size:11px;color:#A89070">'+bugunKalori+' / '+kaloriHA+' kcal</div></div>';
     html+='<div class="card" style="padding:12px;margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="font-size:12px;font-weight:600;color:#2A2015">Paket Ilerlemesi</div><div style="font-size:11px;color:#A89070">'+buPkt+' / '+(o.paket||20)+'</div></div><div style="height:6px;background:#E8DFD0;border-radius:4px;overflow:hidden"><div style="width:'+buPktPct+'%;height:100%;background:linear-gradient(90deg,#946C18,#F0DC92);border-radius:4px"></div></div></div>';
     html+='<div class="card" style="padding:12px;margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:#2A2015;margin-bottom:8px">Haftalik Program</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">';
     gunSira.forEach(function(g,gi){
@@ -452,6 +488,7 @@ function renderAna(){
 
   html+='</div>';
   document.getElementById('c-ana').innerHTML=html;
+  ogrBultenYukle();
 
   if(OGR._id){
     sb.from('olcumler').select('*').eq('ogrenci_id',OGR._id).order('tarih',{ascending:false}).limit(2)
@@ -530,7 +567,7 @@ function renderDersler(){
   });
   let html='<div style="padding:'+padMain+'">';
   html+='<div style="font-size:'+fsMeta+';font-weight:700;color:#2A2015;margin-bottom:16px">📅 Derslerim</div>';
-  html+='<div style="display:grid;grid-template-columns:'+(genis?'1fr 360px':desk?'1fr 300px':'1fr')+';gap:'+gapMain+';align-items:start"><div>';
+  html+='<div style="display:grid;grid-template-columns:'+(genis?'minmax(0,1fr) 360px':desk?'minmax(0,1fr) 300px':'1fr')+';gap:'+gapMain+';align-items:start"><div>';
   html+='<div class="card" style="border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0">';
   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span class="badge b-pilates">'+(o.tur==='ems'?'⚡ EMS':'🧘 Pilates')+'</span><span style="margin-left:auto;font-size:12px;color:var(--text2)">'+o.paket+' ders/paket · ₺'+(o.ucret||0).toLocaleString('tr-TR')+'</span></div>';
   html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-bottom:14px">';
@@ -555,6 +592,7 @@ function renderDersler(){
 function renderSu(){
   if(!OGR)return;
   const suH=parseInt(localStorage.getItem('su_h_'+OGR._id)||'2000');
+  const kaloriH=parseInt(localStorage.getItem('kalori_h_'+OGR._id)||'2000');
   const pct=Math.min(100,Math.round(bugunSu/suH*100));
   const desk=window.innerWidth>=768;
   const genis=window.innerWidth>=1200;
@@ -562,33 +600,98 @@ function renderSu(){
   const gapMain=desk?'28px':'12px';
   const fsMeta=desk?'22px':'18px';
   let html='<div style="padding:'+padMain+'">';
-  html+='<div style="font-size:'+fsMeta+';font-weight:700;color:#2A2015;margin-bottom:16px">💧 Su Takibi</div>';
-  html+='<div style="display:grid;grid-template-columns:'+(genis?'1fr 360px':desk?'1fr 300px':'1fr')+';gap:'+gapMain+';align-items:start"><div>';
+  html+='<div style="font-size:'+fsMeta+';font-weight:700;color:#2A2015;margin-bottom:18px">💧 Su ve Kalori Takibi</div>';
+
+  // ══ SU TAKİBİ PANELİ ══
+  html+='<div style="border-top:3px solid var(--blue);border-radius:3px;padding-top:16px;margin-bottom:36px">';
+  html+='<div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:6px">💧 Su Takibi</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;align-items:start">';
   html+='<div class="card" style="text-align:center;padding:24px 16px">';
-  html+='<div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--blue) '+(pct*3.6)+'deg, var(--bg3) '+(pct*3.6)+'deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">';
+  html+='<div style="width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--blue) '+(pct*3.6)+'deg, var(--bg3) '+(pct*3.6)+'deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">';
   html+='<div class="water-inner"><div class="water-val">'+(bugunSu>=1000?(bugunSu/1000).toFixed(1)+'L':bugunSu+'ml')+'</div><div class="water-lbl">/ '+(suH>=1000?(suH/1000).toFixed(1)+'L':suH+'ml')+'</div></div></div>';
   html+='<div style="font-size:13px;color:var(--text2);margin-bottom:16px">'+(pct>=100?'🎉 Hedefe ulaştınız!':pct>=75?'💪 Çok yaklaştınız!':pct>=50?'🙂 Yarısını geçtiniz!':'💧 Su içmeye devam!')+'</div>';
   html+='<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
   html+=(()=>{const bs=[];[150,200,250,500].forEach(ml=>{bs.push('<button onclick="suEkle('+ml+')" style="padding:9px 14px;border-radius:99px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);cursor:pointer;font-size:12px;font-weight:700">+'+ml+'ml</button>');});return bs.join('');})();
   html+='</div>';
   html+=(bugunSu>0?'<button onclick="suSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">↺ Sıfırla</button>':'');
-  html+='</div></div>';
-  html+='<div><div class="section-title">⚙️ Günlük Hedef</div><div class="card"><div style="display:flex;gap:8px;flex-wrap:wrap">';
+  html+='</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:14px">';
+  html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px">⚙️ GÜNLÜK HEDEF</div><div style="display:flex;gap:8px;flex-wrap:wrap">';
   html+=(()=>{const btns=[];[1500,2000,2500,3000].forEach(h=>{const active=suH===h;const lbl=h>=1000?(h/1000).toFixed(1)+'L':h+'ml';btns.push('<button onclick="setHedef('+h+')" class="btn-sm" style="'+(active?'background:var(--blue);color:#fff;border-color:var(--blue)':'')+'">'+lbl+'</button>');});return btns.join('');})();
   html+='</div></div>';
-  html+='<div class="section-title">📊 Son 7 Gün</div><div class="card"><div style="display:flex;align-items:flex-end;gap:5px;height:90px;margin-bottom:8px">';
+  html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px">📊 SON 7 GÜN</div><div style="display:flex;align-items:flex-end;gap:5px;height:80px">';
   for(let i=0;i<7;i++){
     const d=new Date();d.setDate(d.getDate()-(6-i));
     const k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-    const val=suData[k]||0;const h2=suH>0?Math.round((val/suH)*80):0;
-    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:100%;height:'+h2+'px;min-height:2px;background:'+(val>=suH?'var(--blue)':'var(--blue-bg)')+';border-radius:3px 3px 0 0;border:1px solid var(--blue-border)"></div><div style="font-size:9px;color:'+(i===6?'var(--blue)':'var(--text3)')+'">'+GUNLER[d.getDay()]+'</div></div>';
+    const val=suData[k]||0;const h2=suH>0?Math.round((val/suH)*60):0;
+    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%"><div style="width:100%;height:'+h2+'px;min-height:2px;background:'+(val>=suH?'var(--blue)':'var(--blue-bg)')+';border-radius:3px 3px 0 0;border:1px solid var(--blue-border)"></div><div style="font-size:9px;color:'+(i===6?'var(--blue)':'var(--text3)')+'">'+GUNLER[d.getDay()]+'</div></div>';
   }
-  html+='</div></div></div></div></div>';
+  html+='</div></div>';
+  html+='</div>'; // sağ kolon kapanış
+  html+='</div>'; // su grid kapanış
+  html+='</div>'; // su panel kapanış
+
+  // ══ KALORİ TAKİBİ PANELİ ══
+  const kaloriPct=Math.min(100,Math.round(bugunKalori/kaloriH*100));
+  html+='<div style="border-top:3px solid var(--gold-dark,#946C18);border-radius:3px;padding-top:16px">';
+  html+='<div style="font-size:14px;font-weight:700;color:var(--gold-dark,#946C18);margin-bottom:12px;display:flex;align-items:center;gap:6px">🔥 Kalori Takibi</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;align-items:start">';
+  html+='<div class="card" style="text-align:center;padding:24px 16px">';
+  html+='<div style="width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--gold-dark,#946C18) '+Math.min(360,Math.round(bugunKalori/kaloriH*360))+'deg, var(--bg3) '+Math.min(360,Math.round(bugunKalori/kaloriH*360))+'deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">';
+  html+='<div class="water-inner"><div class="water-val" style="color:var(--gold-dark,#946C18)">'+bugunKalori+'</div><div class="water-lbl">/ '+kaloriH+' kcal</div></div></div>';
+  html+='<div style="font-size:13px;color:var(--text2);margin-bottom:16px">'+(kaloriPct>=100?'🎯 Hedefe ulaştınız!':kaloriPct>=75?'👍 Çok yaklaştınız!':kaloriPct>=50?'🙂 Yarısını geçtiniz!':'🍽️ Öğünlerinizi eklemeye devam edin')+'</div>';
+  html+='<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+  html+=(()=>{const bs=[];[100,200,300,500].forEach(kc=>{bs.push('<button onclick="kaloriEkle('+kc+')" style="padding:9px 14px;border-radius:99px;border:1px solid var(--gold-border,#D4C8B0);background:var(--gold-bg,#F9EFBD);color:var(--gold-dark,#946C18);cursor:pointer;font-size:12px;font-weight:700">+'+kc+' kcal</button>');});return bs.join('');})();
+  html+='</div>';
+  html+='<div style="display:flex;gap:8px;justify-content:center;margin-top:10px">';
+  html+='<input id="kalori-ozel" type="number" min="0" placeholder="Örn: 135" style="width:110px;padding:9px 12px;border:1px solid var(--gold-border,#D4C8B0);border-radius:99px;font-size:12px;text-align:center">';
+  html+='<button onclick="kaloriOzelEkle()" style="padding:9px 16px;border-radius:99px;border:none;background:var(--gold-dark,#946C18);color:#fff;cursor:pointer;font-size:12px;font-weight:700">Ekle</button>';
+  html+='</div>';
+  html+=(bugunKalori>0?'<button onclick="kaloriSifirla()" style="margin-top:12px;background:transparent;border:none;color:var(--text3);font-size:12px;cursor:pointer">↺ Sıfırla</button>':'');
+  html+='</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:14px">';
+  html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px">⚙️ GÜNLÜK HEDEF</div><div style="display:flex;gap:8px;flex-wrap:wrap">';
+  html+=(()=>{const btns=[];[1500,1800,2000,2500].forEach(h=>{const active=kaloriH===h;btns.push('<button onclick="setKaloriHedef('+h+')" class="btn-sm" style="'+(active?'background:var(--gold-dark,#946C18);color:#fff;border-color:var(--gold-dark,#946C18)':'')+'">'+h+' kcal</button>');});return btns.join('');})();
+  html+='</div></div>';
+  html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1px;margin-bottom:10px">📊 SON 7 GÜN</div><div style="display:flex;align-items:flex-end;gap:5px;height:80px">';
+  for(let i=0;i<7;i++){
+    const d2=new Date();d2.setDate(d2.getDate()-(6-i));
+    const k2=d2.getFullYear()+'-'+pad(d2.getMonth()+1)+'-'+pad(d2.getDate());
+    const kval=kaloriData[k2]||0;const kh=kval>0?Math.max(3,Math.round((kval/kaloriH)*60)):0;
+    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%"><div style="width:100%;height:'+kh+'px;min-height:2px;background:'+(kval>=kaloriH?'var(--gold-dark,#946C18)':'var(--gold-bg,#F9EFBD)')+';border-radius:3px 3px 0 0;border:1px solid var(--gold-border,#D4C8B0)"></div><div style="font-size:9px;color:'+(i===6?'var(--gold-dark,#946C18)':'var(--text3)')+'">'+GUNLER[d2.getDay()]+'</div></div>';
+  }
+  html+='</div></div>';
+  html+='</div>'; // sağ kolon kapanış
+  html+='</div>'; // kalori grid kapanış
+  html+='</div>'; // kalori panel kapanış
+
+  html+='</div>'; // sayfa padding kapanış
   document.getElementById('c-su').innerHTML=html;
 }
 function setHedef(h){localStorage.setItem('su_h_'+OGR._id,h);renderSu();}
 function suEkle(ml){bugunSu+=ml;if(!OGR)return;suData[bugun()]=bugunSu;localStorage.setItem('su_'+OGR._id,JSON.stringify(suData));renderSu();renderAna();}
 function suSifirla(){bugunSu=0;if(!OGR)return;suData[bugun()]=0;localStorage.setItem('su_'+OGR._id,JSON.stringify(suData));renderSu();renderAna();}
+function setKaloriHedef(h){localStorage.setItem('kalori_h_'+OGR._id,h);renderSu();}
+function kaloriEkle(kc){
+  bugunKalori+=kc;if(!OGR)return;
+  kaloriData[bugun()]=bugunKalori;
+  localStorage.setItem('kalori_'+OGR._id,JSON.stringify(kaloriData));
+  renderSu();
+  sb.from('kalori_kayitlari').upsert({ogrenci_id:OGR._id,tarih:bugun(),kalori:bugunKalori,guncelleme:new Date().toISOString()},{onConflict:'ogrenci_id,tarih'}).then(function(){});
+}
+function kaloriSifirla(){
+  bugunKalori=0;if(!OGR)return;
+  kaloriData[bugun()]=0;
+  localStorage.setItem('kalori_'+OGR._id,JSON.stringify(kaloriData));
+  renderSu();
+  sb.from('kalori_kayitlari').upsert({ogrenci_id:OGR._id,tarih:bugun(),kalori:0,guncelleme:new Date().toISOString()},{onConflict:'ogrenci_id,tarih'}).then(function(){});
+}
+function kaloriOzelEkle(){
+  const el=document.getElementById('kalori-ozel');
+  const v=parseInt(el.value);
+  if(!v||v<=0){alert('Lütfen geçerli bir kalori miktarı girin.');return;}
+  kaloriEkle(v);
+}
 
 // ── DÖNGÜ ──
 function donguDurum(){
@@ -617,7 +720,7 @@ function renderDongu(){
   const fsMeta=desk?'22px':'18px';
   let html='<div style="padding:'+padMain+'">';
   html+='<div style="font-size:'+fsMeta+';font-weight:700;color:#2A2015;margin-bottom:16px">🌸 Regl Döngüsü Takibi</div>';
-  html+='<div style="display:grid;grid-template-columns:'+(genis?'1fr 360px':desk?'1fr 300px':'1fr')+';gap:'+gapMain+';align-items:start"><div>';
+  html+='<div style="display:grid;grid-template-columns:'+(genis?'minmax(0,1fr) 360px':desk?'minmax(0,1fr) 300px':'1fr')+';gap:'+gapMain+';align-items:start"><div>';
   html+='<div class="card" style="background:var(--pink-bg);border-color:var(--pink-border);text-align:center;padding:24px">';
   html+='<div style="font-size:36px;margin-bottom:8px">🌸</div>';
   html+='<div style="font-size:'+(desk?'20px':'17px')+';font-weight:800;margin-bottom:4px">'+ozet.baslik+'</div>';
