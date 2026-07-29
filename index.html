@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
-<title>DumansStudio — Öğrenci Paneli</title>
+<title>DumansStudio — Üye Paneli</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -256,7 +256,7 @@ body{background:var(--bg);color:var(--text);font-family:'Jost',-apple-system,Bli
     <div style="flex:1"></div>
     <div class="sidebar-footer">
       <div id="sb-ad" style="font-size:12px;font-weight:600;color:var(--text)">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:2px">Öğrenci</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px">Üye</div>
       <button onclick="cikisYap()" style="margin-top:6px;font-size:11px;color:var(--red);background:transparent;border:none;cursor:pointer;padding:0">Çıkış Yap →</button>
     </div>
   </nav>
@@ -353,8 +353,14 @@ async function ogrBultenYukle(){
   const el=document.getElementById('bulten-alan');
   if(!el)return;
   try{
-    const {data:rows,error}=await sb.from('bultenler').select('*').or('hedef_tip.eq.tumu,ogrenci_id.eq.'+OGR._id).order('olusturulma',{ascending:false});
-    if(error||!rows){el.innerHTML='';return;}
+    const [tumRes,kisiRes]=await Promise.all([
+      sb.from('bultenler').select('*').eq('hedef_tip','tumu').order('olusturulma',{ascending:false}),
+      sb.from('bultenler').select('*').eq('ogrenci_id',OGR._id).order('olusturulma',{ascending:false})
+    ]);
+    if(tumRes.error)console.error('Bulten (tumu) yuklenemedi:',tumRes.error.message);
+    if(kisiRes.error)console.error('Bulten (kisisel) yuklenemedi:',kisiRes.error.message);
+    const rows=[...(tumRes.data||[]),...(kisiRes.data||[])];
+    if(!rows.length){el.innerHTML='';return;}
     const now=Date.now();
     const aktif=rows.filter(function(r){return now-new Date(r.olusturulma).getTime()<24*3600*1000;});
     if(!aktif.length){el.innerHTML='';return;}
