@@ -385,6 +385,24 @@ input:focus,select:focus,textarea:focus{border-color:var(--ds-gold6) !important;
 .ds-indirimli{font-size:12px;color:var(--ds-gold7);margin:-2px 0 6px}
 .ds-indirimli s{color:var(--ds-ink5);margin-right:4px}
 .ds-indirimli-k{font-size:10px;margin:0 0 2px}
+/* Üyelik sözleşmesi onayı */
+.ds-sozlesme-ov{position:fixed;inset:0;z-index:9800;background:rgba(20,14,6,.55);display:flex;align-items:center;justify-content:center;padding:12px}
+.ds-sozlesme{background:#fff;border-radius:18px;width:100%;max-width:640px;height:min(92vh,900px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.ds-sozlesme-bas{padding:18px 20px 12px;border-bottom:1px solid var(--ds-line)}
+.ds-sozlesme-govde{flex:1;overflow:auto;padding:14px 20px 20px;-webkit-overflow-scrolling:touch}
+.ds-sozlesme-metin{font-size:12.5px;line-height:1.6;color:var(--ds-ink7,#3a332b)}
+.ds-sozlesme-metin h3{font-size:12.5px;font-weight:700;letter-spacing:.04em;color:var(--ds-ink);margin:16px 0 6px}
+.ds-sozlesme-metin p{margin:0 0 8px;text-align:justify}
+.ds-sozlesme-metin ol{padding-left:20px;margin:0}
+.ds-sozlesme-metin li{margin-bottom:6px;text-align:justify}
+.ds-sozlesme-form{display:flex;flex-direction:column;gap:2px;padding:12px;margin:4px 0 8px;border:1px solid var(--ds-goldline);border-radius:12px;background:var(--ds-goldbg)}
+.ds-sozlesme-form textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--ds-line);border-radius:10px;resize:vertical}
+.ds-sozlesme-son{text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ds-ink5);padding:14px 0 4px}
+.ds-sozlesme-alt{padding:12px 20px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--ds-line);background:#fff}
+.ds-sozlesme-alt a{color:var(--ds-gold7)}
+.ds-sozlesme-kabul input:disabled+span{opacity:.55}
+#sz-onay:disabled{opacity:.4;cursor:not-allowed}
+.ds-sozlesme .ds-form-hata{color:#A2463B;font-size:12.5px;margin:0 0 8px}
 /* QR ile giriş */
 .ds-qr-kart{display:flex;flex-direction:column;gap:12px;border-color:var(--ds-goldline) !important;background:var(--ds-goldbg) !important}
 .ds-qr-kart b{display:block;font-size:14.5px;font-weight:600;color:var(--ds-ink)}
@@ -575,6 +593,9 @@ async function baslatApp(){
   bugunSu=suData[bugun()]||0;
   try{await ogrEkYukle();takipBirlestir();}catch(e){console.error('Ek veriler yüklenemedi',e);}
   sp('ana');
+  // Üyelik sözleşmesi onaylanmadıysa önce onay alınır (onaylanmadan panel kullanılamaz)
+  if(typeof sozlesmeGerekirseOnaylat==='function')await sozlesmeGerekirseOnaylat();
+  if(!OGR)return;
   // Afişteki QR telefonun kamerasıyla okutulduysa: girişten hemen sonra derse giriş işlenir
   if(typeof QR_BEKLEYEN!=='undefined'&&QR_BEKLEYEN){const k=QR_BEKLEYEN;QR_BEKLEYEN=null;qrGirisGonder(k);return;}
   odemeUyarisi();
@@ -927,6 +948,110 @@ function davetHtml(){
     +'<div class="ds-davet-kod">'+kac(OGR.davet_kodu)+'</div>'
     +'<button class="btn btn-primary" style="width:100%" onclick="window.open(\'https://wa.me/?text=\'+encodeURIComponent(davetMetni()),\'_blank\',\'noopener\')">'+dsIc('msg')+' WhatsApp\'ta paylaş</button></div>';
 }
+// ── ÜYELİK SÖZLEŞMESİ (08_uyelik_sozlesmesi.sql) ──
+// Aktif sözleşme sürümü onaylanmadıysa panel açılışında tam ekran onay penceresi gösterilir.
+let sozlesmeAktif=null,sozlesmeOnay=null;
+const STUDYO_TARAF='<b>DUMANS STUDIO</b><br><b>ADRES:</b> Cumhuriyet .NO:10 Serpil Sokak 54100 Kat:3 Duman Studio Sakarya/Adapazarı – Çark İnşaat İş Merkezi<br><b>TELEFON:</b> 0 534 523 99 63';
+async function sozlesmeYukle(){
+  const [s,o]=await Promise.all([
+    sb.from('sozlesmeler').select('surum,baslik,metin,yayin').eq('aktif',true).maybeSingle(),
+    sb.from('sozlesme_onaylari').select('*').eq('ogrenci_id',OGR._id).order('onay_zamani',{ascending:false})
+  ].map(p=>p.then(x=>x,e=>({error:e}))));
+  sozlesmeAktif=(!s.error&&s.data)?s.data:null;
+  const l=(!o.error&&o.data)?o.data:[];
+  sozlesmeOnay=sozlesmeAktif?(l.find(x=>x.surum===sozlesmeAktif.surum)||null):(l[0]||null);
+}
+function adSoyadAyir(ad){const p=String(ad||'').trim().split(/\s+/);return p.length>1?[p.slice(0,-1).join(' '),p[p.length-1]]:[p[0]||'',''];}
+function sozlesmeBelgesi(s,on){
+  const e=x=>kac(x==null?'':String(x));const [ad,soyad]=adSoyadAyir(on.ad_soyad);
+  const t=new Date(on.onay_zamani);
+  return '<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>'+e(s.baslik)+'</title><style>@page{size:A4;margin:16mm}body{font-family:Georgia,"Times New Roman",serif;color:#1a1714;font-size:10.5pt;line-height:1.5;font-variant-numeric:lining-nums}'
+    +'h1{text-align:center;font-size:15pt;border-bottom:2px solid #1a1714;padding-bottom:6px}h3{font-size:11pt;margin:14px 0 6px}table{width:100%;border-collapse:collapse;margin:6px 0 10px}td{border:1px solid #333;padding:5px 8px;vertical-align:top}td:first-child{width:34%;font-weight:bold}'
+    +'ol{padding-left:22px}li{margin-bottom:4px;text-align:justify}p{text-align:justify}.onay{margin-top:18px;padding:10px 12px;border:1px solid #946C18;background:#FBF5E2;font-family:Arial,sans-serif;font-size:9pt;line-height:1.6}</style></head><body>'
+    +'<h1>'+e(s.baslik)+'</h1><h3>MADDE – 1 TARAFLAR:</h3><p>'+STUDYO_TARAF+'</p><p><b>ÜYE:</b></p><table>'
+    +[['ADI',ad],['SOYADI',soyad],['TC KİMLİK NUMARASI',on.tc_kimlik],['ADRES',on.adres],['TELEFON',on.telefon],['E POSTA',on.eposta||'—']].concat(on.veli_ad_soyad?[['VELİ / VASİ',on.veli_ad_soyad]]:[]).map(r=>'<tr><td>'+r[0]+':</td><td>'+e(r[1])+'</td></tr>').join('')
+    +'</table>'+s.metin
+    +'<div class="onay"><b>ELEKTRONİK ONAY KAYDI</b><br>Sözleşme tarihi / onay zamanı: '+t.toLocaleString('tr-TR')+'<br>Sözleşme sürümü: '+e(on.surum)+'<br>Onaylayan: '+e(on.ad_soyad)+(on.veli_ad_soyad?' (veli/vasi: '+e(on.veli_ad_soyad)+')':'')+' · Telefon: '+e(on.telefon)
+    +'<br>IP adresi: '+e(on.ip||'—')+'<br>Metin özeti (SHA-256): '+e(on.metin_ozeti)+'<br>Bu sözleşme DumansStudio üye panelinde (ogrenci.dumansstudio.com) telefon numarası ve şifre ile giriş yapılarak elektronik ortamda onaylanmıştır.</div>'
+    +'<script>setTimeout(function(){window.focus();window.print();},400)<\/script></body></html>';
+}
+function sozlesmeYazdir(){
+  if(!sozlesmeOnay)return;
+  const s=sozlesmeAktif&&sozlesmeAktif.surum===sozlesmeOnay.surum?sozlesmeAktif:null;
+  const ac=metinli=>{const w=window.open('','_blank');if(!w){alert('Açılır pencereye izin verin.');return;}w.document.write(sozlesmeBelgesi(metinli,sozlesmeOnay));w.document.close();};
+  if(s)return ac(s);
+  sb.from('sozlesmeler').select('surum,baslik,metin').eq('surum',sozlesmeOnay.surum).maybeSingle().then(r=>{if(r.data)ac(r.data);});
+}
+function sozlesmeOnaylat(){
+  return new Promise(coz=>{
+    const s=sozlesmeAktif;const o=OGR;
+    const ov=document.createElement('div');ov.className='ds-sozlesme-ov';
+    ov.innerHTML='<div class="ds-sozlesme" role="dialog" aria-modal="true" aria-label="Üyelik sözleşmesi">'
+      +'<div class="ds-sozlesme-bas"><div class="ds-eyebrow">DUMANSSTUDIO</div><div class="ds-pencere-baslik" style="margin:4px 0">Üyelik sözleşmesi</div>'
+      +'<div class="ds-kucuk" style="line-height:1.55">Panelinizi kullanmaya devam etmek için üyelik sözleşmesini okuyup onaylamanız gerekiyor. Sözleşmede yer alan taraf bilgilerinizi tamamlayın.</div></div>'
+      +'<div class="ds-sozlesme-govde" tabindex="0">'
+      +'<div class="ds-sozlesme-metin"><h3>MADDE – 1 TARAFLAR:</h3><p>'+STUDYO_TARAF+'</p><p><b>ÜYE:</b></p></div>'
+      +'<div class="ds-sozlesme-form">'
+      +'<label class="ds-alan"><span>Ad soyad</span><input type="text" value="'+kac(o.ad)+'" disabled></label>'
+      +'<label class="ds-alan"><span>Telefon</span><input type="text" value="'+kac(o.tel)+'" disabled></label>'
+      +'<label class="ds-alan"><span>TC kimlik numarası *</span><input type="text" id="sz-tc" inputmode="numeric" maxlength="11" autocomplete="off" placeholder="11 haneli"></label>'
+      +'<label class="ds-alan"><span>Açık adres *</span><textarea id="sz-adres" rows="2" maxlength="300" placeholder="Mahalle, sokak, no, ilçe / il"></textarea></label>'
+      +'<label class="ds-alan"><span>E-posta</span><input type="email" id="sz-eposta" value="'+kac(o.mail||'')+'" placeholder="ornek@mail.com"></label>'
+      +'<label class="ds-secenek" style="margin-top:2px"><input type="checkbox" id="sz-18"><span><b>18 yaşından küçüğüm</b><small>Veli veya vasinizin onayı gerekir.</small></span></label>'
+      +'<label class="ds-alan" id="sz-veli-alan" hidden><span>Veli / vasi ad soyad *</span><input type="text" id="sz-veli" maxlength="80"></label>'
+      +'</div>'
+      +'<div class="ds-sozlesme-metin">'+s.metin+'</div>'
+      +'<div class="ds-sozlesme-son" id="sz-son">Sözleşmenin sonu</div>'
+      +'</div>'
+      +'<div class="ds-sozlesme-alt">'
+      +'<label class="ds-secenek ds-sozlesme-kabul"><input type="checkbox" id="sz-kabul" disabled><span><b>Üyelik sözleşmesini okudum, anladım ve kabul ediyorum.</b><small id="sz-ipucu">Onaylamak için metni sonuna kadar kaydırın.</small></span></label>'
+      +'<div class="ds-kucuk" style="margin:2px 0 10px">Kişisel verileriniz <a href="https://dumansstudio.com/gizlilik-politikasi" target="_blank" rel="noopener">Gizlilik Politikası ve KVKK Aydınlatma Metni</a> kapsamında işlenir.</div>'
+      +'<div class="ds-form-hata" id="sz-hata" hidden></div>'
+      +'<button class="btn btn-primary" id="sz-onay" style="width:100%" disabled>Sözleşmeyi onaylıyorum</button>'
+      +'<button class="btn" id="sz-cikis" style="width:100%;margin-top:8px">Şimdi değil, çıkış yap</button></div></div>';
+    document.body.appendChild(ov);
+    const $=id=>ov.querySelector('#'+id);
+    const govde=ov.querySelector('.ds-sozlesme-govde');
+    const sonaGeldi=()=>{if(govde.scrollTop+govde.clientHeight>=govde.scrollHeight-40){$('sz-kabul').disabled=false;$('sz-ipucu').textContent='Onay tarihi, IP adresi ve onaylanan metin sözleşme kaydı olarak saklanır.';}};
+    govde.addEventListener('scroll',sonaGeldi);setTimeout(sonaGeldi,300);
+    $('sz-kabul').addEventListener('change',()=>{$('sz-onay').disabled=!$('sz-kabul').checked;});
+    $('sz-18').addEventListener('change',()=>{$('sz-veli-alan').hidden=!$('sz-18').checked;});
+    $('sz-tc').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,11);});
+    $('sz-cikis').addEventListener('click',()=>{ov.remove();cikisYap();});
+    $('sz-onay').addEventListener('click',async()=>{
+      const h=$('sz-hata');h.hidden=true;
+      const tc=$('sz-tc').value.trim(),adres=$('sz-adres').value.trim(),ep=$('sz-eposta').value.trim(),veli=$('sz-18').checked?$('sz-veli').value.trim():'';
+      const hata=m=>{h.textContent=m;h.hidden=false;};
+      if(!/^[1-9]\d{10}$/.test(tc))return hata('TC kimlik numaranızı 11 hane olarak yazın.');
+      if(adres.length<10)return hata('Lütfen açık adresinizi yazın.');
+      if($('sz-18').checked&&veli.length<5)return hata('Veli veya vasinizin adını soyadını yazın.');
+      $('sz-onay').disabled=true;yukluYap(true);
+      try{
+        const {error}=await sb.rpc('sozlesme_onayla',{p_surum:s.surum,p_tc:tc,p_adres:adres,p_eposta:ep,p_veli:veli||null});
+        if(error)throw error;
+        await sozlesmeYukle();if(ep&&!OGR.mail)OGR.mail=ep;
+        ov.remove();coz(true);
+        alert('Üyelik sözleşmeniz onaylandı. Hesabım sayfasından dilediğiniz zaman görüntüleyebilirsiniz.');
+      }catch(e){hata(e.message);$('sz-onay').disabled=false;}
+      finally{yukluYap(false);}
+    });
+  });
+}
+async function sozlesmeGerekirseOnaylat(){
+  try{await sozlesmeYukle();}catch(e){return;}
+  if(sozlesmeAktif&&!sozlesmeOnay){yukluYap(false);await sozlesmeOnaylat();}
+}
+// Hesabım sayfasına "Üyelik sözleşmem" kartı
+const _renderHesapSozlesmesiz=renderHesap;
+renderHesap=function(){
+  _renderHesapSozlesmesiz();
+  const el=document.getElementById('c-hesap');if(!el||!sozlesmeOnay)return;
+  const t=new Date(sozlesmeOnay.onay_zamani);
+  el.insertAdjacentHTML('beforeend','<div class="card" style="margin-top:14px"><div class="ds-kart-bas">'+dsIc('file')+'<span class="ds-eyebrow">Üyelik sözleşmem</span></div>'
+    +'<div class="ds-kucuk" style="line-height:1.6;margin-bottom:10px">'+t.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})+' '+t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})+' tarihinde elektronik olarak onayladınız (sürüm '+kac(sozlesmeOnay.surum)+').</div>'
+    +'<button class="btn" onclick="sozlesmeYazdir()">'+dsIc('printer')+' Görüntüle / yazdır</button></div>');
+};
+
 // ── QR İLE DERSE GİRİŞ (07_qr_giris.sql) ──
 // Stüdyodaki afiş "ogrenci.dumansstudio.com/?giris=KOD" adresini açar; uygulama içinden de kamera ile okutulabilir.
 // Konum yalnızca stüdyoya uzaklığı ölçmek için kullanılır; koordinat saklanmaz.
