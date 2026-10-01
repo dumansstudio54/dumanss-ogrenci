@@ -377,6 +377,27 @@ input:focus,select:focus,textarea:focus{border-color:var(--ds-gold6) !important;
 .ds-etkinlik{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--ds-stone)}
 .ds-etkinlik:first-of-type{border-top:0;padding-top:0}
 .ds-davet-kod{font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;font-weight:600;letter-spacing:.16em;text-align:center;padding:10px;margin:12px 0;border:1px dashed var(--ds-goldline);border-radius:12px;background:var(--ds-goldbg);color:var(--ds-ink);user-select:all}
+.ds-odul{display:flex;flex-direction:column;gap:10px;padding:12px 14px;margin:0 0 12px;border-radius:12px;border:1px solid var(--ds-line);background:#fff}
+.ds-odul b{display:block;font-size:13.5px;font-weight:600;color:var(--ds-ink)}
+.ds-odul small{display:block;font-size:12px;line-height:1.55;color:var(--ds-ink5);margin-top:3px}
+.ds-odul-aktif{border-color:var(--ds-goldline);background:var(--ds-goldbg)}
+.ds-odul .btn{width:100%}
+.ds-indirimli{font-size:12px;color:var(--ds-gold7);margin:-2px 0 6px}
+.ds-indirimli s{color:var(--ds-ink5);margin-right:4px}
+.ds-indirimli-k{font-size:10px;margin:0 0 2px}
+/* QR ile giriş */
+.ds-qr-kart{display:flex;flex-direction:column;gap:12px;border-color:var(--ds-goldline) !important;background:var(--ds-goldbg) !important}
+.ds-qr-kart b{display:block;font-size:14.5px;font-weight:600;color:var(--ds-ink)}
+.ds-qr-kart small{display:block;font-size:12px;line-height:1.55;color:var(--ds-ink5);margin-top:3px}
+.ds-qr-kart .btn{width:100%}
+.ds-qr-tamam{flex-direction:row;align-items:center;background:#F2F6F0 !important;border-color:#D3E0CF !important}
+.ds-qr-tamam>.ds-ic{font-size:26px;color:#4A6645;flex:none}
+.ds-qr-sonuc{display:flex;justify-content:center;align-items:center;height:64px;margin:4px 0 8px}
+.ds-qr-sonuc>.ds-ic{font-size:46px;color:#A2463B}
+.ds-qr-ok>.ds-ic{color:#4A6645}
+.ds-qr-kamera{position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:1/1}
+.ds-qr-kamera video{width:100%;height:100%;object-fit:cover;display:block}
+.ds-qr-kamera i{position:absolute;inset:18%;border:2px solid rgba(212,175,55,.9);border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.35)}
 /* Bildirimler */
 #bildirim-btn{position:relative}
 .ds-sayi{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--ds-ink);color:var(--gold-light);font:600 10.5px/18px 'Jost',sans-serif;text-align:center}
@@ -513,7 +534,7 @@ function bitis(o){
 }
 function kalanGun(o){return Math.ceil((bitis(o)-new Date())/864e5)}
 function barRenk(k){return k===0?'var(--red)':k<=3?'var(--yellow)':'var(--green)'}
-function rowToOgr(r){return{_id:r.id,ad:r.ad,tel:r.tel||'',mail:r.mail||'',tur:r.tur||'pilates',paket:r.paket||20,ucret:r.ucret||0,toplam_paket:r.toplam_paket||r.paket||20,baslangic:r.baslangic||'',yapilan:r.yapilan||0,borc:r.borc||0,saat:r.saat||'',gunler:r.gunler||[],iptal_hakki:r.iptal_hakki??1,iptal_gecmisi:r.iptal_gecmisi||[],odeme_bekliyor:r.odeme_bekliyor||false,ilk_odeme_alindi:r.ilk_odeme_alindi!==false,analiz_paketi:r.analiz_paketi===true,borc_tl:+r.borc_tl||0,davet_kodu:r.davet_kodu||'',dogum_tarihi:r.dogum_tarihi||null};}
+function rowToOgr(r){return{_id:r.id,ad:r.ad,tel:r.tel||'',mail:r.mail||'',tur:r.tur||'pilates',paket:r.paket||20,ucret:r.ucret||0,toplam_paket:r.toplam_paket||r.paket||20,baslangic:r.baslangic||'',yapilan:r.yapilan||0,borc:r.borc||0,saat:r.saat||'',gunler:r.gunler||[],iptal_hakki:r.iptal_hakki??1,iptal_gecmisi:r.iptal_gecmisi||[],odeme_bekliyor:r.odeme_bekliyor||false,ilk_odeme_alindi:r.ilk_odeme_alindi!==false,analiz_paketi:r.analiz_paketi===true,borc_tl:+r.borc_tl||0,davet_kodu:r.davet_kodu||'',davet_eden:r.davet_eden||null,dogum_tarihi:r.dogum_tarihi||null};}
 function yukluYap(goster){let el=document.getElementById('ov-loading');if(goster){if(!el){el=document.createElement('div');el.id='ov-loading';el.style.cssText='position:fixed;inset:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;z-index:9999';el.innerHTML='<div class="spinner"></div>';document.body.appendChild(el);}el.style.display='flex';}else if(el){el.style.display='none';}}
 // Giri\u015f: telefon + st\u00fcdyonun verdi\u011fi \u015fifre. Supabase hesab\u0131 "<telefonun son 10 hanesi>@uye.dumansstudio.com"
 // adresiyle tutulur (bkz. supabase/functions/ogrenci-hesap). \u00d6\u011frenci yaln\u0131zca kendi kayd\u0131n\u0131 okuyabilir.
@@ -554,6 +575,8 @@ async function baslatApp(){
   bugunSu=suData[bugun()]||0;
   try{await ogrEkYukle();takipBirlestir();}catch(e){console.error('Ek veriler yüklenemedi',e);}
   sp('ana');
+  // Afişteki QR telefonun kamerasıyla okutulduysa: girişten hemen sonra derse giriş işlenir
+  if(typeof QR_BEKLEYEN!=='undefined'&&QR_BEKLEYEN){const k=QR_BEKLEYEN;QR_BEKLEYEN=null;qrGirisGonder(k);return;}
   odemeUyarisi();
 }
 
@@ -610,7 +633,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
 // ════════════════════════════════════════════════════════════════════
 // GELİŞTİRMELER (03_gelistirmeler.sql ile birlikte çalışır)
 // ════════════════════════════════════════════════════════════════════
-let ykKayit=[],talepKayit=[],odemeKayit=[],takip=null,katilimlar=[],tatilSet={},aktifBulten=0;
+let ykKayit=[],talepKayit=[],odemeKayit=[],takip=null,katilimlar=[],tatilSet={},aktifBulten=0,davetOdul=[],davetSayisi=0,qrAcik=false;
 const DAVET_INDIRIMI_YUZDE=10;
 const ROZETLER=[1,10,25,50,75,100,150,200,300];
 const YK_ETIKET={geldi:['Katıldınız','yesil'],gelmedi:['Katılmadınız','kirmizi'],iptal:['İptal (hak kullanıldı)','gri'],studyo_iptal:['Stüdyo iptali','gri'],ertelendi:['Ertelendi','altin'],telafi:['Telafi dersi','altin']};
@@ -632,7 +655,10 @@ async function ogrEkYukle(){
     sb.from('ogrenci_takip').select('*').eq('ogrenci_id',OGR._id).maybeSingle(),
     sb.from('etkinlik_katilim').select('etkinlik').eq('ogrenci_id',OGR._id),
     sb.from('tatiller').select('tarih,ad').gte('tarih',tEkle(bugun(),-1)),
-    sb.from('bultenler').select('id',{count:'exact',head:true}).gte('olusturulma',new Date(Date.now()-864e5).toISOString())
+    sb.from('bultenler').select('id',{count:'exact',head:true}).gte('olusturulma',new Date(Date.now()-864e5).toISOString()),
+    sb.from('davet_odulleri').select('*').order('verilis',{ascending:false}),
+    sb.from('davet_kod_gecmisi').select('id',{count:'exact',head:true}),
+    sb.rpc('qr_giris_acik')
   ].map(p=>p.then(x=>x,e=>({error:e}))));
   if(!r[0].error)ykKayit=r[0].data||[];
   if(!r[1].error)talepKayit=r[1].data||[];
@@ -641,6 +667,9 @@ async function ogrEkYukle(){
   if(!r[4].error)katilimlar=(r[4].data||[]).map(x=>x.etkinlik);
   if(!r[5].error){tatilSet={};(r[5].data||[]).forEach(x=>tatilSet[x.tarih]=x.ad);}
   if(!r[6].error)aktifBulten=r[6].count||0;
+  if(!r[7].error)davetOdul=r[7].data||[];
+  if(r[8]&&!r[8].error)davetSayisi=r[8].count||0;
+  if(r[9]&&!r[9].error)qrAcik=r[9].data===true;
   bildirimRozeti();
 }
 // Panel tekrar öne gelince (ör. ertesi gün) bilgiler tazelenir.
@@ -827,16 +856,158 @@ async function etkinlikKatil(kod,katil){
   katilimlar=katil?[...katilimlar,k]:katilimlar.filter(x=>x!==k);anaEkYukle();
 }
 function davetMetni(){return 'Merhaba! DumansStudio Adapazarı\'nda Reformer Pilates / EMS derslerine katılıyorum ve çok memnunum. Denemek istersen kayıt olurken "'+(OGR.davet_kodu||'')+'" davet kodumu söylemen yeterli; ilk paketinde %'+DAVET_INDIRIMI_YUZDE+' indirim kazanırsın. https://dumansstudio.com';}
+// ── DAVET ÖDÜLÜ: arkadaşı ilk ödemesini yapınca davet edene 30 gün geçerli %10 indirim hakkı ──
+function odulAktif(x){return x.durum==='aktif'&&new Date(x.bitis)>new Date();}
+function odulTutari(x){return Math.round((OGR.ucret||0)*(+x.oran||DAVET_INDIRIMI_YUZDE/100));}
+function tarihKisa(ts){return new Date(ts).toLocaleDateString('tr-TR',{day:'numeric',month:'long'});}
+// Bir sonraki paket ödemesinde ödenecek tutar: davetle gelen üyenin ilk paket indirimi ve kullanılan davet indirimi düşülür.
+function odenecekTutar(){
+  const u=+(OGR&&OGR.ucret)||0;let ind=0;const n=[];
+  if(OGR&&OGR.ilk_odeme_alindi===false&&OGR.davet_eden){const x=Math.round(u*DAVET_INDIRIMI_YUZDE/100);ind+=x;n.push('Davetle ilk paket indirimi');}
+  const bek=davetOdul.filter(x=>x.durum==='kullanildi'&&+x.kalan>0).reduce((t,x)=>t+(+x.kalan),0);
+  if(bek>0){const x=Math.min(bek,u-ind);ind+=x;n.push('Davet indiriminiz');}
+  return {tutar:u-ind,indirim:ind,not:n.join(' + ')};
+}
+function indirimSatiri(kucuk){
+  const t=odenecekTutar();if(!t.indirim)return '';
+  return '<div class="ds-indirimli'+(kucuk?' ds-indirimli-k':'')+'"><s>'+tl(OGR.ucret)+'</s> '+kac(t.not)+' −'+tl(t.indirim)+'</div>';
+}
+function davetOdulHtml(){
+  const satirlar=[];
+  davetOdul.forEach(x=>{
+    if(odulAktif(x)){
+      const gun=Math.max(0,Math.ceil((new Date(x.bitis)-Date.now())/864e5));
+      satirlar.push('<div class="ds-odul ds-odul-aktif"><div><b>%'+Math.round((+x.oran||0.1)*100)+' indirim hakkı kazandınız</b>'
+        +'<small>Davet ettiğiniz arkadaşınız aramıza katıldı. '+tarihKisa(x.bitis)+' tarihine kadar ('+gun+' gün) kullanabilirsiniz.</small></div>'
+        +'<button class="btn btn-primary" onclick="davetIndirimiUygula(\''+x.id+'\')">%'+Math.round((+x.oran||0.1)*100)+' İndirimi Uygula · '+tl(odulTutari(x))+'</button></div>');
+    }else if(x.durum==='kullanildi'){
+      const parca=[];
+      if(+x.borca_yansiyan>0)parca.push(tl(x.borca_yansiyan)+' kalan ödemenizden düşüldü');
+      if(+x.kalan>0)parca.push(tl(x.kalan)+' bir sonraki paket ödemenizde düşülecek');
+      else if(x.mahsup_tarihi&&!(+x.borca_yansiyan>0))parca.push(tl(x.tutar)+' '+tarihKisa(x.mahsup_tarihi)+' tarihli ödemenizde uygulandı');
+      if(parca.length&&(+x.kalan>0||Date.now()-new Date(x.kullanim)<60*864e5))
+        satirlar.push('<div class="ds-odul"><div><b>Davet indiriminiz kullanıldı</b><small>'+parca.join('; ')+'.</small></div></div>');
+    }
+  });
+  // Sıradaki haklar: her ay bir hak aktif olur (bir önceki hakkın aktif olduğu tarihten bir ay sonra)
+  const sira=davetOdul.filter(x=>x.durum==='sirada');
+  if(sira.length){
+    const acilan=davetOdul.filter(x=>x.durum!=='sirada'&&x.verilis).map(x=>new Date(x.verilis));
+    let sonraki=acilan.length?new Date(Math.max(...acilan)):new Date();
+    if(acilan.length)sonraki.setMonth(sonraki.getMonth()+1);
+    davetOdul.filter(odulAktif).forEach(x=>{const b=new Date(x.bitis);if(b>sonraki)sonraki=b;});
+    if(sonraki<new Date())sonraki=new Date(Date.now()+864e5);
+    satirlar.push('<div class="ds-odul"><div><b>Sırada '+sira.length+' indirim hakkınız var</b><small>Aynı ay içinde birden fazla arkadaşınızı getirdiniz, teşekkür ederiz! Her ay bir indirim hakkınız aktif olur. Sıradaki hakkınız yaklaşık '+tarihKisa(sonraki)+' tarihinde aktif olacak ve o günden itibaren 30 gün geçerli olacak.</small></div></div>');
+  }
+  return satirlar.join('');
+}
+async function davetIndirimiUygula(id){
+  const x=davetOdul.find(d=>d.id===id);if(!x||!OGR)return;
+  const t=odulTutari(x);const borc=+OGR.borc_tl||0;
+  const nasil=borc>0
+    ?'Kalan ödemenizden '+tl(Math.min(t,borc))+' hemen düşülür'+(t>borc?'; kalan '+tl(t-borc)+' bir sonraki paket ödemenizde düşülür.':'.')
+    :'Şu an ödenmemiş bir tutarınız olmadığı için indirim bir sonraki paket ödemenizde otomatik olarak düşülür.';
+  if(!confirm('%'+Math.round((+x.oran||0.1)*100)+' davet indiriminiz ('+tl(t)+') uygulansın mı?\n\n'+nasil+'\n\nBu hak yalnızca bir kez kullanılabilir.'))return;
+  yukluYap(true);
+  try{
+    const {data,error}=await sb.rpc('davet_indirimi_kullan',{p_odul:id});
+    if(error)throw error;
+    await kendiKaydimiYukle();await ogrEkYukle();
+    alert('İndiriminiz uygulandı.\n\n'+(data.borca>0?tl(data.borca)+' kalan ödemenizden düşüldü.':'')+(data.kalan>0?(data.borca>0?'\n':'')+tl(data.kalan)+' bir sonraki paket ödemenizde düşülecek.':''));
+    const a=document.querySelector('.page.active')?.id?.replace('pg-','');sp(a||'ana');
+  }catch(e){alert('İndirim uygulanamadı: '+e.message);}
+  finally{yukluYap(false);}
+}
 function davetHtml(){
   if(!OGR.davet_kodu)return '';
   return '<div class="card ds-davet"><div class="ds-kart-bas">'+dsIc('heart')+'<span class="ds-eyebrow">Arkadaşınızı getirin</span></div>'
-    +'<div style="font-size:13.5px;color:var(--ds-ink7);line-height:1.6">Davet kodunuzla kayıt olan arkadaşınız ilk paketinde <b>%'+DAVET_INDIRIMI_YUZDE+' indirim</b> kazanır.</div>'
+    +davetOdulHtml()
+    +'<div style="font-size:13.5px;color:var(--ds-ink7);line-height:1.6">Davet kodunuzla kayıt olan arkadaşınız ilk paketinde <b>%'+DAVET_INDIRIMI_YUZDE+' indirim</b> kazanır. Arkadaşınız ilk ödemesini yaptığında <b>siz de %'+DAVET_INDIRIMI_YUZDE+' indirim hakkı</b> kazanırsınız; bu hak 30 gün geçerlidir.</div>'
+    +'<div class="ds-kucuk" style="margin-top:6px;line-height:1.55">Her kod yalnızca bir kez kullanılabilir. Kodunuz kullanıldığında burada yeni kodunuz görünür; böylece istediğiniz kadar arkadaşınızı davet edebilirsiniz. Birden fazla indirim hakkı kazanırsanız haklarınız sıraya girer ve her ay biri aktif olur'+(davetSayisi?'; şimdiye kadar <b>'+davetSayisi+'</b> arkadaşınızı getirdiniz.':'.')+'</div>'
     +'<div class="ds-davet-kod">'+kac(OGR.davet_kodu)+'</div>'
     +'<button class="btn btn-primary" style="width:100%" onclick="window.open(\'https://wa.me/?text=\'+encodeURIComponent(davetMetni()),\'_blank\',\'noopener\')">'+dsIc('msg')+' WhatsApp\'ta paylaş</button></div>';
 }
+// ── QR İLE DERSE GİRİŞ (07_qr_giris.sql) ──
+// Stüdyodaki afiş "ogrenci.dumansstudio.com/?giris=KOD" adresini açar; uygulama içinden de kamera ile okutulabilir.
+// Konum yalnızca stüdyoya uzaklığı ölçmek için kullanılır; koordinat saklanmaz.
+let QR_BEKLEYEN=null;
+try{const k=new URLSearchParams(location.search).get('giris');if(k){QR_BEKLEYEN=k;history.replaceState(null,'',location.pathname);}}catch(e){}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!QR_BEKLEYEN)return;
+  const k=document.querySelector('#login-screen > div');
+  if(k)k.insertAdjacentHTML('afterbegin','<div style="width:100%;margin-bottom:14px;padding:12px 14px;border-radius:12px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.1);color:#f3f1ea;font-size:12.5px;line-height:1.55;text-align:center">Derse girişiniz için önce üye panelinize giriş yapın. Giriş yaptığınızda yoklamanız otomatik alınır.</div>');
+});
+function bugunDers(){return yaklasanDersler(1).find(x=>x.t===bugun())||null;}
+function qrKartHtml(){
+  if(!qrAcik)return '';
+  const d=bugunDers();if(!d)return '';
+  if(d.yk&&d.yk.durum==='geldi')return '<div class="card ds-qr-kart ds-qr-tamam">'+dsIc('check')+'<div><b>Bugünkü girişiniz alındı</b><small>İyi dersler!</small></div></div>';
+  if(d.yk&&['iptal','studyo_iptal','ertelendi'].includes(d.yk.durum))return '';
+  return '<div class="card ds-qr-kart"><div><b>Bugün dersiniz var</b><small>Stüdyoya geldiğinizde girişteki QR kodu okutun. Okutulmayan dersler gün sonunda "gelmedi" olarak işlenir.</small></div>'
+    +'<button class="btn btn-primary" onclick="qrOkut()">'+dsIc('target')+' QR okut</button></div>';
+}
+function qrSonucGoster(ok,baslik,metin){
+  ogrPencere('<div class="ds-qr-sonuc'+(ok?' ds-qr-ok':'')+'">'+dsIc(ok?'check':'warn')+'</div><div class="ds-pencere-baslik" style="text-align:center">'+kac(baslik)+'</div>'
+    +'<div class="ds-kucuk" style="text-align:center;margin-bottom:16px;line-height:1.6">'+kac(metin)+'</div><div class="ds-pencere-btn"><button class="btn btn-primary" data-kapat="1" style="width:100%">Tamam</button></div>');
+}
+function konumAl(){
+  return new Promise((coz,red)=>{
+    if(!navigator.geolocation)return red(new Error('Telefonunuz konum bilgisini desteklemiyor.'));
+    navigator.geolocation.getCurrentPosition(p=>coz(p.coords),e=>red(new Error(e.code===1
+      ?'Konum izni verilmedi. Girişin stüdyoda yapıldığını doğrulamak için konum izni gerekiyor. Tarayıcı ayarlarından bu site için konum iznini açıp tekrar deneyin.'
+      :'Konumunuz alınamadı. Konum servisinin açık olduğundan emin olup tekrar deneyin.')),{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+  });
+}
+async function qrGirisGonder(kod){
+  const bekle=ogrPencere('<div class="ds-qr-sonuc"><div class="spinner"></div></div><div class="ds-pencere-baslik" style="text-align:center">Girişiniz kontrol ediliyor</div><div class="ds-kucuk" style="text-align:center">Stüdyoda olduğunuzu doğrulamak için konumunuz alınıyor. Konumunuz kaydedilmez.</div>');
+  try{
+    const c=await konumAl();
+    const {data,error}=await sb.rpc('qr_giris',{p_kod:kod,p_lat:c.latitude,p_lng:c.longitude,p_dogruluk:c.accuracy});
+    if(error)throw error;
+    bekle.remove();
+    const ok=data.sonuc==='tamam'||data.sonuc==='zaten';
+    qrSonucGoster(ok,ok?'Hoş geldiniz!':'Giriş alınamadı',data.mesaj);
+    if(ok){await ogrEkYukle();const a=document.querySelector('.page.active')?.id?.replace('pg-','');sp(a||'ana');}
+  }catch(e){bekle.remove();qrSonucGoster(false,'Giriş alınamadı',e.message);}
+}
+function jsQRYukle(){
+  if(window.jsQR)return Promise.resolve();
+  return new Promise((coz,red)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js';s.onload=coz;s.onerror=()=>red(new Error('QR okuyucu yüklenemedi. İnternet bağlantınızı kontrol edin.'));document.head.appendChild(s);});
+}
+async function qrOkut(){
+  const ov=ogrPencere('<div class="ds-pencere-baslik" style="text-align:center">QR kodu okutun</div><div class="ds-kucuk" style="text-align:center;margin-bottom:12px">Kamerayı stüdyo girişindeki QR afişine tutun.</div>'
+    +'<div class="ds-qr-kamera"><video playsinline muted></video><i></i></div><div class="ds-pencere-btn" style="margin-top:14px"><button class="btn" data-kapat="1" style="width:100%">Vazgeç</button></div>');
+  let akis=null,bitti=false;
+  const dur=()=>{bitti=true;if(akis)akis.getTracks().forEach(t=>t.stop());};
+  new MutationObserver((m,obs)=>{if(!document.body.contains(ov)){dur();obs.disconnect();}}).observe(document.body,{childList:true});
+  try{
+    await jsQRYukle();
+    akis=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    const v=ov.querySelector('video');v.srcObject=akis;await v.play();
+    const cv=document.createElement('canvas');const cx=cv.getContext('2d',{willReadFrequently:true});
+    const tara=()=>{
+      if(bitti)return;
+      if(v.readyState>=2&&v.videoWidth){
+        cv.width=v.videoWidth;cv.height=v.videoHeight;cx.drawImage(v,0,0);
+        const q=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height,{inversionAttempts:'dontInvert'});
+        if(q&&q.data){
+          let kod=q.data;try{const u=new URL(q.data);kod=u.searchParams.get('giris')||'';}catch(e){}
+          if(kod){dur();ov.remove();qrGirisGonder(kod);return;}
+        }
+      }
+      requestAnimationFrame(tara);
+    };
+    tara();
+  }catch(e){
+    dur();ov.remove();
+    qrSonucGoster(false,'Kamera açılamadı',e.name==='NotAllowedError'
+      ?'Kamera izni verilmedi. İsterseniz telefonunuzun kamera uygulamasıyla afişteki QR kodu okutabilirsiniz; açılan sayfa girişinizi alır.'
+      :e.message||'Kamera başlatılamadı. Telefonunuzun kamera uygulamasıyla afişteki QR kodu okutmayı deneyin.');
+  }
+}
 async function anaEkYukle(){
   const el=document.getElementById('ana-ek');if(!el||!OGR)return;
-  el.innerHTML='<div class="ds-ana-ek">'+rozetHtml()+davetHtml()+'</div>';
+  el.innerHTML='<div class="ds-ana-ek">'+qrKartHtml()+rozetHtml()+davetHtml()+'</div>';
   const ev=await etkinlikHtml();
   if(ev&&document.getElementById('ana-ek'))document.querySelector('#ana-ek .ds-ana-ek').insertAdjacentHTML('afterbegin',ev);
   rozetKutlama();
@@ -845,6 +1016,8 @@ async function anaEkYukle(){
 // ── ÖDEME: geçmiş ve kalan borç ──
 function odemeEkHtml(){
   let h='';
+  const odul=davetOdulHtml();
+  if(odul)h+='<div class="card ds-davet" style="margin-bottom:12px"><div class="ds-kart-bas">'+dsIc('heart')+'<span class="ds-eyebrow">Davet indirimi</span></div>'+odul+'</div>';
   if((OGR.borc_tl||0)>0)h+='<div class="alert a-red" style="display:flex;gap:10px;align-items:center">'+dsIc('wallet')+'<span>Kalan ödemeniz: <b>'+tl(OGR.borc_tl)+'</b>. Ödeme yaptıysanız aşağıdaki "Ödeme Yaptım" düğmesiyle stüdyoya bildirebilirsiniz.</span></div>';
   if(odemeKayit.length)h+='<div class="ds-ust-bolum"><div class="ds-eyebrow" style="margin-bottom:10px">Ödeme geçmişiniz</div><div class="card ds-liste">'+odemeKayit.slice(0,12).map(g=>'<div class="ds-sat" style="grid-template-columns:1fr auto"><div class="ds-sat-orta"><div class="ds-sat-ad">'+tTR(g.tarih)+'</div><div class="ds-kucuk">'+kac((g.acik||'').replace(/^.*? — /,''))+'</div></div><div class="ds-tutar">'+tl(g.tutar)+'</div></div>').join('')+'</div></div>';
   return h;
@@ -856,13 +1029,17 @@ function bildirimler(){
   const b=[];const o=OGR;const bg=bugun();const yarin=tEkle(bg,1);
   const yd=yaklasanDersler(2);
   const bugunD=yd.find(x=>x.t===bg&&!x.yk);const yarinD=yd.find(x=>x.t===yarin&&!x.yk);
-  if(bugunD)b.push({id:'ders-'+bg,ikon:'cal',baslik:'Bugün dersiniz var',metin:(o.saat?o.saat+' · ':'')+(o.tur==='ems'?'EMS':'Pilates'),git:'dersler'});
+  if(bugunD)b.push({id:'ders-'+bg,ikon:'cal',baslik:'Bugün dersiniz var',metin:(o.saat?o.saat+' · ':'')+(o.tur==='ems'?'EMS':'Pilates')+(qrAcik?' · Girişte QR kodu okutmayı unutmayın.':''),git:qrAcik?'ana':'dersler'});
   if(yarinD)b.push({id:'ders-'+yarin,ikon:'cal',baslik:'Yarın dersiniz var',metin:(o.saat?o.saat+' · ':'')+'Gelemeyecekseniz Derslerim sayfasından bildirebilirsiniz.',git:'dersler'});
   ykKayit.filter(y=>y.durum==='telafi'&&y.tarih>=bg).forEach(y=>b.push({id:'telafi-'+y.tarih,ikon:'refresh',baslik:'Telafi dersiniz planlandı',metin:tTR(y.tarih)+' '+gunUzun(y.tarih),git:'dersler'}));
   talepKayit.filter(d=>d.durum!=='bekliyor'&&d.yanit_tarihi&&(Date.now()-new Date(d.yanit_tarihi))<7*864e5).forEach(d=>b.push({id:'talep-'+d.id+'-'+d.durum,ikon:d.durum==='onaylandi'?'check':'x',baslik:'Talebiniz '+(d.durum==='onaylandi'?'onaylandı':'onaylanmadı'),metin:tTR(d.tarih)+' dersi'+(d.yanit?' · '+d.yanit:''),git:'dersler'}));
   const od=typeof odemeDurumu==='function'?odemeDurumu(o):null;
   if(od)b.push({id:'odeme-'+od.baslik+'-'+bg.slice(0,7),ikon:'card',baslik:od.baslik,metin:od.metin,git:'odeme'});
   if((o.borc_tl||0)>0)b.push({id:'borc-'+o.borc_tl,ikon:'wallet',baslik:'Kalan ödemeniz var',metin:tl(o.borc_tl),git:'odeme'});
+  davetOdul.filter(odulAktif).forEach(x=>{
+    b.push({id:'davet-'+x.id,ikon:'heart',baslik:'Davet indirimi kazandınız',metin:'Arkadaşınız aramıza katıldı. %'+Math.round((+x.oran||0.1)*100)+' indiriminizi '+tarihKisa(x.bitis)+' tarihine kadar Ödeme sayfasından kullanabilirsiniz.',git:'odeme'});
+    if(new Date(x.bitis)-Date.now()<3*864e5)b.push({id:'davet-son-'+x.id,ikon:'clock',baslik:'Davet indiriminizin süresi doluyor',metin:tarihKisa(x.bitis)+' tarihine kadar kullanabilirsiniz.',git:'odeme'});
+  });
   if(aktifBulten)b.push({id:'bulten-'+bg,ikon:'uten',baslik:'Günün menüsü yayında',metin:'Merve Hoca\'nın bugünkü önerisi ana sayfada.',git:'ana'});
   if(o.dogum_tarihi&&o.dogum_tarihi.slice(5)===bg.slice(5))b.push({id:'dogum-'+bg,ikon:'sparkle',baslik:'İyi ki doğdunuz!',metin:'DumansStudio ailesi olarak doğum gününüzü kutlarız.',git:'ana'});
   (window.DUMANS_EVENTS||[]).filter(e=>e.tarih>=bg&&e.tarih<=tEkle(bg,7)).forEach(e=>b.push({id:'etkinlik-'+e.tarih+e.baslik,ikon:'sparkle',baslik:'Etkinlik yaklaşıyor',metin:e.baslik+' · '+tTR(e.tarih),git:'ana'}));
@@ -1020,7 +1197,7 @@ function renderAna(){
     html+='</div>';
     html+='<div class="card" style="padding:12px;display:flex;align-items:center;gap:10px">';
     html+='<div><div style="font-size:12px;font-weight:600;color:#946C18">Ödeme</div>';
-    html+='<div style="font-size:22px;font-weight:800;color:#2A2015;font-family:Cormorant Garamond,Georgia,serif">&#8378;'+(o.ucret||0).toLocaleString('tr-TR')+'</div>';
+    html+='<div style="font-size:22px;font-weight:800;color:#2A2015;font-family:Cormorant Garamond,Georgia,serif">&#8378;'+odenecekTutar().tutar.toLocaleString('tr-TR')+'</div>'+indirimSatiri(true)+'';
     html+='<div style="font-size:10px;color:#A89070">'+(o.paket||20)+' ders / paket</div></div>';
     html+='<button onclick="sp(\'odeme\')" style="margin-left:auto;font-size:11px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:5px 10px;border-radius:99px;cursor:pointer">Ödeme</button>';
     html+='</div>';
@@ -1055,7 +1232,7 @@ function renderAna(){
     html+='</div></div>';
     html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">';
     html+='<div class="card" style="padding:12px"><div style="font-size:11px;font-weight:600;color:#C07A90;margin-bottom:4px">Regl Döngüsü</div><div style="font-size:12px;color:var(--text2);margin-bottom:6px">'+(sonDongu?donguGun+'. gün':'Kayıt yok')+'</div><button onclick="sp(\'dongu\')" style="font-size:10px;color:#946C18;background:#F9EFBD;border:0.5px solid #D4C8B0;padding:4px 8px;border-radius:99px;cursor:pointer">'+(sonDongu?'Detay':'+ Başlat')+'</button></div>';
-    html+='<div class="card" style="padding:12px"><div style="font-size:11px;font-weight:600;color:#946C18;margin-bottom:4px">Ödeme</div><div style="font-size:18px;font-weight:800;color:#2A2015;font-family:Cormorant Garamond,Georgia,serif">&#8378;'+(o.ucret||0).toLocaleString('tr-TR')+'</div><div style="font-size:9px;color:#A89070">'+(o.paket||20)+' ders/paket</div></div>';
+    html+='<div class="card" style="padding:12px"><div style="font-size:11px;font-weight:600;color:#946C18;margin-bottom:4px">Ödeme</div><div style="font-size:18px;font-weight:800;color:#2A2015;font-family:Cormorant Garamond,Georgia,serif">&#8378;'+odenecekTutar().tutar.toLocaleString('tr-TR')+'</div>'+indirimSatiri(true)+'<div style="font-size:9px;color:#A89070">'+(o.paket||20)+' ders/paket</div></div>';
     html+='</div>';
     html+='<div class="card" style="padding:12px;cursor:pointer" onclick="sp(\'olcum\')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:#2A2015">Son Ölçüm</div><span style="font-size:10px;color:#946C18;background:#F9EFBD;padding:2px 8px;border-radius:99px;border:0.5px solid #D4C8B0">Detay</span></div><div id="son-olcum-ozet"><div style="font-size:12px;color:#A89070;text-align:center;padding:10px">Yükleniyor...</div></div></div>';
   }
@@ -1540,7 +1717,7 @@ function renderOdeme(){
   html+='<div style="display:grid;grid-template-columns:'+colO+';gap:'+gapO+';align-items:start"><div>';
   html+='<div style="background:linear-gradient(135deg,var(--gold-bg),rgba(148,108,24,.05));border:1px solid var(--gold-border);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px">';
   html+='<div style="font-size:13px;color:var(--text2)">'+(o.tur==='ems'?'⚡ EMS':'🧘 Pilates')+' Paketi</div>';
-  html+='<div style="font-size:'+(desk?'38px':'32px')+';font-weight:800;color:var(--gold-dark);font-family:Cormorant Garamond,Georgia,serif;margin:8px 0">₺'+(o.ucret||0).toLocaleString('tr-TR')+'</div>';
+  html+='<div style="font-size:'+(desk?'38px':'32px')+';font-weight:800;color:var(--gold-dark);font-family:Cormorant Garamond,Georgia,serif;margin:8px 0">₺'+odenecekTutar().tutar.toLocaleString('tr-TR')+'</div>'+indirimSatiri();
   html+='<div style="font-size:13px;color:var(--text2)">'+(o.paket||20)+' ders / ay</div>';
   if(o.borc>0)html+='<div style="font-size:12px;color:var(--red);margin-top:8px">⚠️ '+o.borc+' ders borcunuz var</div>';
   html+='</div>';
